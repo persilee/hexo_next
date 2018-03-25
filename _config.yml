@@ -6,7 +6,7 @@
 title: persilee's Blog
 subtitle: 
 description: 个人博客
-keywords: 前端;博客;技术;个人;web;node
+keywords: 前端;博客;技术;个人;web;node;hexo;next;github;pages
 author: 李少颖（persilee）
 language: zh-Hans
 timezone: 
@@ -88,4 +88,4 @@ search:
   format: html
   limit: 10000
 
-livere_uid: your uid
+livere_uid: MTAyMC8zNTE3Ni8xMTcxMQ==

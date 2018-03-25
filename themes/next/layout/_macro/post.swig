@@ -189,7 +189,7 @@
                {% if theme.post_meta.item_text %}
                  <span class="post-meta-item-text">{{__('post.visitors')}} </span>
                {% endif %}
-                 <span class="leancloud-visitors-count"> ℃</span>
+                 <span class="leancloud-visitors-count">℃</span>
              </span>
           {% endif %}
 
@@ -207,13 +207,13 @@
                   <span class="post-meta-divider">|</span>
                 {% endif %}
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
+                  <i class="fa fa-pencil-square-o"></i>
                 </span>
                 {% if theme.post_wordcount.item_text %}
                   <span class="post-meta-item-text">{{ __('post.wordcount') }}</span>
                 {% endif %}
                 <span title="{{ __('post.wordcount') }}">
-                  {{ wordcount(post.content) }}
+                  {{ wordcount(post.content) }} (字)
                 </span>
               {% endif %}
 
@@ -229,7 +229,7 @@
                   <span class="post-meta-item-text">{{ __('post.min2read') }}</span>
                 {% endif %}
                 <span title="{{ __('post.min2read') }}">
-                  {{ min2read(post.content) }}
+                  {{ min2read(post.content) }} (分)
                 </span>
               {% endif %}
             </div>
