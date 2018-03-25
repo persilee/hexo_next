@@ -89,3 +89,7 @@ search:
   limit: 10000
 
 livere_uid: MTAyMC8zNTE3Ni8xMTcxMQ==
+
+# Extensions
+## Plugins: http://hexo.io/plugins/
+plugins: hexo-generate-feed
