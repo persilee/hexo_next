@@ -52,10 +52,63 @@
     margin: 4em 1.5em;
 }
 
-@media (min-width: 992px) {
+@media screen and (min-width: 1600px) {
     .full-image.full-image.full-image {
         max-width: none;
         width: 107%;
         margin: 25px -3.5%;
+    }
+} 
+
+@media screen and (min-width: 992px) and (max-width: 1599px) {
+    .full-image.full-image.full-image {
+        width: 109%;
+        margin: 25px -4.4%;
+    }
+} 
+//ipad
+@media screen and (min-width: 768px) and (max-width: 991px) {
+    .full-image.full-image.full-image {
+        max-width: none;
+        width: 109%;
+        margin: 25px -4.5%;
+    }
+    .github-corner {
+        display: none;    
+    }
+} 
+
+// iphone 6/7/8..puls
+@media screen and (min-width: 414px) and (max-width: 767px) {
+    .full-image.full-image.full-image {
+        max-width: none;
+        width: 117%;
+        margin: 25px -8.5%;
+    }
+    .github-corner {
+        display: none;    
+    }
+} 
+
+// iphone 6/7/8
+@media screen and (min-width: 375px) and (max-width: 413px) {
+    .full-image.full-image.full-image {
+        max-width: none;
+        width: 120%;
+        margin: 25px -10%;
+    }
+    .github-corner {
+        display: none;
+    }
+} 
+// iphone 5
+@media screen and (max-width: 375px) {
+    .full-image.full-image.full-image {
+        max-width: none;
+        width: 125%;
+        margin: 25px -12%;
+    }
+    .github-corner {
+        display: none;
     }
 } 
