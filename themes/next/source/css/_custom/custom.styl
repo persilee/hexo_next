@@ -52,6 +52,47 @@
     margin: 4em 1.5em;
 }
 
+//修改 tags 
+.posts-expand .post-tags a {
+    margin: 3px 1px 0;
+    border-radius: 2px;
+}
+
+//修改 归档 
+.posts-collapse .post.post-type-normal {
+    box-shadow: 0 0 5px rgba(202, 203, 203, 0);
+    webkit-box-shadow: 0 0 5px rgba(202, 203, 203, 0);
+    -moz-box-shadow: 0 0 5px rgba(202,203,204,0);
+}
+
+hr {
+    border: none;
+    background-color: #ccc;
+    background-image: repeating-linear-gradient(-45deg, #fff, #fff 2px, transparent 4px, transparent 4px);
+}
+
+// pages-end 样式
+.line.pages-end {
+    height: 1px;
+    width: 85%;
+    margin-left: 7.5%;
+    // border-top: 2px solid #f5f5f5;
+    text-align: center;
+    margin-top: 50px;
+    border: none;
+    background-color: #ccc;
+    background-image: repeating-linear-gradient(-45deg, #fff, #fff 2px, transparent 4px, transparent 4px);
+}
+
+.line.pages-end span {
+    position: relative;
+    top: -16px;
+    background: #ffffff;
+    padding: 0 15px;
+    color: #bbb;
+    font-size: 12px;
+}
+
 @media screen and (min-width: 1600px) {
     .full-image.full-image.full-image {
         max-width: none;
@@ -88,6 +129,9 @@
     .github-corner {
         display: none;    
     }
+    .my_post_copyright {
+        margin: 3em 0em;
+    }
 } 
 
 // iphone 6/7/8
@@ -100,6 +144,9 @@
     .github-corner {
         display: none;
     }
+    .my_post_copyright {
+        margin: 3em 0em;
+    }
 } 
 // iphone 5
 @media screen and (max-width: 375px) {
@@ -110,5 +157,8 @@
     }
     .github-corner {
         display: none;
+    }
+    .my_post_copyright {
+        margin: 3em 0em;
     }
 } 

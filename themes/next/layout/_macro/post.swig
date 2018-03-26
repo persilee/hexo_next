@@ -189,7 +189,7 @@
                {% if theme.post_meta.item_text %}
                  <span class="post-meta-item-text">{{__('post.visitors')}} </span>
                {% endif %}
-                 <span class="leancloud-visitors-count">℃</span>
+                 <span class="leancloud-visitors-count"></span> ℃
              </span>
           {% endif %}
 
@@ -229,7 +229,7 @@
                   <span class="post-meta-item-text">{{ __('post.min2read') }}</span>
                 {% endif %}
                 <span title="{{ __('post.min2read') }}">
-                  {{ min2read(post.content) }} (分)
+                  {{ min2read(post.content) }} (分钟)
                 </span>
               {% endif %}
             </div>
@@ -314,6 +314,11 @@
     {### END POST BODY ###}
     {#####################}
 
+    <div>
+      {% if not is_index %}
+        {% include 'passage-end-tag.swig' %}
+      {% endif %}
+    </div>
 
     <div>
       {% if not is_index %}
