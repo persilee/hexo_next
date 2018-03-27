@@ -109,7 +109,7 @@ code {
 
 .highlight {
     border-radius: 4px;
-    box-shadow: 0 0 10px #404040b8;
+    box-shadow: 0 0 3px #404040b8;
 }
 
 pre, .highlight {
@@ -118,6 +118,15 @@ pre, .highlight {
 
 .highlight .code pre {
     background: #404040;
+}
+
+.highlight .gutter pre {
+    background-color: rgba(0, 0, 0, 0.85);
+}
+
+//修改 li 为实现圆点
+.posts-expand .post-body ul li {
+    list-style: disc;
 }
 
 @media screen and (min-width: 1600px) {
