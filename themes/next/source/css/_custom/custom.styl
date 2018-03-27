@@ -94,8 +94,9 @@ hr {
 }
 
 // 当改变图片大小时候，修改margin
-.posts-expand .post-body img {
+.posts-expand .post-body img:not(.full-image) {
     margin: 0 auto;
+    box-shadow: 1px 1px 15px #33333347;
 }
 
 @media screen and (min-width: 1600px) {

@@ -13,7 +13,7 @@ timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: lishaoy.net
+url: https://lishaoy.net
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -83,7 +83,7 @@ deploy:
   branch: master
 
 search:
-  path: search.xml
+  path: search.json
   field: post
   format: html
   limit: 10000
@@ -93,26 +93,3 @@ livere_uid: MTAyMC8zNTE3Ni8xMTcxMQ==
 # Extensions
 ## Plugins: http://hexo.io/plugins/
 plugins: hexo-generate-feed
-
-## 加入markdown-it
-# markdown: 'default'
-markdown:
-  render:
-    html: true
-    xhtmlOut: false
-    breaks: false
-    linkify: true
-    typographer: true
-    quotes: '“”‘’'
-  plugins:
-    - markdown-it-footnote
-    - markdown-it-sup
-    - markdown-it-sub
-    - markdown-it-abbr
-    - markdown-it-emoji
-  anchors:
-    level: 2
-    collisionSuffix: 'v'
-    permalink: true
-    permalinkClass: header-anchor
-    permalinkSymbol: ¶
