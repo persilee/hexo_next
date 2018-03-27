@@ -66,6 +66,7 @@
 }
 
 hr {
+    margin: 40px 0;
     border: none;
     background-color: #ccc;
     background-image: repeating-linear-gradient(-45deg, #fff, #fff 2px, transparent 4px, transparent 4px);
@@ -97,6 +98,18 @@ hr {
 .posts-expand .post-body img:not(.full-image) {
     margin: 0 auto;
     box-shadow: 1px 1px 15px #33333347;
+    border: none;
+}
+
+.posts-expand .post-body img[alt=no-shadow] {
+    margin: 0 auto;
+    box-shadow: none
+    border: none;
+}
+
+.post-gallery .post-gallery-img img {
+    box-shadow: none!important;
+    border: none!important;
 }
 
 //修改 code 样式

@@ -21,7 +21,7 @@
 
   <div class="theme-info">
     <div class="powered-by"></div>
-    <span class="post-count">Bolg总字数: {{ totalcount(site) }}字</span>
+    <span class="post-count">Blog总字数: {{ totalcount(site) }}字</span>
   </div>
 </div>
 
