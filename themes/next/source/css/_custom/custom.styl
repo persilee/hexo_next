@@ -112,6 +112,10 @@ hr {
     border: none!important;
 }
 
+.post-gallery {
+    margin: 0 0 30px;
+}
+
 //修改 code 样式
 code {
     color: #d40237e3;
@@ -140,6 +144,32 @@ pre, .highlight {
 //修改 li 为实现圆点
 .posts-expand .post-body ul li {
     list-style: disc;
+}
+
+//div 居中
+
+.per-m-auto {
+    margin: 0 auto;
+    width: 40%;
+}
+
+.per-table {
+    border: none;
+    margin: 0;
+}
+
+.per-table>tbody>tr:nth-of-type(odd){
+    background-color: #fff;
+}
+
+.per-table>tbody>tr>td:first-child{
+    text-align: right;
+}
+
+.per-table td, .per-table th{
+    background-color: #fff;
+    border: none;
+    padding: 1px;
 }
 
 @media screen and (min-width: 1600px) {

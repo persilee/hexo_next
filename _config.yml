@@ -93,3 +93,7 @@ livere_uid: MTAyMC8zNTE3Ni8xMTcxMQ==
 # Extensions
 ## Plugins: http://hexo.io/plugins/
 plugins: hexo-generate-feed
+
+marked:
+  gfm: true
+  breaks: false

@@ -119,7 +119,7 @@ CEF还提供的如下特性：自定义插件、自定义协议、自定义JavaS
 
 - **第一步** 创建 `package.json` 配置文件
 
-``` json
+```vim
 {
     "name": "helloworld",
     "main": "index.html",
@@ -133,7 +133,7 @@ CEF还提供的如下特性：自定义插件、自定义协议、自定义JavaS
 
 - **第二步** 创建 `index.html` 
 
-```vbscript-html
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -174,7 +174,7 @@ CEF还提供的如下特性：自定义插件、自定义协议、自定义JavaS
 
 **Mac打包应用：** 在项目根目录执行以下命令，把所有文件压缩成 `app.nw` 文件。
 
-```
+```vim
 zip -r app.nw *
 ```
 
@@ -205,13 +205,13 @@ your-app/
 
 首先需要安装 **Node** 环境，用 `npm` 来创建一个应用的配置文件 `package.json`
 
-```
+```vim
 npm init
 ```
 
 在 `package.json` 里新增启动命令 `start` 
 
-```
+```vim
 {
     "name": "your-app",
     "version": "0.1.0",
