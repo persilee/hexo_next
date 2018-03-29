@@ -40,6 +40,8 @@ photos:
 
 <!-- more -->
 
+</br>
+
 <img src="shenzhenUuniversity/girlfriends01.JPG" alt="hexo" width="100%" align="center" />
 
 <img src="shenzhenUuniversity/girlfriends02.JPG" alt="hexo" width="100%" align="center" />
