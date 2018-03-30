@@ -13,7 +13,7 @@ comments: true
 photos:
 ---
 
-{% fi shenzhenUuniversity/girlfriends02.JPG %}
+{% fi shenzhenUuniversity/girlfriends02.png %}
 <div class="text-center">
 **悲伤一起哭，欢乐一起笑，好书一起读，好歌一起听……**
 </div>
@@ -42,14 +42,14 @@ photos:
 
 </br>
 
-<img src="shenzhenUuniversity/girlfriends01.JPG" alt="hexo" width="100%" align="center" />
+<img src="shenzhenUuniversity/girlfriends01.png" alt="hexo" width="100%" align="center" />
 
-<img src="shenzhenUuniversity/girlfriends02.JPG" alt="hexo" width="100%" align="center" />
+<img src="shenzhenUuniversity/girlfriends02.png" alt="hexo" width="100%" align="center" />
 
-<img src="shenzhenUuniversity/girlfriends03.JPG" alt="hexo" width="100%" align="center" />
+<img src="shenzhenUuniversity/girlfriends03.png" alt="hexo" width="100%" align="center" />
 
-<img src="shenzhenUuniversity/girlfriends04.JPG" alt="hexo" width="100%" align="center" />
+<img src="shenzhenUuniversity/girlfriends04.png" alt="hexo" width="100%" align="center" />
 
-<img src="shenzhenUuniversity/girlfriends05.JPG" alt="hexo" width="100%" align="center" />
+<img src="shenzhenUuniversity/girlfriends05.png" alt="hexo" width="100%" align="center" />
 
-<img src="shenzhenUuniversity/girlfriends06.JPG" alt="hexo" width="100%" align="center" />
+<img src="shenzhenUuniversity/girlfriends06.png" alt="hexo" width="100%" align="center" />
