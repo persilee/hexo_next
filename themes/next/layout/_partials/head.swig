@@ -1,6 +1,7 @@
 <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="baidu-site-verification" content="7S8EhsCBzP" />
 <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
 <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
 <style>
@@ -32,6 +33,11 @@
   <link href="{{ pace_css_uri }}" rel="stylesheet">
 {% endif %}
 
+{% if page.description %}
+	<meta name="description" content="{{ page.description }}" />
+{% elif theme.description %}
+	<meta name="description" content="{{ theme.description }}" />
+{% endif %}
 
 {% if theme.han %}
   {% set Han_uri = url_for(theme.vendors._internal + '/Han/dist/han.min.css?v=3.3') %}

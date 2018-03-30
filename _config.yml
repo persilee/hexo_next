@@ -4,9 +4,9 @@
 
 # Site
 title: persilee's Blog
-subtitle:
-description: 个人博客
-keywords: 前端;博客;技术;个人;web;node;hexo;next;github;pages
+subtitle: Blog
+description: 前端;博客;技术;个人;摄影;web;node;hexo;next;github;pages
+keywords: 前端;博客;技术;个人;摄影;web;node;hexo;next;github;pages
 author: 李少颖（persilee）
 language: zh-Hans
 timezone:
