@@ -94,8 +94,10 @@ social:
   # LinkLabel: Link
   GitHub: https://github.com/persilee
   Twitter: https://twitter.com/persilee2
-  Weibo: https://weibo.com/u/2757177517
-  知乎: https://www.zhihu.com/people/persilee
+  # Weibo: https://weibo.com/u/2757177517
+  # 知乎: https://www.zhihu.com/people/persilee
+  segmentfault: https://segmentfault.com/u/lishaoy
+  掘金: https://juejin.im/user/58b3d788570c350069747887
   POCO: http://lishaoy.poco.cn
   
 
