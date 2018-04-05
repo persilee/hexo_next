@@ -2,6 +2,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="baidu-site-verification" content="7S8EhsCBzP" />
+<meta name="google-site-verification" content="c7v-UByxWR7Pl8zy2sW85x1mKLtl7kCPtIaZyr-vjsI" />
 <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
 <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
 <style>
