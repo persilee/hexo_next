@@ -304,12 +304,15 @@ font:
   logo:
     external: true
     family: Lobster Two
+    # family: Brush Script MT
     size: 24
 
   # Font settings for <code> and code blocks.
   codes:
     external: true
     family: PT Mono
+    # family: Comic Sans MS
+    # family: Gill Sans
     size:
 
 
@@ -319,9 +322,10 @@ font:
 
 # MathJax Support
 mathjax:
-  enable: false
+  enable: true
   per_page: false
-  cdn: //cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML
+  # cdn: //cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML
+  cdn: //cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML
 
 # Han Support docs: https://hanzi.pro/
 han: false

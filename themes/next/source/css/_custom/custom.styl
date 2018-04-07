@@ -116,6 +116,15 @@ hr {
     margin: 0 0 30px;
 }
 
+kbd {
+    border: 1px solid #333;
+    padding: 4px;
+    border-radius: 4px;
+    background-color: #222;
+    color: #fff;
+    box-shadow: 0 0 2px #222222;
+}
+
 //修改 code 样式
 code {
     color: #d70037;
@@ -125,12 +134,21 @@ code {
 }
 
 .highlight {
-    border-radius: 5px;
+    border-radius: 2px;
     box-shadow: 0 0 3px #222222;
+    margin: 25px -3%;
+}
+
+.highlight td {
+    background-color: #222;
 }
 
 .highlight table {
     margin: 25px;    
+}
+
+.highlight table>tbody>tr:nth-of-type(odd){
+    background-color: #222;
 }
 
 pre, .highlight {
@@ -177,11 +195,35 @@ pre, .highlight {
     padding: 1px;
 }
 
+.post-body .note.success,
+.post-body .note.default,
+.post-body .note.primary,
+.post-body .note.success,
+.post-body .note.info,
+.post-body .note.warning,
+.post-body .note.danger {
+    margin: 25px -3%;
+}
+
 @media screen and (min-width: 1600px) {
     .full-image.full-image.full-image {
         max-width: none;
         width: 107%;
         margin: 25px -3.55%;
+    }
+    .post-body .highlight , table {
+        width: 106%;
+        margin: 25px -3%;
+    }
+
+    .post-body .note.success,
+    .post-body .note.default,
+    .post-body .note.primary,
+    .post-body .note.success,
+    .post-body .note.info,
+    .post-body .note.warning,
+    .post-body .note.danger {
+        margin: 25px -3%;
     }
 } 
 
@@ -189,6 +231,19 @@ pre, .highlight {
     .full-image.full-image.full-image {
         width: 108.5%;
         margin: 25px -4.25%;
+    }
+    .post-body .highlight , table  {
+        width: 108%;
+        margin: 25px -4%;
+    }
+    .post-body .note.success,
+    .post-body .note.default,
+    .post-body .note.primary,
+    .post-body .note.success,
+    .post-body .note.info,
+    .post-body .note.warning,
+    .post-body .note.danger {
+        margin: 25px -4%;
     }
 } 
 //ipad
@@ -200,6 +255,19 @@ pre, .highlight {
     }
     .github-corner {
         display: none;    
+    }
+    .post-body .highlight , table  {
+        width: 108%;
+        margin: 25px -4%;
+    }
+    .post-body .note.success,
+    .post-body .note.default,
+    .post-body .note.primary,
+    .post-body .note.success,
+    .post-body .note.info,
+    .post-body .note.warning,
+    .post-body .note.danger {
+        margin: 25px -4%;
     }
 } 
 
@@ -216,7 +284,41 @@ pre, .highlight {
     .my_post_copyright {
         margin: 3em 0em;
     }
+    .post-body .highlight , table {
+        width: 116%;
+        margin: 25px -8%;
+    }
+    .post-body .note.success,
+    .post-body .note.default,
+    .post-body .note.primary,
+    .post-body .note.success,
+    .post-body .note.info,
+    .post-body .note.warning,
+    .post-body .note.danger {
+        margin: 25px -8%;
+    }
 } 
+
+@media screen and (min-width: 450px) and (max-width: 767px) {
+    .full-image.full-image.full-image {
+        max-width: none;
+        width: 111%;
+        margin: 25px -5.5%;
+    }
+    .post-body .highlight , table {
+        width: 108%;
+        margin: 25px -4%;
+    }
+    .post-body .note.success,
+    .post-body .note.default,
+    .post-body .note.primary,
+    .post-body .note.success,
+    .post-body .note.info,
+    .post-body .note.warning,
+    .post-body .note.danger{
+        margin: 25px -4%;
+    }
+}
 
 // iphone 6/7/8
 @media screen and (min-width: 375px) and (max-width: 413px) {
@@ -231,6 +333,20 @@ pre, .highlight {
     .my_post_copyright {
         margin: 3em 0em;
     }
+    .post-body .highlight , table {
+        width: 118%;
+        margin: 25px -9%;
+    }
+    .post-body .note.success,
+    .post-body .note.default,
+    .post-body .note.primary,
+    .post-body .note.success,
+    .post-body .note.info,
+    .post-body .note.warning,
+    .post-body .note.danger {
+        margin: 25px -9%;
+    }
+        
 } 
 // iphone 5
 @media screen and (max-width: 374px) {
@@ -244,5 +360,18 @@ pre, .highlight {
     }
     .my_post_copyright {
         margin: 3em 0em;
+    }
+    .post-body .highlight , table {
+        width: 123%;
+        margin: 25px -11.5%;
+    }
+    .post-body .note.success,
+    .post-body .note.default,
+    .post-body .note.primary,
+    .post-body .note.success,
+    .post-body .note.info,
+    .post-body .note.warning,
+    .post-body .note.danger {
+        margin: 25px -11.5%;
     }
 } 

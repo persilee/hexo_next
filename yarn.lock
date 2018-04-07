@@ -1231,6 +1231,12 @@ decompress@^3.0.0:
     vinyl-assign "^1.0.1"
     vinyl-fs "^2.2.0"
 
+deep-assign@^2.0.0:
+  version "2.0.0"
+  resolved "http://registry.npm.taobao.org/deep-assign/download/deep-assign-2.0.0.tgz#ebe06b1f07f08dae597620e3dd1622f371a1c572"
+  dependencies:
+    is-obj "^1.0.0"
+
 deep-extend@~0.4.0:
   version "0.4.2"
   resolved "http://registry.npm.taobao.org/deep-extend/download/deep-extend-0.4.2.tgz#48b699c27e334bf89f10892be432f6e4c7d34a7f"
@@ -2521,6 +2527,18 @@ hexo-deployer-git@^0.3.1:
     moment "^2.18.0"
     swig "^1.4.2"
 
+hexo-filter-flowchart@^1.0.4:
+  version "1.0.4"
+  resolved "http://registry.npm.taobao.org/hexo-filter-flowchart/download/hexo-filter-flowchart-1.0.4.tgz#5b213126a02771df260ed0d5c6e04613486f9ccf"
+  dependencies:
+    deep-assign "^2.0.0"
+
+hexo-filter-sequence@^1.0.3:
+  version "1.0.3"
+  resolved "http://registry.npm.taobao.org/hexo-filter-sequence/download/hexo-filter-sequence-1.0.3.tgz#5a0cd2dd47a60a356599cdfa96fa8c4155344ce8"
+  dependencies:
+    deep-assign "^2.0.0"
+
 hexo-front-matter@^0.2.2:
   version "0.2.3"
   resolved "http://registry.npm.taobao.org/hexo-front-matter/download/hexo-front-matter-0.2.3.tgz#c7ca8ef420ea36bd85e8408a2e8c9bf49efa605e"
@@ -2631,7 +2649,7 @@ hexo-renderer-ejs@^0.3.0:
 
 hexo-renderer-marked@^0.3.2:
   version "0.3.2"
-  resolved "https://registry.yarnpkg.com/hexo-renderer-marked/-/hexo-renderer-marked-0.3.2.tgz#d6a37af9ff195e30f9ef6ede1a06ea1fe4322966"
+  resolved "http://registry.npm.taobao.org/hexo-renderer-marked/download/hexo-renderer-marked-0.3.2.tgz#d6a37af9ff195e30f9ef6ede1a06ea1fe4322966"
   dependencies:
     hexo-util "^0.6.2"
     marked "^0.3.9"
@@ -3838,7 +3856,7 @@ markdown@~0.5.0:
 
 marked@^0.3.9:
   version "0.3.19"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-0.3.19.tgz#5d47f709c4c9fc3c216b6d46127280f40b39d790"
+  resolved "http://registry.npm.taobao.org/marked/download/marked-0.3.19.tgz#5d47f709c4c9fc3c216b6d46127280f40b39d790"
 
 match-words@^0.1.0:
   version "0.1.1"
