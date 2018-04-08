@@ -158,15 +158,13 @@ photos:
 
 只要把你的代码块包裹在  <code>\`\`\`</code>  之间，你就不需要通过无休止的缩进来标记代码块了。 在围栏式代码块中，你可以指定一个可选的语言标识符，然后我们就可以为它启用语法着色了。 举个例子，这样可以为一段 `Ruby` 代码着色：
 
-
-```ruby
-```ruby
-require 'redcarpet'
-markdown = Redcarpet.new("Hello World!")
-puts markdown.to_html
-
-```
-
+<code>
+\`\`\`ruby </br>
+require 'redcarpet' </br>
+markdown = Redcarpet.new("Hello World!") </br>
+puts markdown.to_html </br>
+\`\`\`
+</code>
 
 效果如下：
 
@@ -189,7 +187,7 @@ _Coding，让开发更简单_
 ```
 效果如下：
 
-*Coding，让开发更简单*
+*Coding，让开发更简单* </br>
 _Coding，让开发更简单_
 
 加粗：
@@ -200,7 +198,7 @@ __Coding，让开发更简单__
 ```
 效果如下：
 
-**Coding，让开发更简单**
+**Coding，让开发更简单** </br>
 __Coding，让开发更简单__
 
 ---

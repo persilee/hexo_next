@@ -13,7 +13,7 @@ photos:
 
 {% fi IVANAIVAZOVSKY/home.png, IVAN AIVAZOVSKY, IVAN AIVAZOVSKY %}
 
-*在 [awwwards][1] 上发现一个设计和交互超级棒的网页  [ivanaivazovsky.life][2]，整个设计非常简洁大胆，色彩基本只有黑白色，看起来非常舒服，直接看效果吧！* 🏞
+*在 [awwwards][1] 上发现一个设计和交互超级棒的网页  [ivanaivazovsky.life][2]，整个设计非常简洁大胆，色彩基本只有黑白色，看起来非常舒服，直接看效果吧！* 🍷 
 
 ---
 
