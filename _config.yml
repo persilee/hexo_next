@@ -81,8 +81,10 @@ theme: next
 deploy:
 - type: baidu_url_submitter
 - type: git
-  repository: https://github.com/persilee/MyBlog.git
-  branch: master
+  repo:
+    # coding: git@git.coding.net:persilee/MyBlog.git
+    coding: https://git.coding.net/persilee/MyBlog.git
+    github: https://github.com/persilee/MyBlog.git
 
 search:
   path: search.json
