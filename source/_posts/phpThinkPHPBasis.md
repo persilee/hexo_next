@@ -1,5 +1,5 @@
 ---
-title: php && thinkPHP 初识
+title: PHP ThinkPHP 初识
 date: 2018-04-06 15:59:52
 tags:
     - php

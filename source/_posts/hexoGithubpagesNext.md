@@ -1,5 +1,5 @@
 ---
-title: 用 Hexo + Next + GitHubPages 搭建漂亮的免费博客
+title: 用 Hexo Next GitHubPages 搭建漂亮的免费博客
 date: 2018-03-24 20:32:26
 tags:
     - 博客
