@@ -82,9 +82,10 @@ deploy:
 - type: baidu_url_submitter
 - type: git
   repo:
-    # coding: git@git.coding.net:persilee/MyBlog.git
-    coding: https://git.coding.net/persilee/MyBlog.git
     github: https://github.com/persilee/MyBlog.git
+    coding: git@git.coding.net:persilee/MyBlog.git
+    # coding: https://git.coding.net/persilee/MyBlog.git
+    
 
 search:
   path: search.json

@@ -1,4 +1,110 @@
 // Custom styles.
+
+// 修改背景
+body {
+    background-image: url(/images/bg.jpg);
+    background-repeat: repeat;
+    background-attachment: fixed;
+    background-position: 50% 50%;
+}
+
+.posts-expand .post {
+    margin-top: 120px;
+    background: #fff;
+}
+
+section.posts-expand .post {
+    box-shadow: 0 0 30px #ffffff54;
+}
+
+
+.post-block.page , .post-block.page a , .posts-collapse , .posts-collapse a {
+    color: #fff;
+}
+
+posts-collapse .post-title a {
+    color: #aaa;
+}
+
+.header {
+    background: transparent;
+}
+
+.custom-logo-site-title .brand {
+    color: #f6f6f6;
+}
+
+.logo-line-before i, .logo-line-after i {
+    background: #f6f6f6;
+}
+
+.menu .menu-item a {
+    color: #f6f6f6;
+}
+
+.menu .menu-item a:hover {
+    background: #e1e1e1;
+    color: #222;
+}
+
+.pagination {
+    margin: 120px 0 40px;
+    text-align: center;
+    border-top: 1px solid #aaaaaa73;
+}
+
+.pagination .prev, .pagination .next, .pagination .page-number {
+    border-top: 1px solid rgba(170, 170, 170, 0.46);
+}
+
+nav.pagination a:hover {
+    color: #fff;
+    background: #33333396;
+}
+
+.pagination .page-number.current {
+    color: #fff;
+    background: #33333396;
+}
+
+.footer {
+    background: transparent;
+    color: #ccc;
+}
+
+.footer a {
+    border-bottom-color: #555;
+}
+
+.footer a:hover {
+    color: #f5f5f5;
+    border-bottom-color: #f5f5f5;
+}
+
+.sidebar {
+    background: #22222280;
+}
+
+.btn-bar {
+    background: #f6f6f6;
+}
+
+.posts-collapse .post-title a {
+    color: #999;
+}
+
+.posts-collapse .post-title a:hover {
+    color: #f6f6f6;
+}
+
+.posts-collapse .post-header {
+    border-bottom: 1px dashed #555;
+}
+
+.posts-collapse .post-header:hover {
+    border-bottom: 1px dashed #f6f6f6;
+}
+
 // 主页文章添加阴影效果
  .post {
    margin-top: 60px;
@@ -16,6 +122,11 @@
         text-decoration: underline;
     }
 }
+//去掉 button 的 蓝色框
+iframe button:focus {
+    outline: none !important;
+}
+
 //修改 赏 的样式
 #rewardButton {
     box-shadow: 0px 0px 5px 0px #f70543;
@@ -134,8 +245,8 @@ code {
 }
 
 .highlight {
-    border-radius: 2px;
-    box-shadow: 0 0 3px #222222;
+    // border-radius: 2px;
+    box-shadow: 0 0 3px #101010;
     margin: 25px -3%;
 }
 
@@ -208,12 +319,18 @@ pre, .highlight {
 @media screen and (min-width: 1600px) {
     .full-image.full-image.full-image {
         max-width: none;
-        width: 107%;
-        margin: 25px -3.55%;
+        width: 106.6%;
+        margin: 25px -3.3%;
     }
-    .post-body .highlight , .posts-expand .post-body>table {
+
+    .post-body .highlight {
         width: 106%;
-        margin: 25px -3%;
+        margin: 25px -3%;  
+    }
+        
+    .posts-expand .post-body>table {
+        width: 105%;
+        margin: 25px -2.5%;
     }
 
     .post-body .note.success,
@@ -223,7 +340,7 @@ pre, .highlight {
     .post-body .note.info,
     .post-body .note.warning,
     .post-body .note.danger {
-        margin: 25px -3%;
+        margin: 25px -2.9%;
     }
 } 
 
@@ -232,9 +349,14 @@ pre, .highlight {
         width: 108.5%;
         margin: 25px -4.25%;
     }
-    .post-body .highlight , .posts-expand .post-body>table  {
+    .post-body .highlight {
         width: 108%;
-        margin: 25px -4%;
+        margin: 25px -4%;    
+    }
+        
+    .posts-expand .post-body>table  {
+        width: 107%;
+        margin: 25px -3.5%;
     }
     .post-body .note.success,
     .post-body .note.default,
@@ -243,7 +365,11 @@ pre, .highlight {
     .post-body .note.info,
     .post-body .note.warning,
     .post-body .note.danger {
-        margin: 25px -4%;
+        margin: 25px -3.9%;
+    }
+
+    .pagination .prev, .pagination .next, .pagination .page-number {
+        border-bottom: none; 
     }
 } 
 //ipad
@@ -256,9 +382,14 @@ pre, .highlight {
     .github-corner {
         display: none;    
     }
-    .post-body .highlight , .posts-expand .post-body>table  {
+    .post-body .highlight ,{
         width: 108%;
-        margin: 25px -4%;
+        margin: 25px -4%;    
+    }
+        
+    .posts-expand .post-body>table  {
+        width: 107%;
+        margin: 25px -3.5%;
     }
     .post-body .note.success,
     .post-body .note.default,
@@ -267,7 +398,11 @@ pre, .highlight {
     .post-body .note.info,
     .post-body .note.warning,
     .post-body .note.danger {
-        margin: 25px -4%;
+        margin: 25px -3.9%;
+    }
+
+    .pagination .prev, .pagination .next, .pagination .page-number {
+        border-bottom: none; 
     }
 } 
 
@@ -284,9 +419,13 @@ pre, .highlight {
     .my_post_copyright {
         margin: 3em 0em;
     }
-    .post-body .highlight , .posts-expand .post-body>table {
+    .post-body .highlight {
         width: 116%;
         margin: 25px -8%;
+    }
+    .posts-expand .post-body>table {
+        width: 115%;
+        margin: 25px -7.5%;
     }
     .post-body .note.success,
     .post-body .note.default,
@@ -295,7 +434,10 @@ pre, .highlight {
     .post-body .note.info,
     .post-body .note.warning,
     .post-body .note.danger {
-        margin: 25px -8%;
+        margin: 25px -7.9%;
+    }
+    .pagination .prev, .pagination .next, .pagination .page-number {
+        border-bottom: none; 
     }
 } 
 
@@ -316,7 +458,11 @@ pre, .highlight {
     .post-body .note.info,
     .post-body .note.warning,
     .post-body .note.danger{
-        margin: 25px -4%;
+        margin: 25px -3.9%;
+    }
+
+    .pagination .prev, .pagination .next, .pagination .page-number {
+        border-bottom: none; 
     }
 }
 
@@ -333,9 +479,14 @@ pre, .highlight {
     .my_post_copyright {
         margin: 3em 0em;
     }
-    .post-body .highlight , .posts-expand .post-body>table {
+    .post-body .highlight {
         width: 118%;
         margin: 25px -9%;
+    } 
+        
+    .posts-expand .post-body>table {
+        width: 117%;
+        margin: 25px -8.5%;
     }
     .post-body .note.success,
     .post-body .note.default,
@@ -344,7 +495,11 @@ pre, .highlight {
     .post-body .note.info,
     .post-body .note.warning,
     .post-body .note.danger {
-        margin: 25px -9%;
+        margin: 25px -8.9%;
+    }
+
+    .pagination .prev, .pagination .next, .pagination .page-number {
+        border-bottom: none; 
     }
         
 } 
@@ -372,6 +527,10 @@ pre, .highlight {
     .post-body .note.info,
     .post-body .note.warning,
     .post-body .note.danger {
-        margin: 25px -11.5%;
+        margin: 25px -11.4%;
+    }
+
+    .pagination .prev, .pagination .next, .pagination .page-number {
+        border-bottom: none; 
     }
 } 
