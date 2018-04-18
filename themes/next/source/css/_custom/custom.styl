@@ -1,5 +1,87 @@
 // Custom styles.
 
+// links页面样式
+.per-link-page {
+  margin: 20px auto 50px;
+}
+
+.per-link-page hr {
+  background-color: #cccccc1f;
+  background-image: repeating-linear-gradient(-45deg, #ffffff3b, #ffffff33 1px, transparent 4px, transparent 5px);
+}
+
+.per-link-page .instructions {
+  font-size: 13px;
+  color: #ddd;
+}
+
+.per-link-page .per-links {
+    padding: 0;
+    margin: 0 0 80px;
+    text-align: center;
+    overflow: auto;
+    list-style-type: none;
+}
+
+.per-link-page .per-links .per-links-item {
+    padding: 0;
+    margin: 0;
+    width: 280px;
+    list-style: none;
+    color: #f5f5f5;
+    background: #fff0;
+    border: 1px solid rgba(204, 204, 204, 0.2);
+    box-shadow: 0 2px 15px 0 rgba(249, 246, 246, 0.1), 0 3px 10px -2px rgba(247, 244, 244, 0.1), 0 1px 10px 0 rgba(251, 248, 248, 0.1);
+    height: 72px;
+    line-height: 15px;
+    margin: 20px auto;
+    transition: box-shadow .25s;
+}
+
+.per-link-page .per-links .per-links-item:hover {
+    box-shadow: 0 4px 20px 1px rgba(251, 248, 248, 0.2);
+}
+
+.per-link-page .per-links .per-links-item  a {
+    display: block;
+    height: 100%;
+    color: #ddd;
+    text-decoration: none;
+    border: none;
+    position: relative;
+}
+
+.per-link-page .per-links .per-links-title {
+    font-size: 20px;
+    line-height: 50px;
+    margin: 0;
+    padding: 0;
+}
+
+.per-link-page .per-links .per-links-des {
+    margin: 0;
+    margin-left: 72px;
+    margin-right: 5px;
+    padding: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.per-link-page .per-links .per-links-icon {
+    width: 72px;
+    height: 72px;
+    fill: currentColor;
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+    z-index: 1;
+}
+
+blockquote {
+  color: #bbb;
+}
+
 // 修改背景
 body {
     background-image: url(/images/bg.jpg);
@@ -148,13 +230,13 @@ iframe button:focus {
     box-shadow: 0px 0px 15px 0px #fd2d62;
 }
 
-//修改评论框 border 
+//修改评论框 border
 #container .wf-form, #container .popup-quotation .quotation-wf .quotation-text {
     border: 1px solid #bbb;
 }
 
-#container button.wf-write-btn, 
-#container .popup-quotation .quotation-wf-group .quotation-wf-right button.quotation-write-btn, 
+#container button.wf-write-btn,
+#container .popup-quotation .quotation-wf-group .quotation-wf-right button.quotation-write-btn,
 #container button.fake-write-btn {
     background: #222222e0;
 }
@@ -163,13 +245,13 @@ iframe button:focus {
     margin: 4em 1.5em;
 }
 
-//修改 tags 
+//修改 tags
 .posts-expand .post-tags a {
     margin: 3px 1px 0;
     border-radius: 2px;
 }
 
-//修改 归档 
+//修改 归档
 .posts-collapse .post.post-type-normal {
     box-shadow: 0 0 5px rgba(202, 203, 203, 0);
     webkit-box-shadow: 0 0 5px rgba(202, 203, 203, 0);
@@ -255,7 +337,7 @@ code {
 }
 
 .highlight table {
-    margin: 25px;    
+    margin: 25px;
 }
 
 .highlight table>tbody>tr:nth-of-type(odd){
@@ -325,9 +407,9 @@ pre, .highlight {
 
     .post-body .highlight {
         width: 106%;
-        margin: 25px -3%;  
+        margin: 25px -3%;
     }
-        
+
     .posts-expand .post-body>table {
         width: 105%;
         margin: 25px -2.5%;
@@ -342,7 +424,7 @@ pre, .highlight {
     .post-body .note.danger {
         margin: 25px -2.9%;
     }
-} 
+}
 
 @media screen and (min-width: 992px) and (max-width: 1599px) {
     .full-image.full-image.full-image {
@@ -351,9 +433,9 @@ pre, .highlight {
     }
     .post-body .highlight {
         width: 108%;
-        margin: 25px -4%;    
+        margin: 25px -4%;
     }
-        
+
     .posts-expand .post-body>table  {
         width: 107%;
         margin: 25px -3.5%;
@@ -369,9 +451,9 @@ pre, .highlight {
     }
 
     .pagination .prev, .pagination .next, .pagination .page-number {
-        border-bottom: none; 
+        border-bottom: none;
     }
-} 
+}
 //ipad
 @media screen and (min-width: 768px) and (max-width: 991px) {
     .full-image.full-image.full-image {
@@ -380,13 +462,13 @@ pre, .highlight {
         margin: 25px -4.5%;
     }
     .github-corner {
-        display: none;    
+        display: none;
     }
     .post-body .highlight ,{
         width: 108%;
-        margin: 25px -4%;    
+        margin: 25px -4%;
     }
-        
+
     .posts-expand .post-body>table  {
         width: 107%;
         margin: 25px -3.5%;
@@ -402,9 +484,9 @@ pre, .highlight {
     }
 
     .pagination .prev, .pagination .next, .pagination .page-number {
-        border-bottom: none; 
+        border-bottom: none;
     }
-} 
+}
 
 // iphone 6/7/8..puls
 @media screen and (min-width: 414px) and (max-width: 767px) {
@@ -414,7 +496,7 @@ pre, .highlight {
         margin: 25px -8.5%;
     }
     .github-corner {
-        display: none;    
+        display: none;
     }
     .my_post_copyright {
         margin: 3em 0em;
@@ -437,9 +519,9 @@ pre, .highlight {
         margin: 25px -7.9%;
     }
     .pagination .prev, .pagination .next, .pagination .page-number {
-        border-bottom: none; 
+        border-bottom: none;
     }
-} 
+}
 
 @media screen and (min-width: 450px) and (max-width: 767px) {
     .full-image.full-image.full-image {
@@ -462,7 +544,7 @@ pre, .highlight {
     }
 
     .pagination .prev, .pagination .next, .pagination .page-number {
-        border-bottom: none; 
+        border-bottom: none;
     }
 }
 
@@ -482,8 +564,8 @@ pre, .highlight {
     .post-body .highlight {
         width: 118%;
         margin: 25px -9%;
-    } 
-        
+    }
+
     .posts-expand .post-body>table {
         width: 117%;
         margin: 25px -8.5%;
@@ -499,10 +581,10 @@ pre, .highlight {
     }
 
     .pagination .prev, .pagination .next, .pagination .page-number {
-        border-bottom: none; 
+        border-bottom: none;
     }
-        
-} 
+
+}
 // iphone 5
 @media screen and (max-width: 374px) {
     .full-image.full-image.full-image {
@@ -531,6 +613,6 @@ pre, .highlight {
     }
 
     .pagination .prev, .pagination .next, .pagination .page-number {
-        border-bottom: none; 
+        border-bottom: none;
     }
-} 
+}

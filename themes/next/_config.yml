@@ -47,8 +47,9 @@ index_with_subtitle: false
 # When running the site in a subdirectory (e.g. domain.tld/blog), remove the leading slash (/archives -> archives)
 menu:
   home: /
-  categories: /categories/
+  links: /links/
   about: /about/
+  categories: /categories/
   archives: /archives/
   tags: /tags/
   # sitemap: /sitemap.xml
@@ -70,6 +71,7 @@ menu_icons:
   archives: archive
   sitemap: sitemap
   commonweal: heartbeat
+  links: link
 
 
 # ---------------------------------------------------------------
@@ -100,7 +102,7 @@ social:
   掘金: https://juejin.im/user/58b3d788570c350069747887
   简书: https://www.jianshu.com/u/8a1ceccf9714
   POCO: http://lishaoy.poco.cn
-  
+
 
 
 # Social Links Icons
@@ -126,7 +128,7 @@ social_icons:
   StackOverflow: stack-overflow
   Weibo: weibo
   微博: weibo
-  wechat: wechat 
+  wechat: wechat
   QQ: qq
 
 # Blog rolls
@@ -182,7 +184,7 @@ sidebar:
 
   # Scroll percent label in b2t button
   scrollpercent: false
-  
+
   # Enable sidebar on narrow view
   onmobile: false
 

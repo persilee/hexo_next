@@ -12,12 +12,12 @@
 <div class="powered-by">
   <i class="fa fa-users fa-fw"></i>
   <span id="busuanzi_container_site_uv">
-    本站访客数: <span id="busuanzi_value_site_uv"></span>
+    终于等到你: <span id="busuanzi_value_site_uv"></span>
   </span>
   &nbsp;&nbsp;|&nbsp;&nbsp;
   <i class="fa fa-bar-chart-o fa-fw"></i>
   <span id="busuanzi_container_site_pv">
-    本站总访问量: <span id="busuanzi_value_site_pv"></span>次
+    客观！欢迎再来哟: <span id="busuanzi_value_site_pv"></span>次
   </span>
 
   <div class="theme-info">
@@ -25,10 +25,6 @@
     <span class="post-count">Blog总字数: {{ totalcount(site) }}字</span>
   </div>
 </div>
-
-<script>
-  $('div[id^="sequence"]>svg').css('width','100%');
-</script>
 
 <!--
 {% if theme.copyright %}
