@@ -24,6 +24,13 @@ copyright: true
                 <p class="per-links-des">心，若没有栖息的地方，到哪里都是流浪......</p>
             </a>
         </li>
+        <li class="per-links-item">
+                <a href="https://togln.com" class="group-picture" title="同良小栈" target="_blank">
+                <img class="per-links-icon" src="https://togln.com/tx.jpg" alt="">
+                <h3 class="per-links-title">同良小栈</h3>
+                <p class="per-links-des">使人成熟的是经历，而不是岁月！</p>
+            </a>
+        </li>
     </ul>
 
 <hr> 
