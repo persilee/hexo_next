@@ -99,8 +99,15 @@
     .no-post.v *{
       color: #ddd;
     }
+    .v .vbtn {
+      background: #fbfbfb;
+      padding: .3rem 1.2em;
+    }
     .no-post.v .vbtn {
-      color: #313131;
+      background: #2222220a;
+    }
+    .no-post.v .vbtn:active, .no-post.v .vbtn:hover {
+      background-color: #fff;
     }
     .no-post.v .vwrap {
       border: 1px solid #f0f0f0a3;
@@ -108,9 +115,16 @@
     .v a {
       color: #ddd;
     }
+    .v .vlist .vcard .vhead .vsys {
+      padding: .1rem .3rem;
+      background: #dddddd1c;
+      color: #aaa;
+      border: 1px solid #dddddd59;
+    }
     .no-post.v .vlist .vcard .vhead .vsys {
       background: #ededed1f;
       color: #808080;
+      padding: .1rem .3rem;
     }
     .no-post.v .vlist .vcard section {
     border-bottom: 1px dashed #f5f5f55e;

@@ -9,12 +9,11 @@
       return GUEST.indexOf(item)>-1;
     });
     new Valine({
+        av: AV,
         el: '#comments' ,
         appId: '{{ theme.valine_modify.appid }}',
         appKey: '{{ theme.valine_modify.appkey }}',
         placeholder: '{{ theme.valine_modify.placeholder }}',
-        notify: true,
-        verify: false,
         avatar: 'monsterid'
     });
   </script>
