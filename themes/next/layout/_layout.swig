@@ -34,7 +34,12 @@
             {% block content %}{% endblock %}
           </div>
           {% include '_third-party/duoshuo-hot-articles.swig' %}
-          {% include '_partials/comments.swig' %}
+
+          {% if page.type != 'links' %}
+            {% include '_partials/comments.swig' %}
+          {% elseif page.type == 'links' %}
+            {% include '_partials/comments_no_post.swig' %}
+          {% endif %}
         </div>
         {% if theme.sidebar.display !== 'remove' %}
           {% block sidebar %}{% endblock %}
@@ -83,8 +88,42 @@
   {% include '_third-party/exturl.swig' %}
   <!-- 页面点击小红心 -->
   <script type="text/javascript" src="/js/src/love.js"></script>
-  <!-- 背景动画 
+  <!-- 背景动画
   <script type="text/javascript" src="/js/src/particle.js"></script>
   -->
+
+  <style>
+    .no-post.comments .comments.no-post {
+      background: transparent;
+    }
+    .no-post.v *{
+      color: #ddd;
+    }
+    .no-post.v .vbtn {
+      color: #313131;
+    }
+    .no-post.v .vwrap {
+      border: 1px solid #f0f0f0a3;
+    }
+    .v a {
+      color: #ddd;
+    }
+    .no-post.v .vlist .vcard .vhead .vsys {
+      background: #ededed1f;
+      color: #808080;
+    }
+    .no-post.v .vlist .vcard section {
+    border-bottom: 1px dashed #f5f5f55e;
+    }
+    .no-post.v .vwrap .vheader .vinput::-webkit-input-placeholder {
+      color: #808080;
+    }
+    .no-post.v .vwrap .vheader .vinput:-ms-input-placeholder{  /* Internet Explorer 10-11 */
+      color: #808080;
+    }
+    .v .txt-right {
+      display: none;
+    }
+</style>
 </body>
 </html>

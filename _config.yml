@@ -52,7 +52,7 @@ highlight:
 index_generator:
   path: ''
   per_page: 10
-  order_by: -date
+  order_by: -updated
 
 # Category & Tag
 default_category: uncategorized
@@ -92,8 +92,6 @@ search:
   field: post
   format: html
   limit: 10000
-
-livere_uid: MTAyMC8zNTE3Ni8xMTcxMQ==
 
 baidu_url_submit:
   count: 100 # 提交最新的一个链接

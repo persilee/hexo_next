@@ -1,10 +1,32 @@
 // Custom styles.
 
 
+//评论样式
+.content-wrap .comments {
+  margin: 0;
+}
+
+.content-wrap .comments  .comments {
+  background: #fff;
+  border-radius: 4px;
+  padding: 5px;
+}
+
+.comments .comments.no-post {
+  background: transparent !important;
+}
+.comments .comments.no-post .v {
+  color: #ddd !important;
+}
+
+.comments .comments.no-post .v .vwrap {
+  border: 1px solid #f0f0f0a3;
+}
+
 ::selection {
-    background: #00a77bde;
-    color: #ffffff;
-    font-weight: bold;
+  background: #00a77bde;
+  color: #ffffff;
+  font-weight: bold;
 }
 
 // links页面样式
@@ -100,10 +122,12 @@ body {
 .posts-expand .post {
     margin-top: 120px;
     background: #fff;
+    border-radius: 4px;
 }
 
 section.posts-expand .post {
     box-shadow: 0 0 30px #ffffff54;
+    border-radius: 4px;
 }
 
 

@@ -6354,6 +6354,10 @@ validate-npm-package-name@^3.0.0, validate-npm-package-name@~3.0.0:
   dependencies:
     builtins "^1.0.3"
 
+valine@^1.1.9-beta9:
+  version "1.1.9-beta9"
+  resolved "http://registry.npm.taobao.org/valine/download/valine-1.1.9-beta9.tgz#1da3751bee89994b72f63032d9f5b3581ddbcda8"
+
 vary@~1.1.2:
   version "1.1.2"
   resolved "http://registry.npm.taobao.org/vary/download/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"

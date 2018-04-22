@@ -9,7 +9,7 @@ tags:
     - 桌面应用
 categories: Node
 copyright: true
-top: 1
+top: 104
 comments: true
 photos:
     - "https://yoshikiito.net/blog/wp-content/uploads/2016/09/electorn-logo.png"
@@ -17,6 +17,8 @@ photos:
 ---
 
 最近研究了一下基于 `Chromium` 定制浏览器的方案，查阅了大量资料，具体方案也有了大概的蓝图 😉 
+
+----
 
 <!-- more -->
 

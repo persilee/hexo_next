@@ -689,5 +689,11 @@ images: images
 passage_end_tag:
   enabled: true
 
+valine_modify:
+  enable: true
+  appid: 'aYLp6FBYzOGMYTUMR9qtvO3G-gzGzoHsz'
+  appkey: 'LQGYiMkEyJ6VYOba5K0LvduD'
+  placeholder: 客官，留个言呗!
+
 # Theme version
 version: 5.1.2
