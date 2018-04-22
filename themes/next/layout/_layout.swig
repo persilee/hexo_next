@@ -112,7 +112,7 @@
     .no-post.v .vwrap {
       border: 1px solid #f0f0f0a3;
     }
-    .v a {
+    .no-post.v a {
       color: #ddd;
     }
     .v .vlist .vcard .vhead .vsys {
