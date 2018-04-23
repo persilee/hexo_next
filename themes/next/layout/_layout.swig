@@ -1,5 +1,28 @@
 <!DOCTYPE html>
 
+<!--
+                           _ooOoo_
+                          o8888888o
+                          88" . "88
+                          (| -_- |)
+                          O\  =  /O
+                       ____/`---'\____
+                     .'  \\|     |//  `.
+                    /  \\|||  :  |||//  \
+                   /  _||||| -:- |||||-  \
+                   |   | \\\  -  /// |   |
+                   | \_|  ''\---/''  |   |
+                   \  .-\__  `-`  ___/-. /
+                 ___`. .'  /--.--\  `. . __
+              ."" '<  `.___\_<|>_/___.'  >'"".
+             | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+             \  \ `-.   \_ __\ /__ _/   .-` /  /
+        ======`-.____`-.___\_____/___.-`____.-'======
+                           `=---='
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                 佛祖保佑       永无BUG  By:- lishaoy.net
+-->
+
 {% set html_class = 'theme-next ' + theme.scheme %}
 {% if theme.use_motion %}
   {% set html_class = html_class + ' use-motion' %}
@@ -91,6 +114,8 @@
   <!-- 背景动画
   <script type="text/javascript" src="/js/src/particle.js"></script>
   -->
+   <!-- 自己的脚本 -->
+  <script type="text/javascript" src="/js/src/persilee.js"></script>
 
   <style>
     .no-post.comments .comments.no-post {
