@@ -14,7 +14,7 @@
         appId: '{{ theme.valine_modify.appid }}',
         appKey: '{{ theme.valine_modify.appkey }}',
         placeholder: '{{ theme.valine_modify.placeholder }}',
-        avatar: 'monsterid'
+        avatar: 'retro'
     });
   </script>
 {% endif %}

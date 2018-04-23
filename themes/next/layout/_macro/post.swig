@@ -67,10 +67,10 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               {% if theme.post_meta.item_text %}
-                <span class="post-meta-item-text">{{ __('post.posted') }}</span>
+                <span class="post-meta-item-text">{{ __('post.modified') }}</span>
               {% endif %}
-              <time title="{{ __('post.created') }}" itemprop="dateCreated datePublished" datetime="{{ moment(post.date).format() }}">
-                {{ date(post.date, config.date_format) }}
+              <time title="{{ __('post.modified') }}" itemprop="dateCreated datePublished" datetime="{{ moment(post.updated).format() }}">
+                {{ date(post.updated, config.date_format) }}
               </time>
             {% endif %}
 
