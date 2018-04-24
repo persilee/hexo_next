@@ -693,7 +693,7 @@ valine_modify:
   enable: true
   appid: 'aYLp6FBYzOGMYTUMR9qtvO3G-gzGzoHsz'
   appkey: 'LQGYiMkEyJ6VYOba5K0LvduD'
-  placeholder: 留个言呗 ：）（填写邮箱，会收到邮件通知）
+  placeholder: 留个言呗 📝  填写邮箱，会收到邮件提醒 ：）
 
 # Theme version
 version: 5.1.2
