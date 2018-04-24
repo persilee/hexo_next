@@ -145,11 +145,17 @@
       background: #dddddd1c;
       color: #aaa;
       border: 1px solid #dddddd59;
+      padding: 1px 5px;
+      font-size: 12px;
+      line-height: 1.4;
     }
+
     .no-post.v .vlist .vcard .vhead .vsys {
       background: #ededed1f;
       color: #808080;
-      padding: .1rem .3rem;
+      padding: 1px 5px;
+      font-size: 12px;
+      line-height: 1.4;
     }
     .no-post.v .vlist .vcard section {
     border-bottom: 1px dashed #f5f5f55e;

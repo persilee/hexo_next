@@ -32,13 +32,6 @@ copyright: true
             </a>
         </li>
         <li class="per-links-item">
-                <a href="https://smohan.net" class="group-picture" title="水墨寒的博客" target="_blank">
-                <img class="per-links-icon" src="https://secure.gravatar.com/avatar/85356416ea5399c0dc1ea9fd354b1c8e?s=100" alt="">
-                <h3 class="per-links-title">水墨寒的博客</h3>
-                <p class="per-links-des">水墨寒，90后双鱼座普通男青年！毕业于成都一所普通大学的电子信息专业，思维欠发达，差点迷失于错综复杂的电路与多维空间信号中……遂改行，从事于WEB前端开发。喜欢敲代码的感觉，相信编程是一门艺术</p>
-            </a>
-        </li>
-        <li class="per-links-item">
                 <a href="https://sanqiu.org" class="group-picture" title="三秋" target="_blank">
                 <img class="per-links-icon" src="https://sanqiu.org/s/tupian/sanqiu.gif" alt="">
                 <h3 class="per-links-title">三秋</h3>
@@ -50,6 +43,41 @@ copyright: true
                 <img class="per-links-icon" src="https://lolili.cc/static/images/default/head.png" alt="">
                 <h3 class="per-links-title">洛哩哩~</h3>
                 <p class="per-links-des">只要你能幸福，我是谁，又有什么关系？记不记得住，又有什么关系啊！</p>
+            </a>
+        </li>
+        <li class="per-links-item">
+                <a href="https://tongtaos.com" class="group-picture" title="Mr. 童的博客" target="_blank">
+                <img class="per-links-icon" src="https://i.loli.net/2017/10/17/59e6226c8c570.jpg" alt="">
+                <h3 class="per-links-title">Mr. 童的博客</h3>
+                <p class="per-links-des">Mr.童的博客｜这是我的人生</p>
+            </a>
+        </li>
+        <li class="per-links-item">
+                <a href="https://kotori.love" class="group-picture" title="空樱酱" target="_blank">
+                <img class="per-links-icon" src="https://kotori.love/usr/themes/default/assets/img/default-avatar.jpg" alt="">
+                <h3 class="per-links-title">空樱酱</h3>
+                <p class="per-links-des">やかみ そら </p>
+            </a>
+        </li>
+        <li class="per-links-item">
+                <a href="http://xiaowiba.com" class="group-picture" title="小 xiǎo 尾 wěi 巴 bā" target="_blank">
+                <img class="per-links-icon" src="http://xiaowiba.com/xwb.jpg" alt="">
+                <h3 class="per-links-title">小 xiǎo 尾 wěi 巴 bā</h3>
+                <p class="per-links-des">一个漫步前行在代码路上的小白。</p>
+            </a>
+        </li>
+        <li class="per-links-item">
+                <a href="https://blog.thkira.com/" class="group-picture" title="兰陵の记事簿" target="_blank">
+                <img class="per-links-icon" src="https://blog.thkira.com/head.jpg" alt="">
+                <h3 class="per-links-title">兰陵の记事簿</h3>
+                <p class="per-links-des">Tech Otakus Save The World</p>
+            </a>
+        </li>
+        <li class="per-links-item">
+                <a href="http://godweiyang.com/" class="group-picture" title="WeiYang Bolg" target="_blank">
+                <img class="per-links-icon" src="http://godweiyang.com/img/ironman-draw.png" alt="">
+                <h3 class="per-links-title">WeiYang Bolg</h3>
+                <p class="per-links-des">自然语言处理与深度学习</p>
             </a>
         </li>
     </ul>
