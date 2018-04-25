@@ -1,7 +1,68 @@
 // Custom styles.
 
 
+//修改 边距
+
+.main {
+    margin-top: 150px;
+}
+
+//固定 header
+.header {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    top: 0;
+    transition: all .3s ease-in-out;
+    -moz-transition: all .3s ease-in-out;
+    -webkit-transition: all .3s ease-in-out;
+    -o-transition: all .3s;
+    z-index: 99;
+}
+.github-corner {
+    position: fixed;
+    left: 0;
+    top: 1px;
+    z-index: 100;
+}
+
+
+.header.light-header {
+    background: #87daffe3;
+    box-shadow: 0.06rem 0.06rem 0.1rem #87daff, -0.06rem 0 0.06rem #87daff;
+}
+
+.header-has-sidebar {
+  width: calc(100% - 320px);
+}
+
+//页面进度条样式
+#load {
+    background-color: #333;
+    box-shadow: 0 0 5px #222;
+    height: 2px;
+    border-radius: 2px;
+    width: 0px;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    z-index: 9999;
+}
+
 //评论样式
+
+.v .vlist .vcard .vhead .bozhu {
+    font-size: 12px;
+    margin-right: 10px;
+    color: #fff;
+    background: #78c3e5;
+    border-radius: 2px;
+    padding: 0 3px;
+    box-shadow: 0 0 7px #78c3e5;
+    border: 1px solid #f6f6f629;
+    font-weight: bold;
+}
+
 .content-wrap .comments {
   margin: 0;
 }
@@ -115,9 +176,17 @@ blockquote {
 body {
     background-image: url(/images/bg.jpg);
     background-repeat: repeat;
-    background-attachment: fixed;
-    background-position: 50% 50%;
+    // background-attachment: fixed;
+    // background-position: 50% 50%;
 }
+
+// body {
+//     background-image: url(/images/back.jpg);
+//     background-position: center center;
+//     background-size: cover;
+//     background-repeat: no-repeat;
+//     background-attachment: fixed;
+// }
 
 .posts-expand .post {
     margin-top: 120px;
@@ -143,19 +212,42 @@ posts-collapse .post-title a {
     background: transparent;
 }
 
-.custom-logo-site-title .brand {
+.header.dark .custom-logo-site-title .brand {
     color: #f6f6f6;
 }
 
-.logo-line-before i, .logo-line-after i {
+.header.dark .logo-line-before i, .header.dark .logo-line-after i {
     background: #f6f6f6;
 }
 
+
 .menu .menu-item a {
-    color: #f6f6f6;
+  font-size: 15px;
+  font-weight: bold;
 }
 
 .menu .menu-item a:hover {
+    background: #222222e0;
+    color: #fff;
+}
+
+.menu .menu-item.menu-item-active a {
+  background: #222222e0;
+  color: #fff;
+}
+
+.header.dark .menu .menu-item a {
+    color: #f6f6f6;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.header.dark .menu .menu-item a:hover {
+    background: #e1e1e1;
+    color: #222;
+}
+
+.header.dark .menu .menu-item.menu-item-active a {
     background: #e1e1e1;
     color: #222;
 }
@@ -464,6 +556,9 @@ pre, .highlight {
 
 // iPad pro
 @media screen and (min-width: 992px) and (max-width: 1599px) {
+    .container .header-inner {
+        width: 900px;
+    }
     .full-image.full-image.full-image {
         width: 108.55%;
         margin: 25px -4.28%;
@@ -530,6 +625,10 @@ pre, .highlight {
 
     .per-link-page .per-links .per-links-item {
       margin: 20px 30px;
+    }
+
+    .menu .menu-item a , .header.dark .menu .menu-item a {
+      font-size: 12px;
     }
 }
 

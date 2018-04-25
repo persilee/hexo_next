@@ -109,11 +109,17 @@
   {% include '_third-party/mathjax.swig' %}
   {% include '_third-party/scroll-cookie.swig' %}
   {% include '_third-party/exturl.swig' %}
+
+  <div id="load" style=""></div>
   <!-- 页面点击小红心 -->
   <script type="text/javascript" src="/js/src/love.js"></script>
   <!-- 背景动画
   <script type="text/javascript" src="/js/src/particle.js"></script>
   -->
+
+   <!-- 输入爆炸效果来自 http://xiaowiba.com （小尾巴） 如有侵权，请通知我撤销 -->
+  <script type="text/javascript" src="/js/src/activate-power-mode.js"></script>
+
    <!-- 自己的脚本 -->
   <script type="text/javascript" src="/js/src/persilee.js"></script>
 
@@ -159,8 +165,13 @@
     }
 
     .v .vlist .vcard .vcontent a {
-      color: #66cc66e6;
-      border-bottom-color: #66cc6687;
+      color: #86dbff;
+      border-bottom-color: #86dbff99;
+    }
+
+    .v .vlist .vcard .vcontent a:hover {
+        color: #d7191a;
+        border-bottom-color: #222;
     }
 
     .no-post.v .vlist .vcard section {
