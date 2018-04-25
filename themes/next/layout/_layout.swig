@@ -140,8 +140,8 @@
     .no-post.v a {
       color: #ddd;
     }
+
     .v .vlist .vcard .vhead .vsys {
-      padding: .1rem .3rem;
       background: #dddddd1c;
       color: #aaa;
       border: 1px solid #dddddd59;
@@ -150,13 +150,19 @@
       line-height: 1.4;
     }
 
-    .no-post.v .vlist .vcard .vhead .vsys {
+    .no-post.v .vlist .vcard .vhead .vsys{
       background: #ededed1f;
       color: #808080;
       padding: 1px 5px;
       font-size: 12px;
       line-height: 1.4;
     }
+
+    .v .vlist .vcard .vcontent a {
+      color: #66cc66e6;
+      border-bottom-color: #66cc6687;
+    }
+
     .no-post.v .vlist .vcard section {
     border-bottom: 1px dashed #f5f5f55e;
     }
@@ -168,6 +174,13 @@
     }
     .v .txt-right {
       display: none;
+    }
+
+    .v .vlist .vcard .vcontent .code, .v .vlist .vcard .vcontent code, .v .vlist .vcard .vcontent pre {
+        color: #d70037;
+        background: #fbf0f0;
+        border-radius: 2px;
+        box-shadow: 0 0 2px #fdb9b9;
     }
 </style>
 </body>

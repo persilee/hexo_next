@@ -54,7 +54,7 @@ copyright: true
         </li>
         <li class="per-links-item">
                 <a href="https://kotori.love" class="group-picture" title="空樱酱" target="_blank">
-                <img class="per-links-icon" src="https://kotori.love/usr/themes/default/assets/img/default-avatar.jpg" alt="">
+                <img class="per-links-icon" src="https://secure.gravatar.com/avatar/06a2950d128ec9faf155e28d9e889baa?s=100&r=G" alt="">
                 <h3 class="per-links-title">空樱酱</h3>
                 <p class="per-links-des">やかみ そら </p>
             </a>
@@ -67,17 +67,24 @@ copyright: true
             </a>
         </li>
         <li class="per-links-item">
-                <a href="https://blog.thkira.com/" class="group-picture" title="兰陵の记事簿" target="_blank">
+                <a href="https://blog.thkira.com" class="group-picture" title="兰陵の记事簿" target="_blank">
                 <img class="per-links-icon" src="https://blog.thkira.com/head.jpg" alt="">
                 <h3 class="per-links-title">兰陵の记事簿</h3>
                 <p class="per-links-des">Tech Otakus Save The World</p>
             </a>
         </li>
         <li class="per-links-item">
-                <a href="http://godweiyang.com/" class="group-picture" title="WeiYang Bolg" target="_blank">
+                <a href="http://godweiyang.com" class="group-picture" title="WeiYang Bolg" target="_blank">
                 <img class="per-links-icon" src="http://godweiyang.com/img/ironman-draw.png" alt="">
                 <h3 class="per-links-title">WeiYang Bolg</h3>
                 <p class="per-links-des">自然语言处理与深度学习</p>
+            </a>
+        </li>
+        <li class="per-links-item">
+                <a href="https://www.dreamwings.cn" class="group-picture" title="千千" target="_blank">
+                <img class="per-links-icon" src="https://secure.gravatar.com/avatar/806e52a2e2b9ff4bd2c23140df75cc1f?s=50&d=identicon&r=g" alt="">
+                <h3 class="per-links-title">千千</h3>
+                <p class="per-links-des">继续踏上旅途，在没有你的春天……</p>
             </a>
         </li>
     </ul>
