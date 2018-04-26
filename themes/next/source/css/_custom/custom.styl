@@ -4,7 +4,7 @@
 //修改 边距
 
 .main {
-    margin-top: 150px;
+    margin-top: 100px;
 }
 
 //固定 header
@@ -25,7 +25,9 @@
     top: 1px;
     z-index: 100;
 }
-
+.header-inner {
+    padding: 8px 0;
+}
 
 .header.light-header {
     background: #87daffe3;
@@ -34,6 +36,49 @@
 
 .header-has-sidebar {
   width: calc(100% - 320px);
+}
+
+.slideOutUp {
+    -webkit-animation-name: slideOutUp;
+    animation-name: slideOutUp;
+}
+
+.slideInDown {
+    -webkit-animation-name: slideInDown;
+    animation-name: slideInDown;
+}
+
+.animated {
+    -webkit-animation-duration: 0.5s;
+    animation-duration: 0.5s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+@keyframes slideOutUp{
+  0% {
+      -webkit-transform: translate3d(0,0,0);
+      transform: translate3d(0,0,0);
+  }
+
+  100% {
+      visibility: hidden;
+      -webkit-transform: translate3d(0,-100%,0);
+      transform: translate3d(0,-100%,0);
+  }
+}
+
+@keyframes slideInDown{
+  0% {
+      -webkit-transform: translate3d(0,-100%,0);
+      transform: translate3d(0,-100%,0);
+      visibility: visible;
+  }
+
+  100% {
+      -webkit-transform: translate3d(0,0,0);
+      transform: translate3d(0,0,0);
+  }
 }
 
 //页面进度条样式
@@ -220,9 +265,12 @@ posts-collapse .post-title a {
     background: #f6f6f6;
 }
 
+.menu {
+    margin: 8px 8px;
+}
 
 .menu .menu-item a {
-  font-size: 15px;
+  font-size: 13px;
   font-weight: bold;
 }
 
@@ -232,13 +280,13 @@ posts-collapse .post-title a {
 }
 
 .menu .menu-item.menu-item-active a {
-  background: #222222e0;
+  background: rgba(34, 34, 34, 0.86);
   color: #fff;
 }
 
 .header.dark .menu .menu-item a {
     color: #f6f6f6;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: bold;
 }
 
@@ -248,7 +296,7 @@ posts-collapse .post-title a {
 }
 
 .header.dark .menu .menu-item.menu-item-active a {
-    background: #e1e1e1;
+    background: rgba(255, 255, 255, 0.83);
     color: #222;
 }
 
@@ -712,6 +760,20 @@ pre, .highlight {
     .content-wrap .comments {
       margin: 20px 20px 0;
     }
+    .header-inner {
+        margin-bottom: 0px;
+    }
+}
+
+@media (max-width: 767px){
+  .header-inner {
+      margin-bottom: 0px;
+  }
+
+  .header.dark .site-nav {
+      background: #333333d4;
+      padding-bottom: 2px;
+  }
 }
 
 // iphone 6/7/8
