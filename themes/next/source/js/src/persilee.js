@@ -1,7 +1,7 @@
 $(function () {
 
-   // 调整 github logo 大小
-   $('.github-corner svg').width(60).height(60);
+  // 调整 github logo 大小
+  $('.github-corner svg').width(60).height(60);
 
   POWERMODE.colorful = true; // ture 为启用礼花特效
   POWERMODE.shake = false; // false 为禁用震动特效
@@ -9,23 +9,26 @@ $(function () {
 
   //让 header 适应 暗色 背景
   $('#header').addClass('dark').addClass('animated');
-  $('.sidebar-toggle').on('click',function(){
-      $('#header').toggleClass('header-has-sidebar');
+  $('.sidebar-toggle').on('click', function () {
+    $('#header').toggleClass('header-has-sidebar');
   });
 
   // 鼠标往上滚动 隐藏 header , 鼠标往下滚动 显示 header
-  $(document).on("mousewheel DOMMouseScroll", function (e) {
-    var delta = (e.originalEvent.wheelDelta && (e.originalEvent.wheelDelta > 0 ? 1 : -1)) ||  // chrome & ie
-      (e.originalEvent.detail && (e.originalEvent.detail > 0 ? -1 : 1));              // firefox
-    if (delta > 0) {
-      // 向上滚
-      $('#header').removeClass('slideOutUp').addClass('slideInDown');
-    } else if (delta < 0) {
-      // 向下滚
+  var p = 0,
+      t = 0;
+  $(document).on("scroll", function (e) {
+    p = $(this).scrollTop();
+
+    if (t <= p) { //下滚
       if ($(window).scrollTop() > 10) {
-          $('#header').addClass('slideOutUp').removeClass('slideInDown');
+        $('#header').addClass('slideOutUp').removeClass('slideInDown');
       }
+    } else { //上滚
+      $('#header').removeClass('slideOutUp').addClass('slideInDown');
     }
+    setTimeout(function () {
+      t = p;
+    }, 0);
   });
 
   // 给页面新增滚动进度条
@@ -36,7 +39,11 @@ $(function () {
     var max_scroll = document_height - window_height;
     var scroll_percentage = scroll_so_far / (max_scroll / 102);
     $('#load').width(scroll_percentage + '%');
-
+    if (scroll_percentage >= 100){
+      $('#load').hide();
+    }else{
+      $('#load').show();
+    }
     var document_width = $(document).width();
     if (scroll_so_far > 5) {
       $('#header').addClass('light-header').removeClass('dark');
@@ -49,29 +56,25 @@ $(function () {
   });
   $(window).resize(function () {
     scroll_fn();
-    if ($(window).width() <= 990){
+    if ($(window).width() <= 990) {
       $('#header').removeClass('header-has-sidebar');
-    } else if ($('#sidebar').width() > 0){
+    } else if ($('#sidebar').width() > 0) {
       $('#header').addClass('header-has-sidebar');
     }
   });
 
   setTimeout(() => {
     $('.vhead .vname[href="https://lishaoy.net"]').after('<span class = "bozhu">博主</span>');
-  }, 500);
+  }, 1000);
 
-  $('.vsubmit.vbtn').on('click',function(){
+  $('.vsubmit.vbtn').on('click', function () {
     setTimeout(() => {
       console.log('aaa');
-      if (!$('.vhead').eq(0).find('.vname[href="https://lishaoy.net"]~.bozhu')){
+      if (!$('.vhead').eq(0).find('.vname[href="https://lishaoy.net"]~.bozhu')) {
         $('.vhead').eq(0).find('.vname[href="https://lishaoy.net"]').after('<span class = "bozhu">博主</span>');
       }
-
     }, 1000);
   });
 
 
 });
-
-
-

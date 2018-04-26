@@ -63,15 +63,15 @@ menu:
 menu_icons:
   enable: true
   #KeyMapsToMenuItemKey: NameOfTheIconFromFontAwesome
-  home: home
-  about: user
-  categories: th
-  schedule: calendar
-  tags: tags
-  archives: archive
-  sitemap: sitemap
-  commonweal: heartbeat
-  links: link
+  home: home faa-wrench
+  about: user faa-horizontal
+  categories: th faa-vertical
+  schedule: calendar faa-flash
+  tags: tags faa-spin
+  archives: archive faa-float
+  sitemap: sitemap faa-tada
+  commonweal: heartbeat faa-pulse
+  links: link faa-shake
 
 
 # ---------------------------------------------------------------

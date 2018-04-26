@@ -83,15 +83,19 @@
 
 //页面进度条样式
 #load {
-    background-color: #333;
-    box-shadow: 0 0 5px #222;
-    height: 2px;
+    background-color: rgb(135, 218, 255);
+    box-shadow: 0 0 10px #87daff, 0 0 5px #87daff;
+    height: 1px;
     border-radius: 2px;
     width: 0px;
     position: fixed;
     left: 0px;
-    top: 0px;
+    bottom: 0px;
     z-index: 9999;
+}
+
+.scroll_percentage{
+  color: #fff;
 }
 
 //评论样式
@@ -275,13 +279,35 @@ posts-collapse .post-title a {
 }
 
 .menu .menu-item a:hover {
-    background: #222222e0;
-    color: #fff;
+    background: none;
+    // color: #fff;
 }
 
-.menu .menu-item.menu-item-active a {
-  background: rgba(34, 34, 34, 0.86);
-  color: #fff;
+.menu .menu-item a::after{
+    position: absolute;
+    content: '';
+    top: 150%;
+    left: 24%;
+    margin: -0.64285714em 0 0 -0.64285714em;
+    width: 80%;
+    max-width: 0;
+    height: 1px;
+    border-radius: 10px;
+    background: #333333e0;
+    transition: max-width .25s ease-in-out;
+}
+
+.menu .menu-item a:hover::after{
+    max-width: 80%;
+}
+
+// .menu .menu-item.menu-item-active a {
+//   background: rgba(34, 34, 34, 0.86);
+//   color: #fff;
+// }
+
+.menu .menu-item.menu-item-active a::after {
+    max-width: 80%;
 }
 
 .header.dark .menu .menu-item a {
@@ -291,13 +317,19 @@ posts-collapse .post-title a {
 }
 
 .header.dark .menu .menu-item a:hover {
-    background: #e1e1e1;
-    color: #222;
+    color: #fff;
 }
 
-.header.dark .menu .menu-item.menu-item-active a {
-    background: rgba(255, 255, 255, 0.83);
-    color: #222;
+.header.dark .menu .menu-item a:hover::after {
+    background: #fff;
+}
+
+// .header.dark .menu .menu-item.menu-item-active a {
+//     background: rgba(255, 255, 255, 0.83);
+//     color: #222;
+// }
+.header.dark .menu .menu-item.menu-item-active a::after {
+    background: #fff;
 }
 
 .pagination {
@@ -724,6 +756,24 @@ pre, .highlight {
     .content-wrap .comments {
       margin: 20px 20px 0;
     }
+
+    .menu .menu-item a:hover::after{
+        content: none
+    }
+
+    .menu .menu-item.menu-item-active a {
+      background: rgba(34, 34, 34, 0.86);
+      color: #fff;
+    }
+
+    .menu .menu-item.menu-item-active a::after {
+        content: none;
+    }
+
+    .header.dark .menu .menu-item.menu-item-active a {
+        background: rgba(255, 255, 255, 0.83);
+        color: #222;
+    }
 }
 
 @media screen and (min-width: 450px) and (max-width: 767px) {
@@ -762,6 +812,24 @@ pre, .highlight {
     }
     .header-inner {
         margin-bottom: 0px;
+    }
+
+    .menu .menu-item a:hover::after{
+        content: none
+    }
+
+    .menu .menu-item.menu-item-active a {
+      background: rgba(34, 34, 34, 0.86);
+      color: #fff;
+    }
+
+    .menu .menu-item.menu-item-active a::after {
+        content: none;
+    }
+
+    .header.dark .menu .menu-item.menu-item-active a {
+        background: rgba(255, 255, 255, 0.83);
+        color: #222;
     }
 }
 
@@ -823,6 +891,24 @@ pre, .highlight {
       margin: 20px 20px 0;
     }
 
+    .menu .menu-item a:hover::after{
+        content: none
+    }
+
+    .menu .menu-item.menu-item-active a {
+      background: rgba(34, 34, 34, 0.86);
+      color: #fff;
+    }
+
+    .menu .menu-item.menu-item-active a::after {
+        content: none;
+    }
+
+    .header.dark .menu .menu-item.menu-item-active a {
+        background: rgba(255, 255, 255, 0.83);
+        color: #222;
+    }
+
 }
 // iphone 5
 @media screen and (max-width: 374px) {
@@ -864,5 +950,23 @@ pre, .highlight {
     }
     .content-wrap .comments {
       margin: 20px 20px 0;
+    }
+
+    .menu .menu-item a:hover::after{
+        content: none
+    }
+
+    .menu .menu-item.menu-item-active a {
+      background: rgba(34, 34, 34, 0.86);
+      color: #fff;
+    }
+
+    .menu .menu-item.menu-item-active a::after {
+        content: none;
+    }
+
+    .header.dark .menu .menu-item.menu-item-active a {
+        background: rgba(255, 255, 255, 0.83);
+        color: #222;
     }
 }
