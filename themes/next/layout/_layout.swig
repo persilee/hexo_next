@@ -190,10 +190,11 @@
     }
 
     .v .vlist .vcard .vcontent .code, .v .vlist .vcard .vcontent code, .v .vlist .vcard .vcontent pre {
-        color: #d70037;
-        background: #fbf0f0;
-        border-radius: 2px;
-        box-shadow: 0 0 2px #fdb9b9;
+      color: #2577C7;
+      background: #78c4e5;
+      border-radius: 4px;
+      box-shadow: 0 0 2px #87daff;
+      font-size: 90%;
     }
 </style>
 </body>

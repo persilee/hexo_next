@@ -87,6 +87,13 @@ copyright: true
                 <p class="per-links-des">继续踏上旅途，在没有你的春天……</p>
             </a>
         </li>
+        <li class="per-links-item">
+                <a href="https://2heng.xin" class="group-picture" title="樱花庄的白猫" target="_blank">
+                <img class="per-links-icon" src="https://gravatar.shino.cc/avatar/cd2b3a164c977539712929f66cad335c?s=80&d=mm&r=g" alt="">
+                <h3 class="per-links-title">Mashiro</h3>
+                <p class="per-links-des">樱花庄的白猫</p>
+            </a>
+        </li>
     </ul>
 
 <hr> 
