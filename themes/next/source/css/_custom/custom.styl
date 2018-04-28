@@ -1,8 +1,57 @@
 // Custom styles.
 
+.local-search-pop-overlay {
+    z-index: 98;
+}
+
+.local-search-popup {
+    top: 0;
+    left: 0;
+    margin-left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0px;
+}
+
+.local-search-popup .local-search-header.search-middle {
+    position: relative;
+    top: 42%;
+    width: 50%;
+    border-radius: 10px;
+    margin: 0 auto;
+    z-index: 10000;
+    padding: 15px;
+}
+
+.popup.search-popup.local-search-popup {
+    visibility: visible;
+    overflow: hidden;
+    opacity: .99;
+    animation: eleZoom .5s;
+    -webkit-transition: visibility .25s ease,opacity .25s ease;
+    -moz-transition: visibility .25s ease,opacity .25s ease;
+    -ms-transition: visibility .25s ease,opacity .25s ease;
+    -o-transition: visibility .25s ease,opacity .25s ease;
+    transition: visibility .25s ease,opacity .25s ease;
+}
+
+@keyframes eleZoom{
+  0% {
+      transform: scale(0);
+  }
+  55% {
+      transform: scale(1);
+  }
+
+  70% {
+      transform: scale(.98);
+  }
+  100% {
+      transform: scale(1);
+  }
+}
 
 //修改 边距
-
 .main {
     margin-top: 100px;
 }
@@ -774,6 +823,11 @@ pre, .highlight {
         background: rgba(255, 255, 255, 0.83);
         color: #222;
     }
+
+    .local-search-popup .local-search-header.search-middle {
+        width: 80%;
+        padding: 8px;
+    }
 }
 
 @media screen and (min-width: 450px) and (max-width: 767px) {
@@ -830,6 +884,10 @@ pre, .highlight {
     .header.dark .menu .menu-item.menu-item-active a {
         background: rgba(255, 255, 255, 0.83);
         color: #222;
+    }
+    .local-search-popup .local-search-header.search-middle {
+        width: 80%;
+        padding: 8px;
     }
 }
 
@@ -909,6 +967,11 @@ pre, .highlight {
         color: #222;
     }
 
+    .local-search-popup .local-search-header.search-middle {
+        width: 80%;
+        padding: 8px;
+    }
+
 }
 // iphone 5
 @media screen and (max-width: 374px) {
@@ -968,5 +1031,10 @@ pre, .highlight {
     .header.dark .menu .menu-item.menu-item-active a {
         background: rgba(255, 255, 255, 0.83);
         color: #222;
+    }
+
+    .local-search-popup .local-search-header.search-middle {
+        width: 80%;
+        padding: 8px;
     }
 }

@@ -164,6 +164,7 @@
       padding: 1px 5px;
       font-size: 12px;
       line-height: 1.4;
+      border: none;
     }
 
     .v .vlist .vcard .vcontent a {
