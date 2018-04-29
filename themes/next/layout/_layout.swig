@@ -35,6 +35,7 @@
   {% include '_third-party/analytics/index.swig' %}
 
   <link href="//cdn.jsdelivr.net/gh/moezx/cdn@v2.52/css/lib.css" rel="stylesheet" type="text/css">
+  <link href="/live2dw/css/perTips.css" rel="stylesheet" type="text/css">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="{{ page.lang || page.language || config.language }}">
@@ -113,6 +114,9 @@
   {% include '_third-party/exturl.swig' %}
 
   <div id="load" style=""></div>
+  <!-- 新增看娘 -->
+  <script async src="/live2dw/js/perTips.js"></script>
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script>
   <!-- 页面点击小红心 -->
   <script type="text/javascript" src="/js/src/love.js"></script>
   <!-- 背景动画
@@ -197,6 +201,10 @@
       box-shadow: 0 0 2px #87daff;
       font-size: 90%;
     }
+
+  .v .vwrap .vheader .vinput:focus {
+      border-bottom: 1px solid #87daff;
+  }
 </style>
 </body>
 </html>

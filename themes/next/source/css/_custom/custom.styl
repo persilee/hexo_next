@@ -1,5 +1,14 @@
 // Custom styles.
 
+//
+#live2d-widget {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 150px;
+    height: 180px;
+}
+
 .local-search-pop-overlay {
     z-index: 98;
 }
@@ -84,7 +93,7 @@
 }
 
 .header-has-sidebar {
-  width: calc(100% - 320px);
+  width: calc(100% - 220px);
 }
 
 .slideOutUp {
@@ -134,7 +143,7 @@
 #load {
     background-color: rgb(135, 218, 255);
     box-shadow: 0 0 10px #87daff, 0 0 5px #87daff;
-    height: 2px;
+    height: 1px;
     border-radius: 2px;
     width: 0px;
     position: fixed;
@@ -271,11 +280,24 @@ blockquote {
 }
 
 // 修改背景
-body {
-    background-image: url(/images/bg.jpg);
-    background-repeat: repeat;
-    // background-attachment: fixed;
-    // background-position: 50% 50%;
+// body {
+//     background-image: url(/images/bg.jpg);
+//     background-repeat: repeat;
+//     // background-attachment: fixed;
+//     // background-position: 50% 50%;
+// }
+
+body::before {
+  content: '';
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  will-change: transform;
+  z-index: -1;
+  background-image: url(/images/bg.jpg);
+  background-repeat: repeat;
 }
 
 // body {
@@ -690,7 +712,7 @@ pre, .highlight {
     }
     .full-image.full-image.full-image {
         width: 108.55%;
-        margin: 25px -4.28%;
+        margin: 25px -4.25%;
     }
     .post-body .highlight {
         width: 108%;

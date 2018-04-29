@@ -16,12 +16,16 @@ $(function () {
   $('.popup-trigger.faa-parent.animated-hover').on('click',function(){
     $('.github-corner').hide();
     $('.sidebar-toggle').hide();
+    $('.back-to-top.back-to-top-on').hide();
+    $('#sidebar').hide();
     $('#header').removeClass('slideInDown');
     $('.local-search-popup .local-search-header').addClass('search-middle');
   });
   $('.popup-btn-close').on('click',function(){
     $('.github-corner').show();
     $('.sidebar-toggle').show();
+    $('#sidebar').show();
+    $('.back-to-top.back-to-top-on').show();
   })
   $('#local-search-input').on('change keydown',function(){
     $('.local-search-popup .local-search-header').removeClass('search-middle');
@@ -77,9 +81,48 @@ $(function () {
     }
   });
 
+
+
+
+  //新增看娘
+
+  var jsonPaths = ['/live2dw/assets/hijiki.model.json','/live2dw/assets/tororo.model.json'];
+
+  L2Dwidget.init({
+    "pluginRootPath": "live2dw/",
+    "pluginJsPath": "lib/",
+    "pluginModelPath": "assets/",
+    "model": {
+      "jsonPath": jsonPaths[Math.round(Math.random())],
+    },
+    "display": {
+      "superSample": 2,
+      "position": "left",
+      "width": 90,
+      "height": 220,
+      "hOffset": 5,
+      "vOffset": -136
+    },
+    "mobile": {
+      "show": true,
+      "scale": 0.5
+    },
+    "react": {
+      "opacityDefault": 0.75,
+      "opacityOnHover": 0.2
+    }
+  });
+
+  $(document).on('click','#live2d-widget',function(){
+    console.log('aaa');
+  });
+
+
+
   setTimeout(() => {
     $('.vhead .vname[href="https://lishaoy.net"]').after('<span class = "bozhu">博主</span>');
-  }, 1000);
+    $('#live2d-widget').prepend('<div class="per-tips"></div >');
+  }, 1500);
 
   $('.vsubmit.vbtn').on('click', function () {
     setTimeout(() => {
@@ -88,6 +131,4 @@ $(function () {
       }
     }, 1000);
   });
-
-
 });

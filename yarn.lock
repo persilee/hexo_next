@@ -3497,6 +3497,14 @@ liftoff@^2.1.0:
     rechoir "^0.6.2"
     resolve "^1.1.7"
 
+live2d-widget-model-hijiki@^1.0.5:
+  version "1.0.5"
+  resolved "http://registry.npm.taobao.org/live2d-widget-model-hijiki/download/live2d-widget-model-hijiki-1.0.5.tgz#c2ddc6b2380be11b8b8bc2df0d82fd6dfa007f11"
+
+live2d-widget-model-tororo@^1.0.5:
+  version "1.0.5"
+  resolved "http://registry.npm.taobao.org/live2d-widget-model-tororo/download/live2d-widget-model-tororo-1.0.5.tgz#f556caff824198ff41d12f7cec807e1301ebc9d1"
+
 load-json-file@^1.0.0:
   version "1.1.0"
   resolved "http://registry.npm.taobao.org/load-json-file/download/load-json-file-1.1.0.tgz#956905708d58b4bab4c2261b04f59f31c99374c0"
