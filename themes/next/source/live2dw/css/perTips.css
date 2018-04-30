@@ -48,13 +48,6 @@
   position: relative;
 }
 
-@media screen and (min-width: 992px) and (max-width: 1599px) {
-  .per-tips {
-    background-color: #87daffe0;
-  }
-}
-
-
 @media screen and (min-width: 768px) and (max-width: 991px) {
   .per-tips {
     background-color: #87daffe0;
