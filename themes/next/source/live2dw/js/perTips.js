@@ -111,7 +111,6 @@ function showHitokoto() {
 
 function showMessage(text, timeout) {
   if (Array.isArray(text)) text = text[Math.floor(Math.random() * text.length + 1) - 1];
-  console.log(text);
   $('.per-tips').stop();
   $('.per-tips').html(text).fadeTo(200, 1);
   if (timeout === null) timeout = 5000;

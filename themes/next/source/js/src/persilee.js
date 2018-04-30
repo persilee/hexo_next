@@ -96,12 +96,12 @@ $(function () {
       "jsonPath": jsonPaths[Math.round(Math.random())],
     },
     "display": {
-      "superSample": 2,
+      "superSample": 1.8,
       "position": "left",
       "width": 90,
       "height": 220,
-      "hOffset": 5,
-      "vOffset": -136
+      "hOffset": 8,
+      "vOffset": -126
     },
     "mobile": {
       "show": true,
