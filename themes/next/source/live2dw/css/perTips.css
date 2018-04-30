@@ -22,9 +22,9 @@
 
 .per-tips {
     opacity: 0;
-    width: 180px;
-    height: 70px;
-    margin: -65px 4px;
+    width: 160px;
+    height: 65px;
+    margin: -75px 4px;
     color: #eee;
     padding: 5px 10px;
     border: 1px solid rgba(120, 195, 229, 0.22);
@@ -46,6 +46,20 @@
 
 #live2d-widget #live2dcanvas {
   position: relative;
+}
+
+@media screen and (min-width: 992px) and (max-width: 1599px) {
+  .per-tips {
+    background-color: #87daffe0;
+  }
+}
+
+
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .per-tips {
+    background-color: #87daffe0;
+  }
+
 }
 
 @keyframes shake {

@@ -74,13 +74,6 @@ copyright: true
             </a>
         </li>
         <li class="per-links-item">
-                <a href="http://godweiyang.com" class="group-picture" title="WeiYang Bolg" target="_blank">
-                <img class="per-links-icon" src="http://godweiyang.com/img/ironman-draw.png" alt="">
-                <h3 class="per-links-title">WeiYang Bolg</h3>
-                <p class="per-links-des">自然语言处理与深度学习</p>
-            </a>
-        </li>
-        <li class="per-links-item">
                 <a href="https://www.dreamwings.cn" class="group-picture" title="千千" target="_blank">
                 <img class="per-links-icon" src="https://secure.gravatar.com/avatar/806e52a2e2b9ff4bd2c23140df75cc1f?s=50&d=identicon&r=g" alt="">
                 <h3 class="per-links-title">千千</h3>
