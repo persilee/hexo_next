@@ -12,12 +12,12 @@
 <div class="powered-by">
   <i class="fa fa-users fa-fw"></i>
   <span id="busuanzi_container_site_uv">
-    终于等到你: <span id="busuanzi_value_site_uv"></span>
+    终于等到你（UV）: <span id="busuanzi_value_site_uv"></span>
   </span>
   &nbsp;&nbsp;|&nbsp;&nbsp;
   <i class="fa fa-bar-chart-o fa-fw"></i>
   <span id="busuanzi_container_site_pv">
-    客观！欢迎再来哟: <span id="busuanzi_value_site_pv"></span>次
+    欢迎再来哟（PV）: <span id="busuanzi_value_site_pv"></span>
   </span>
 
   <div class="theme-info">

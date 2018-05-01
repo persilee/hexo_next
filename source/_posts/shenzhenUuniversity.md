@@ -5,7 +5,6 @@ tags:
     - 闺蜜
     - 深圳大学
     - 摄影
-    - 天台
 categories: 摄影
 copyright: true
 top: 3

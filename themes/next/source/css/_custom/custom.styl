@@ -1,4 +1,110 @@
 // Custom styles.
+//tags
+.tag-cloud-tags a {
+    background-color: rgba(135,218,255,0.102);
+    border: 1px solid rgba(135,218,255,0.141);
+    color: #eaeaea;
+    padding: 0 8px;
+    border-radius: 2px;
+    box-shadow: 0 0 5px rgba(135,218,255,0.38);
+    margin: 6px;
+    line-height: 1.6;
+    transition: all .5s;
+}
+
+.tag-cloud-tags a:hover{
+    background-color: #87daffc7;
+    box-shadow: 0 0 6px #f6f6f6;
+}
+
+.tag-cloud-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #f0f0f0;
+    margin: 10px auto;
+}
+.archive {
+    margin-top: 50px;
+}
+.posts-collapse::after {
+    left: 81px;
+    width: 1px;
+    background: #f5f5f570;
+}
+.archive .posts-collapse .archive-move-on , .tag .posts-collapse .archive-move-on , .category .posts-collapse .archive-move-on {
+    left: 76px;
+    top: 2px;
+    width: 16px;
+    height: 16px;
+}
+
+.archive .archive-page-counter , .tag .archive-page-counter , .category .archive-page-counter{
+    left: 111px;
+    top: -3px;
+}
+.archive .posts-collapse .collection-title , .tag .posts-collapse .collection-title , .category .posts-collapse .collection-title{
+    margin: 20px 0;
+    left: -1px;
+}
+.archive .posts-collapse .collection-title::before , .tag .posts-collapse .collection-title::before , .category .posts-collapse .collection-title::before {
+    left: 78px;
+    width: 12px;
+    height: 12px;
+}
+.archive .collection-title .archive-year , .tag .collection-title .archive-year , .category .collection-title .archive-year {
+      margin-left: 10px;
+}
+.archive .posts-collapse .post , .tag .posts-collapse .post , .category .posts-collapse .post {
+  margin: 5px 0;
+  padding: 8px;
+}
+.archive .posts-collapse .post-header , .tag .posts-collapse .post-header , .category .posts-collapse .post-header {
+    border-bottom: none;
+    transition: all 5s;
+}
+.archive .posts-collapse .post-header::before , .tag .posts-collapse .post-header::before , .category .posts-collapse .post-header::before {
+    left: 71px;
+    top: 12px;
+    width: 6px;
+    height: 6px;
+    background: #555;
+    border: 1px solid #ccc;
+    transition: all .5s;
+}
+.archive .posts-collapse .post-title , .tag .posts-collapse .post-title  , .category .posts-collapse .post-title{
+    margin: 0 0 0 100px;
+    font-size: 16px;
+    font-weight: normal;
+    line-height: inherit;
+}
+.archive .posts-collapse .post-title a , .tag .posts-collapse .post-title a , .category .posts-collapse .post-title a {
+    color: #f6f6f6;
+    transition: all .5s;
+}
+.archive .posts-collapse .post-meta time , .tag .posts-collapse .post-meta time , .category .posts-collapse .post-meta time {
+    transition: all .5s;
+}
+
+.archive .posts-collapse .post-header:hover , .tag .posts-collapse .post-header:hover , .category .posts-collapse .post-header:hover {
+    border-bottom: none;
+}
+
+.archive .posts-collapse .post-header:hover a , .tag .posts-collapse .post-header:hover a , .category .posts-collapse .post-header:hover a {
+    color: #87daff;
+}
+.archive .posts-collapse .post-header:hover time , .tag .posts-collapse .post-header:hover time , .category .posts-collapse .post-header:hover time {
+    color: #87daff;
+}
+.archive .posts-collapse .post-header:hover::before , .tag .posts-collapse .post-header:hover::before , .category .posts-collapse .post-header:hover::before {
+    transform: scale(1.5);
+    background: #87daff;
+}
+.post-block.tag , .post-block.category {
+    padding-top: 50px;
+}
+.posts-collapse .collection-title h2 {
+    margin-left: 108px;
+}
 
 // 评论 icon
 .vhead .vsys img {
@@ -13,17 +119,13 @@
     width: 18px;
     height: 18px;
 }
-.vhead .vsys img.Chrome {
+.vhead .vsys img.Windows10 , .vhead .vsys img.Chrome {
     width: 12px;
     height: 12px;
 }
-.vhead .vsys img.Firefox {
+.vhead .vsys img.Windows7 , .vhead .vsys img.Android , .vhead .vsys img.Firefox{
     width: 14px;
     height: 14px;
-}
-.vhead .vsys img.Windows10 {
-    width: 12px;
-    height: 12px;
 }
 
 // 看娘
@@ -110,7 +212,11 @@
     z-index: 100;
 }
 .header-inner {
-    padding: 6px 0;
+    padding: 4px 0;
+}
+
+.header-inner .site-meta {
+    margin-top: 4px;
 }
 
 .header.light-header {
@@ -483,10 +589,6 @@ nav.pagination a:hover {
     border-bottom: 1px dashed #555;
 }
 
-.posts-collapse .post-header:hover {
-    border-bottom: 1px dashed #f6f6f6;
-}
-
 // 主页文章添加阴影效果
  .post {
    margin-top: 60px;
@@ -738,7 +840,7 @@ pre, .highlight {
     }
     .full-image.full-image.full-image {
         width: 108.55%;
-        margin: 25px -4.25%;
+        margin: 25px -4.28%;
     }
     .post-body .highlight {
         width: 108%;
@@ -1026,7 +1128,7 @@ pre, .highlight {
     .full-image.full-image.full-image {
         max-width: none;
         width: 125%;
-        margin: 25px -12%;
+        margin: 25px -12.6%;
     }
     .github-corner {
         display: none;

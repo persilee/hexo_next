@@ -154,12 +154,12 @@
     }
 
     .v .vlist .vcard .vhead .vsys {
-      background: #dddddd1c;
-      color: #aaa;
-      border: 1px solid #dddddd59;
-      padding: 1px 5px;
-      font-size: 12px;
-      line-height: 1.4;
+        background: #87daff17;
+        color: #aaa;
+        border: 1px solid #87daff1f;
+        padding: 1px 5px;
+        font-size: 12px;
+        line-height: 1.4;
     }
 
     .no-post.v .vlist .vcard .vhead .vsys{

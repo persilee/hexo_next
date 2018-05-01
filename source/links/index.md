@@ -1,5 +1,5 @@
 ---
-title: 友情链接
+title: 友链
 type: "links"
 date: 2018-04-18 21:56:37
 comments: true
@@ -61,7 +61,7 @@ copyright: true
         </li>
         <li class="per-links-item">
                 <a href="http://xiaowiba.com" class="group-picture" title="小 xiǎo 尾 wěi 巴 bā" target="_blank">
-                <img class="per-links-icon" src="http://xiaowiba.com/xwb.jpg" alt="">
+                <img class="per-links-icon" src="../images/links/xwb.jpg" alt="">
                 <h3 class="per-links-title">小 xiǎo 尾 wěi 巴 bā</h3>
                 <p class="per-links-des">一个漫步前行在代码路上的小白。</p>
             </a>

@@ -2,17 +2,39 @@
 {% import '_macro/post-collapse.swig' as post_template %}
 {% import '_macro/sidebar.swig' as sidebar_template %}
 
-{% block title %}{{ __('title.archive') }} | {{ config.title }}{% endblock %}
+{% block title %}{{ __('title.archive') }} | {{ config.title }}{% endblock %} | {{ __('title.tag') }}: {{ page.tag }}
 
 {% block page_class %} page-archive {% endblock %}
 
 {% block content %}
 
+  {#################}
+  {### TAG BLOCK ###}
+  {#################}
+  <div class="post-block per-tag">
+
+    <div id="posts" class="posts-expand">
+
+      <div class="tag-cloud">
+            <div class="tag-cloud-title">
+                {{ _p('counter.tag_cloud', site.tags.length) }}
+            </div>
+            <div class="tag-cloud-tags">
+              {{ tagcloud({min_font: 14, max_font: 20, amount: 200, color: false, start_color: '#ccc', end_color: '#111'}) }}
+            </div>
+      </div>
+    </div>
+
+  </div>
+  {#####################}
+  {### END TAG BLOCK ###}
+  {#####################}
+
   {#####################}
   {### ARCHIVE BLOCK ###}
   {#####################}
   <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
+    <div id="posts" class="posts-collapse ">
       <span class="archive-move-on"></span>
 
       <span class="archive-page-counter">

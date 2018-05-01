@@ -5,7 +5,6 @@ tags:
     - javascript
     - scope
     - 变量提升
-    - 预编译
 categories: JavaScript
 copyright: true
 top: 107

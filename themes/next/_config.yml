@@ -48,10 +48,10 @@ index_with_subtitle: false
 menu:
   home: /
   links: /links/
-  about: /about/
   categories: /categories/
   archives: /archives/
-  tags: /tags/
+  about: /about/
+  # tags: /tags/
   # sitemap: /sitemap.xml
   # commonweal: /404/
 

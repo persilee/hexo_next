@@ -90,15 +90,15 @@ $(function () {
     var scroll_so_far = $(window).scrollTop();
     var window_height = $(window).height();
     var max_scroll = document_height - window_height;
-    var scroll_percentage = scroll_so_far / (max_scroll / 102);
+    var scroll_percentage = scroll_so_far / (max_scroll / 100);
     $('#load').width(scroll_percentage + '%');
-    if (scroll_percentage >= 100){
+    if (scroll_percentage >= 99.5){
       $('#load').hide();
     }else{
       $('#load').show();
     }
     var document_width = $(document).width();
-    if (scroll_so_far > 5) {
+    if (scroll_so_far > 57) {
       $('#header').addClass('light-header').removeClass('dark');
     } else {
       $('#header').removeClass('light-header').addClass('dark');
@@ -119,7 +119,7 @@ $(function () {
   var _this = null;
   function isUA(){
     if ($(_this).text().indexOf('Safari') == 0) {
-      $(_this).prepend('<img class="Safari" src="/images/ua/Safari.svg">');
+      $(_this).prepend('<img class="Safari" src="/images/ua/Safari.svg">')
     } else if ($(_this).text().indexOf('Mac OS') == 0 || $(_this).text().indexOf('iOS') == 0) {
       $(_this).prepend('<img class="Apple" src="/images/ua/Apple.svg">')
     } else if ($(_this).text().indexOf('Chrome') == 0) {
@@ -134,6 +134,8 @@ $(function () {
       $(_this).prepend('<img class="Android" src="/images/ua/Android.svg">')
     } else if ($(_this).text().indexOf('Ubuntu') == 0) {
       $(_this).prepend('<img class="Ubuntu" src="/images/ua/ubuntu.svg">')
+    } else if ($(_this).text().indexOf('Microsoft Edge') == 0 || $(_this).text().indexOf('MSIE') == 0) {
+      $(_this).prepend('<img class="Ubuntu" src="/images/ua/ie.png">')
     }
   };
   setTimeout(() => {
@@ -161,6 +163,8 @@ $(function () {
         text += '来自 360搜索 的朋友<br>你是搜索 <span style="color:#0099cc;">' + referrer.search.split('&q=')[1].split('&')[0] + '</span> 找到的我吗？';
       } else if (domain == 'google') {
         text += '来自 谷歌搜索 的朋友<br>欢迎阅读<span style="color:#0099cc;">『' + document.title.split(' - ')[0] + '』</span>';
+      }else{
+        text += '来自<span style="color:#0099cc;">&nbsp;' + referrer.hostname + '&nbsp;</span>的朋友,欢迎来到<span style="color:#0099cc;">『' + document.title.split(' | ')[0] + '』</span>&nbsp;本站参观 🙂';
       }
     } else if (localStorage.getItem('ValineCache') !== ('' || null) && window.location.href == 'https://lishaoy.net/'){
       text += '<span style="color:#0099cc;"><strong>&nbsp;' + JSON.parse(localStorage.getItem('ValineCache')).nick + '&nbsp;</strong></span>欢迎回来！要继续看 👀 些什么吗';

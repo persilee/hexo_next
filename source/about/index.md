@@ -1,5 +1,5 @@
 ---
-title: 我是李少颖
+title: 关于
 type: "about"
 date: 2018-03-25 00:57:32
 comments: false
