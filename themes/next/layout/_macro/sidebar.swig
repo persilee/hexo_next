@@ -15,7 +15,7 @@
 
       {% set display_toc = is_post and theme.toc.enable or is_page and theme.toc.enable %}
 
-      {% if display_toc and toc(page.content).length > 1 and page.type != 'links' %}
+      {% if display_toc and toc(page.content).length > 1 and page.type != 'links' and page.type != 'guestbook' %}
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
             {{ __('sidebar.toc') }}
@@ -26,7 +26,7 @@
         </ul>
       {% endif %}
 
-      <section class="site-overview sidebar-panel{% if not display_toc or toc(page.content).length <= 1 or page.type == 'links' %} sidebar-panel-active{% endif %}">
+      <section class="site-overview sidebar-panel{% if not display_toc or toc(page.content).length <= 1 or page.type == 'links' or page.type == 'guestbook' %} sidebar-panel-active{% endif %}">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="{{ url_for( theme.avatar | default(theme.images + '/avatar.gif') ) }}"
@@ -129,7 +129,7 @@
 
       </section>
 
-      {% if display_toc and toc(page.content).length > 1 and page.type != 'links' %}
+      {% if display_toc and toc(page.content).length > 1 and page.type != 'links' and page.type != 'guestbook' %}
       <!--noindex-->
         <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
           <div class="post-toc">

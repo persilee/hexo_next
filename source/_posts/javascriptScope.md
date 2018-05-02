@@ -5,7 +5,7 @@ tags:
     - javascript
     - scope
     - 变量提升
-categories: JavaScript
+categories: JS
 copyright: true
 top: 107
 comments: true

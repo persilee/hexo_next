@@ -6,7 +6,7 @@ tags:
 copyright: true
 comments: true
 date: 2018-04-18 01:34:09
-categories: JavaScript
+categories: JS
 top: 107
 photos:
 ---

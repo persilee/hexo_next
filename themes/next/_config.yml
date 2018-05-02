@@ -48,9 +48,11 @@ index_with_subtitle: false
 menu:
   home: /
   links: /links/
-  categories: /categories/
+  guestbook: /guestbook/
   archives: /archives/
   about: /about/
+
+  # categories: /categories/
   # tags: /tags/
   # sitemap: /sitemap.xml
   # commonweal: /404/
@@ -72,6 +74,7 @@ menu_icons:
   sitemap: sitemap faa-tada
   commonweal: heartbeat faa-pulse
   links: link faa-shake
+  guestbook: comment-o faa-tada
 
 
 # ---------------------------------------------------------------

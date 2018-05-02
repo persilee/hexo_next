@@ -60,10 +60,9 @@
             {% block content %}{% endblock %}
           </div>
           {% include '_third-party/duoshuo-hot-articles.swig' %}
-
-          {% if page.type != 'links' %}
+          {% if page.type == '' %}
             {% include '_partials/comments.swig' %}
-          {% elseif page.type == 'links' %}
+          {% elseif page.type != '' %}
             {% include '_partials/comments_no_post.swig' %}
           {% endif %}
         </div>

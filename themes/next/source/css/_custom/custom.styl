@@ -1,34 +1,35 @@
 // Custom styles.
 //分类
 .category-all-page .category-list {
-  padding-left: 6%;
+    padding-left: 10%;
 }
 .category-all .category-list-item {
     list-style: none;
     display: inline-block;
-    width: 100px;
+    width: 58px;
     height: 120px;
     text-align: center;
     vertical-align: text-bottom;
     position: relative;
-    border: 1px solid #333;
-    border-radius: 4px;
+    margin: 5px 15px;
 }
 .category-all .category-list-item:hover {
   cursor: pointer;
 }
 .category-all .category-list-item a {
     display: inline-block;
-    margin-top: 70px;
+    margin-top: 80px;
     border-bottom: none;
+    color: #eaeaea;
+    font-size: 14px;
 }
 .category-all .category-list-item::before {
     content: "";
     position: absolute;
-    width: 50px;
-    height: 50px;
-    top: 8px;
-    left: 22px;
+    width: 48px;
+    height: 48px;
+    top: 18px;
+    left: 5px;
     color: #fff;
     background-size: cover;
     transition: all 0.5s;
@@ -52,12 +53,13 @@
 .category-all .category-list-item:nth-child(6)::before {
     width: 60px;
     height: 60px;
+    top: 10px;
     background-image: url(/images/category/tool.svg);
 }
 .category-all .category-list-item:nth-child(7)::before {
     width: 45px;
     height: 45px;
-    left: 28px;
+    left: 6px;
     background-image: url(/images/category/photography.svg);
 }
 .category-all .category-list-item:nth-child(8)::before {
@@ -96,7 +98,7 @@
     box-shadow: 0 0 6px #f6f6f6;
 }
 
-.tag-cloud-title {
+.tag-cloud-title , .category-all-title {
     font-size: 18px;
     font-weight: bold;
     color: #f0f0f0;
@@ -409,16 +411,17 @@
 }
 
 // links页面样式
-.per-link-page {
+.per-link-page ,.per-guestbook-page {
   margin: 20px auto 50px;
 }
 
-.per-link-page hr {
+.per-link-page hr , .per-guestbook-page hr{
   background-color: #cccccc1f;
   background-image: repeating-linear-gradient(-45deg, #ffffff3b, #ffffff33 1px, transparent 4px, transparent 5px);
+  height: 1px;
 }
 
-.per-link-page .instructions {
+.per-link-page .instructions , .per-guestbook-page .instructions {
   font-size: 13px;
   color: #ddd;
 }
@@ -502,6 +505,23 @@
     position: absolute;
     left: 0;
     z-index: 1;
+}
+
+//guestbook 页面
+.per-guestbook-page .instructions.title {
+    font-size: 14px;
+    padding-top: 20px;
+}
+
+.per-guestbook-page .mark-main {
+    font-size: 16px;
+    font-weight: bold;
+    color: #87daff;
+}
+.per-guestbook-page .mark-secondary {
+    font-size: 14px;
+    font-weight: bold;
+    color: #87daff;
 }
 
 blockquote {
@@ -965,6 +985,9 @@ pre, .highlight {
     .per-link-page .per-links .per-links-item {
       margin: 20px 30px;
     }
+    .category-all-page .category-list {
+      padding-left: 7%;
+    }
 }
 //ipad
 @media screen and (min-width: 768px) and (max-width: 991px) {
@@ -1005,6 +1028,9 @@ pre, .highlight {
 
     .menu .menu-item a , .header.dark .menu .menu-item a {
       font-size: 12px;
+    }
+    .category-all-page .category-list {
+      padding-left: 7%;
     }
 }
 
@@ -1075,6 +1101,9 @@ pre, .highlight {
         width: 80%;
         padding: 8px;
     }
+    .category-all-page .category-list {
+        padding-left: 8%;
+    }
 }
 
 @media screen and (min-width: 450px) and (max-width: 767px) {
@@ -1135,6 +1164,9 @@ pre, .highlight {
     .local-search-popup .local-search-header.search-middle {
         width: 80%;
         padding: 8px;
+    }
+    .category-all-page .category-list {
+        padding-left: 8%;
     }
 }
 
@@ -1218,6 +1250,9 @@ pre, .highlight {
         width: 80%;
         padding: 8px;
     }
+    .category-all-page .category-list {
+        padding-left: 4%;
+    }
 
 }
 // iphone 5
@@ -1283,5 +1318,8 @@ pre, .highlight {
     .local-search-popup .local-search-header.search-middle {
         width: 80%;
         padding: 8px;
+    }
+    .category-all-page .category-list {
+        padding-left: 2%;
     }
 }
