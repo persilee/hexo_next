@@ -30,6 +30,20 @@
   {### END TAG BLOCK ###}
   {#####################}
 
+   <div class="post-block per-categories">
+    {% include '_partials/page-header.swig' %}
+    <div class="post-body">
+      <div class="category-all-page">
+              <div class="category-all-title">
+                  {{ _p('counter.categories', site.categories.length) }}
+              </div>
+              <div class="category-all">
+                {{ list_categories() }}
+              </div>
+      </div>
+    </div>
+   </div>
+
   {#####################}
   {### ARCHIVE BLOCK ###}
   {#####################}

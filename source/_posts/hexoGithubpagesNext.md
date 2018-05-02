@@ -7,7 +7,7 @@ tags:
     - GithubPages
     - Next
     - Blog
-categories: Hexo
+categories: hexo
 copyright: true
 top: 100
 comments: true
