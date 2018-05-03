@@ -70,6 +70,7 @@
         {# Show year #}
         {% set year %}
         {% set post.year = date(post.date, 'YYYY') %}
+        {% set updated = date(post.updated, 'YYYY-MM-DD') %}
 
         {% if post.year !== year %}
           {% set year = post.year %}
@@ -80,6 +81,7 @@
         {# endshow #}
 
         {{ post_template.render(post) }}
+        <span class="archive-updated">{{ updated}}</span>
 
       {% endfor %}
 
