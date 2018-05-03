@@ -81,7 +81,6 @@
         {# endshow #}
 
         {{ post_template.render(post) }}
-        <span class="archive-updated">{{ updated}}</span>
 
       {% endfor %}
 

@@ -14,7 +14,19 @@
               {% if post.type === 'picture' %}
                 {{ post.content }}
               {% else %}
-                <span itemprop="name">{{ post.title | default(__('post.untitled')) }}</span>
+                <span itemprop="name" class="archive-title" updated="{{ date(post.updated, config.date_format) }}">{{ post.title | default(__('post.untitled')) }}</span>
+                {% if theme.leancloud_visitors.enable %}
+                  <span id="{{ url_for(post.path) }}" class="leancloud_visitors" data-flag-title="{{ post.title }}">
+                    <span class="post-meta-divider">|</span>
+                    <span class="post-meta-item-icon">
+                      <i class="fa fa-eye"></i>
+                    </span>
+                    {% if theme.post_meta.item_text %}
+                      <span class="post-meta-item-text">{{__('post.visitors')}} </span>
+                    {% endif %}
+                      <span class="leancloud-visitors-count"></span> ℃
+                  </span>
+                {% endif %}
               {% endif %}
             </a>
         {% endif %}
