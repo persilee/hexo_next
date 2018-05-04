@@ -59,7 +59,7 @@ $(function () {
   });
 
   $('.popup-trigger.faa-parent.animated-hover').on('click',function(){
-    $('.github-corner').hide();
+    // $('.github-corner').hide();
     $('.sidebar-toggle').hide();
     $('.back-to-top.back-to-top-on').hide();
     $('#sidebar').hide();
@@ -67,7 +67,7 @@ $(function () {
     $('.local-search-popup .local-search-header').addClass('search-middle');
   });
   $('.popup-btn-close').on('click',function(){
-    $('.github-corner').show();
+    // $('.github-corner').show();
     $('.sidebar-toggle').show();
     $('#sidebar').show();
     $('.back-to-top.back-to-top-on').show();
