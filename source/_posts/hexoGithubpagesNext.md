@@ -6,7 +6,6 @@ tags:
     - Hexo
     - GithubPages
     - Next
-    - Blog
 categories: hexo
 copyright: true
 top: 100

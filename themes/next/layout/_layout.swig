@@ -194,8 +194,8 @@
     }
 
     .v .vlist .vcard .vcontent .code, .v .vlist .vcard .vcontent code, .v .vlist .vcard .vcontent pre {
-      color: #01294e;
-      background: #78c4e5e0;
+      color: #005098fc;
+      background: #87daffb8;
       border-radius: 4px;
       box-shadow: 0 0 2px #87daff;
       font-size: 90%;
@@ -204,6 +204,18 @@
   .v .vwrap .vheader .vinput:focus {
       border-bottom: 1px solid #87daff;
   }
+  .v .vlist .vcard .vcontent.expand:after {
+    color: #fdfafa;
+    font-size: 110%;
+    font-weight: bold;
+    background: #87daff38;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+.v .vlist .vcard .vcontent.expand:before {
+    background: -webkit-gradient(linear,left top,left bottom,from(hsla(0,0%,100%,0)),to(#87daff36);
+    background: linear-gradient(180deg,hsla(0, 0%, 100%, 0),#87daff36);
+}
 </style>
 </body>
 </html>

@@ -1,7 +1,7 @@
 ---
 title: 被遗忘的CSS
 tags:
-  - CSS
+  - css
 copyright: true
 comments: true
 date: 2018-04-07 06:45:52
