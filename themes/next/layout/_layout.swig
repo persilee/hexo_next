@@ -151,7 +151,16 @@
     .no-post.v a {
       color: #ddd;
     }
-
+    .v ul {
+      padding-left: 25px;
+    }
+    .v ul li {
+      list-style: disc;
+      padding: 2px 0 0 0;
+    }
+    .v .vlist strong {
+      color: #87daff;
+    }
     .v .vlist .vcard .vhead .vsys {
         background: #87daff17;
         color: #aaa;
@@ -204,6 +213,17 @@
   .v .vwrap .vheader .vinput:focus {
       border-bottom: 1px solid #87daff;
   }
+  .v .vlist .vcard .vcontent pre {
+    background: #87daff21;
+    border-radius: 4px;
+    box-shadow: 0 0 2px #ffffff33;
+}
+.v .vlist .vcard .vcontent pre code {
+    color: #87daff;
+    background: #87daff00;
+    border-radius: 4px;
+    box-shadow: 0 0 2px #87daff05;
+}
   .v .vlist .vcard .vcontent.expand:after {
     color: #fdfafa;
     font-size: 110%;
@@ -213,8 +233,8 @@
     border-bottom-left-radius: 4px;
 }
 .v .vlist .vcard .vcontent.expand:before {
-    background: -webkit-gradient(linear,left top,left bottom,from(hsla(0,0%,100%,0)),to(#87daff36);
-    background: linear-gradient(180deg,hsla(0, 0%, 100%, 0),#87daff36);
+    background: linear-gradient(180deg,hsla(0, 0%, 100%, 0),hsla(199, 100%, 76%, 0.22));
+    background: -webkit-gradient(linear,left top,left bottom,from(hsla(0,0%,100%,0)),to(hsla(199, 100%, 76%, 0.22));
 }
 </style>
 </body>

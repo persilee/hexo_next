@@ -245,6 +245,15 @@
     height: 14px;
 }
 
+// 看娘
+#live2d-widget {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 150px;
+    height: 160px;
+}
+
 .local-search-pop-overlay {
     z-index: 98;
 }
@@ -558,14 +567,9 @@ blockquote {
 // body {
 //     background-image: url(/images/bg.jpg);
 //     background-repeat: repeat;
-//     will-change: auto;
 //     // background-attachment: fixed;
 //     // background-position: 50% 50%;
 // }
-
-body{
-  background-color: #000;
-}
 
 body::before {
   content: '';
@@ -574,8 +578,8 @@ body::before {
   height: 100%;
   top: 0;
   left: 0;
-  will-change: auto;
-  z-index: -100;
+  will-change: transform;
+  z-index: -1;
   background-image: url(/images/bg.jpg);
   background-repeat: repeat;
 }

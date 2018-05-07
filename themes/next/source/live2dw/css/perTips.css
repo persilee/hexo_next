@@ -1,7 +1,10 @@
+
 #live2d-widget {
   position: fixed;
-  bottom: 0;
   left: 5px;
+  bottom: 0;
+  width: 150px;
+  height: 160px;
   z-index: 1;
   font-size: 0;
   transition: all .3s ease-in-out;
@@ -14,26 +17,23 @@
   transform: translateY(0);
 }
 
-@media (max-width: 768px) {
-  #live2d-widget {
-    display: none;
-  }
-}
-
 .per-tips {
     opacity: 0;
     width: 160px;
-    height: 65px;
+    height: auto;
+    min-height: 70px;
+    bottom: 225px;
     margin: -75px 4px;
     color: #eee;
     padding: 5px 10px;
+    box-sizing: border-box;
     border: 1px solid rgba(120, 195, 229, 0.22);
     border-radius: 12px;
     background-color: rgba(120, 195, 229, 0.48);
     box-shadow: 0 3px 15px 2px #87daff73;
-
     font-size: 12px;
     text-overflow: ellipsis;
+    line-height: 1.5;
     overflow: hidden;
     position: absolute;
     animation-delay: 5s;
@@ -44,16 +44,35 @@
 
 }
 
+
 #live2d-widget #live2dcanvas {
   position: relative;
 }
 
 @media screen and (min-width: 768px) and (max-width: 991px) {
   .per-tips {
-    background-color: #87daffe0;
+    background-color: rgba(120, 195, 229, 0.66);
   }
-
 }
+
+@media (max-width: 768px) {
+  /* #live2d-widget {
+    display: none;
+  } */
+  .per-tips {
+    top: 36px;
+    left: 0;
+    background-color: rgba(120, 195, 229, 0.8);
+  }
+  #live2d-widget {
+    width: 100px;
+    height: 160px;
+    /* transform: scale(0.6) translate(-150px, 125px); */
+    transform: scale(0.6) translate(-40px, 52px);
+
+  }
+}
+
 
 @keyframes shake {
   2% {

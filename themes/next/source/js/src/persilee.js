@@ -4,10 +4,19 @@ $(function () {
   var jsonPaths = ['/live2dw/assets/hijiki.model.json', '/live2dw/assets/tororo.model.json'];
   var jsonPath = jsonPaths[Math.round(Math.random())];
   var opacityDefault = 0;
+  var superSample = 0;
+  var hOffset = 0;
+  var vOffset = 0;
   if ($(window).width() <= 1024) {
     opacityDefault = 1;
-  }else{
+    superSample = 1.6;
+    hOffset = 6;
+    vOffset = -116;
+  } else {
+    superSample = 1.8;
     opacityDefault = 0.8;
+    hOffset = 0;
+    vOffset = -126;
   }
   L2Dwidget.init({
     "pluginRootPath": "live2dw/",
@@ -17,16 +26,16 @@ $(function () {
       "jsonPath": jsonPath,
     },
     "display": {
-      "superSample": 1.8,
+      "superSample": superSample,
       "position": "left",
       "width": 90,
       "height": 220,
-      "hOffset": 8,
-      "vOffset": -126
+      "hOffset": hOffset,
+      "vOffset": vOffset
     },
     "mobile": {
       "show": true,
-      "scale": 0.5
+      "scale": 0.8
     },
     "react": {
       "opacityDefault": opacityDefault,
@@ -35,13 +44,12 @@ $(function () {
   });
 
   //给归档加更新时间
-  $('.archive .posts-collapse .post-title a>span.archive-title').each(function(){
+  $('.archive .posts-collapse .post-title a>span.archive-title').each(function () {
     $(this).append('<span class="archive-updated"></span>').find('.archive-updated').html('更新于：<time class="updated">' + $(this).attr('updated') + '</time');
   });
 
   //给分类 li 加事件
-  $('.category-all .category-list-item').on('click',function(){
-    console.log($(this).find('a').attr('href'));
+  $('.category-all .category-list-item').on('click', function () {
     window.location.href = $(this).find('a').attr('href');
     return false;
   });
@@ -58,7 +66,7 @@ $(function () {
     $('#header').toggleClass('header-has-sidebar');
   });
 
-  $('.popup-trigger.faa-parent.animated-hover').on('click',function(){
+  $('.popup-trigger.faa-parent.animated-hover').on('click', function () {
     // $('.github-corner').hide();
     $('.sidebar-toggle').hide();
     $('.back-to-top.back-to-top-on').hide();
@@ -66,13 +74,13 @@ $(function () {
     $('#header').removeClass('slideInDown');
     $('.local-search-popup .local-search-header').addClass('search-middle');
   });
-  $('.popup-btn-close').on('click',function(){
+  $('.popup-btn-close').on('click', function () {
     // $('.github-corner').show();
     $('.sidebar-toggle').show();
     $('#sidebar').show();
     $('.back-to-top.back-to-top-on').show();
   })
-  $('#local-search-input').on('change keydown',function(){
+  $('#local-search-input').on('change keydown', function () {
     $('.local-search-popup .local-search-header').removeClass('search-middle');
   });
 
@@ -95,13 +103,13 @@ $(function () {
     }, 0);
   });
 
-  // 给页面新增滚动进度条
+  //给页面新增滚动进度条
   function scroll_fn() {
     var document_height = $(document).height();
     var scroll_so_far = $(window).scrollTop();
     var window_height = $(window).height();
     var max_scroll = document_height - window_height;
-    var scroll_percentage = scroll_so_far / (max_scroll / 101);
+    var scroll_percentage = scroll_so_far / (max_scroll / 100);
     $('#load').width(scroll_percentage + '%');
     if (scroll_percentage >= 99.5){
       $('#load').hide();
@@ -154,10 +162,9 @@ $(function () {
     if ($('#live2d-widget .per-tips').length == 0) {
       $('#live2d-widget').prepend('<div class="per-tips"></div >');
       if (jsonPath == '/live2dw/assets/hijiki.model.json')
-        text = '喵~ 我是 <span style="color:#fdb9b9">hijiki&nbsp;🐱</span>...</br>'
+        text = '喵~ 我是 <span style="color:#fdb9b9">hijiki&nbsp;🐱</span>...</br>';
       else
-        text = '喵~ 我是 <span style="color:#fdb9b9">tororo&nbsp;🐱</span>...</br>'
-          ;
+        text = '喵~ 我是 <span style="color:#fdb9b9">tororo&nbsp;🐱</span>...</br>';
       if (document.referrer !== '' && document.referrer !== 'https://lishaoy.net/') {
         var referrer = document.createElement('a');
         referrer.href = document.referrer;
@@ -207,23 +214,67 @@ $(function () {
     }
   },100);
 
-  setTimeout(() => {
-    $('.vhead .vname[href="https://lishaoy.net"]').after('<span class = "bozhu">博主</span>');
-    $('.vhead .vsys').each(function () {
-      _this = this;
-      isUA();
-    });
-  }, 1500);
+    var addUVTime_g = setInterval(function () {
+      if ($('.vhead:first .vsys>img').length == 0) {
+        $('.vhead .vsys').each(function () {
+          _this = this;
+          isUA();
+        });
+      } else {
+        clearInterval(addUVTime_g);
+      }
+    }, 100);
+    var addUBZime_g = setInterval(function () {
+      if ($('.vhead .vname[href="https://lishaoy.net"]~.bozhu').length == 0) {
+        $('.vhead .vname[href="https://lishaoy.net"]').after('<span class = "bozhu">博主</span>');
+      } else {
+        clearInterval(addUBZime_g);
+      };
+    }, 100);
 
   $('.vsubmit.vbtn').on('click', function () {
-    setTimeout(() => {
-      if ($('.vhead').eq(0).find('.vname[href="https://lishaoy.net"]~.bozhu')) {
-        $('.vhead').eq(0).find('.vname[href="https://lishaoy.net"]').after('<span class = "bozhu">博主</span>');
+    var addUVTime = setInterval(function () {
+      if ($('.vhead:first .vsys>img').length == 0) {
+        $('.vhead:first .vsys').each(function () {
+          _this = this;
+          isUA();
+        });
+      } else {
+        clearInterval(addUVTime);
       }
-      $('.vhead:first .vsys').each(function () {
-        _this = this;
-        isUA();
-      });
+    }, 1000);
+    var addUBZime = setInterval(function () {
+      if ($('.vhead').eq(0).find('.vname[href="https://lishaoy.net"]~.bozhu').length == 0) {
+        $('.vhead').eq(0).find('.vname[href="https://lishaoy.net"]').after('<span class = "bozhu">博主</span>');
+      } else {
+        clearInterval(addUBZime);
+      };
     }, 1000);
   });
+  $(document).on('click','.vmore.vbtn',function(){
+    var addUVTime = setInterval(function () {
+      if ($('.vhead:last .vsys>img').length == 0) {
+        $('.vhead .vsys').each(function () {
+          if ($(this).html().indexOf('img') == -1){
+            _this = this;
+            isUA();
+          }
+        });
+      } else {
+        clearInterval(addUVTime);
+      }
+    }, 1000);
+    var addUBZime = setInterval(function () {
+      if ($('.vhead:last .vname[href="https://lishaoy.net"]~.bozhu').length  == 0) {
+        $('.vhead .vname[href="https://lishaoy.net"]').each(function(){
+          if ($(this).siblings('.bozhu').length == 0){
+            $(this).after('<span class = "bozhu">博主</span>');
+          }
+        });
+      } else {
+        clearInterval(addUBZime);
+      };
+    }, 1000);
+  })
 });
+

@@ -30,7 +30,7 @@ copyright: true
     <h5>设计理念</h5>
     <div class="instructions">
         <ul>
-            <li>排版：<span class="mark-secondary">简洁易用</span>，整体布局排版整洁、干净</li>
+            <li>排版：<span class="mark-secondary">简洁风格</span>，布局整洁、界面干净</li>
             <li>色调：主色调以黑白为主，以天空蓝、红色点缀</li>
             <li>交互：稍做了一点点而已 😁</li>
             <li>美观：功能为主，颜值略有 🤐</li>
