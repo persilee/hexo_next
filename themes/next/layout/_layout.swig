@@ -232,6 +232,11 @@
     border-bottom-right-radius: 4px;
     border-bottom-left-radius: 4px;
 }
+@media screen and (max-width: 414px) {
+    .v .vlist {
+        padding-left: 0;
+    }
+}
 .v .vlist .vcard .vcontent.expand:before {
     background: linear-gradient(180deg,hsla(0, 0%, 100%, 0),hsla(199, 100%, 76%, 0.22));
     background: -webkit-gradient(linear,left top,left bottom,from(hsla(0,0%,100%,0)),to(hsla(199, 100%, 76%, 0.22));
