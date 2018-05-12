@@ -388,16 +388,22 @@
 
 //页面进度条样式
 #load {
-    background-color: rgb(135, 218, 255);
-    box-shadow: 0 0 10px #87daff, 0 0 5px #87daff;
-    height: 1px;
+    background-color: #87daff;
+    box-shadow: 0 0 10px #87daff, 0 0 1px #87daff;
+    height: 2px;
     border-radius: 2px;
     width: 0px;
     position: fixed;
     left: 0px;
-    bottom: 0px;
+    top: 0px;
     z-index: 9999;
 }
+#load.header {
+    background-color: #333;
+    box-shadow: 0 0 10px #333, 0 0 5px #333;
+    height: 1px;
+}
+
 
 .scroll_percentage{
   color: #fff;
