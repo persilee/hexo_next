@@ -3,21 +3,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="baidu-site-verification" content="7S8EhsCBzP" />
 <meta name="google-site-verification" content="c7v-UByxWR7Pl8zy2sW85x1mKLtl7kCPtIaZyr-vjsI" />
-<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
-<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
-<style>
-    .pace .pace-progress {
-        background: #1E92FB; /*进度条颜色*/
-        height: 2px;
-    }
-    .pace .pace-progress-inner {
-         box-shadow: 0 0 10px #1E92FB, 0 0 5px #1E92FB; /*阴影颜色: #1E92FB*/
-    }
-    .pace .pace-activity {
-        border-top-color: #1E92FB;    /*上边框颜色*/
-        border-left-color: #1E92FB;    /*左边框颜色*/
-    }
-</style>
 <meta name="theme-color" content="{{ theme.android_chrome_color }}">
 
 
@@ -110,7 +95,7 @@
 
 
 {% if theme.favicon %}
-  {#<link rel="shortcut icon" type="image/x-icon" href="{{ url_for(theme.favicon) }}?v={{ theme.version }}" />#} 
+  {#<link rel="shortcut icon" type="image/x-icon" href="{{ url_for(theme.favicon) }}?v={{ theme.version }}" />#}
   <link rel="shortcut icon" type="image/x-icon" href="{{ url_for(theme.favicon) }}" />
 {% endif %}
 

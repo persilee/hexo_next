@@ -40,6 +40,10 @@
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="{{ page.lang || page.language || config.language }}">
 
+  <div id="loader">
+    <div></div>
+  </div>
+
   {% set container_class = "container " %}
   {% if theme.sidebar.position %}
     {% set container_class = container_class + 'sidebar-position-' + theme.sidebar.position %}
@@ -127,7 +131,11 @@
 
    <!-- 自己的脚本 -->
   <script type="text/javascript" src="/js/src/persilee.js"></script>
-
+  <script>
+    $(function(){
+      $('#loader').css('display','none');
+    });
+  </script>
   <style>
     .no-post.comments .comments.no-post {
       background: transparent;
@@ -214,16 +222,16 @@
       border-bottom: 1px solid #87daff;
   }
   .v .vlist .vcard .vcontent pre {
-    background: #87daff21;
-    border-radius: 4px;
-    box-shadow: 0 0 2px #ffffff33;
-}
-.v .vlist .vcard .vcontent pre code {
-    color: #87daff;
-    background: #87daff00;
-    border-radius: 4px;
-    box-shadow: 0 0 2px #87daff05;
-}
+      background: #87daff21;
+      border-radius: 4px;
+      box-shadow: 0 0 2px #ffffff33;
+  }
+  .v .vlist .vcard .vcontent pre code {
+      color: #87daff;
+      background: #87daff00;
+      border-radius: 4px;
+      box-shadow: 0 0 2px #87daff05;
+  }
   .v .vlist .vcard .vcontent.expand:after {
     color: #fdfafa;
     font-size: 110%;
@@ -231,16 +239,16 @@
     background: #87daff38;
     border-bottom-right-radius: 4px;
     border-bottom-left-radius: 4px;
-}
-@media screen and (max-width: 414px) {
-    .v .vlist {
-        padding-left: 0;
-    }
-}
-.v .vlist .vcard .vcontent.expand:before {
-    background: linear-gradient(180deg,hsla(0, 0%, 100%, 0),hsla(199, 100%, 76%, 0.22));
-    background: -webkit-gradient(linear,left top,left bottom,from(hsla(0,0%,100%,0)),to(hsla(199, 100%, 76%, 0.22));
-}
-</style>
+  }
+  @media screen and (max-width: 414px) {
+      .v .vlist {
+          padding-left: 0;
+      }
+  }
+  .v .vlist .vcard .vcontent.expand:before {
+      background: linear-gradient(180deg,hsla(0, 0%, 100%, 0),hsla(199, 100%, 76%, 0.22));
+      background: -webkit-gradient(linear,left top,left bottom,from(hsla(0,0%,100%,0)),to(hsla(199, 100%, 76%, 0.22));
+  }
+  </style>
 </body>
 </html>
