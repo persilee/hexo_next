@@ -1,4 +1,27 @@
 // Custom styles.
+//页面进度条样式
+#load {
+    position: fixed;
+    left: 0px;
+    top: 0px; height: 2px;
+    width: 0px;
+    border-radius: 2px;
+    background-color: #87daff;
+    box-shadow: 0 0 10px #87daff, 0 0 1px #87daff;
+    z-index: 9999;
+}
+#load.header {
+    background-color: #333;
+    box-shadow: 0 0 10px #333, 0 0 5px #333;
+    height: 1px;
+}
+.scroll_percentage{
+  color: #fff;
+}
+//禁用了包括 hover 在内的鼠标事件，从而提高滚动性能
+.disable-hover, .disable-hover * {
+  pointer-events: none !important;
+}
 //分类
 .category-all-page .category-list {
     padding-left: 10%;
@@ -386,29 +409,6 @@
   }
 }
 
-//页面进度条样式
-#load {
-    background-color: #87daff;
-    box-shadow: 0 0 10px #87daff, 0 0 1px #87daff;
-    height: 2px;
-    border-radius: 2px;
-    width: 0px;
-    position: fixed;
-    left: 0px;
-    top: 0px;
-    z-index: 9999;
-}
-#load.header {
-    background-color: #333;
-    box-shadow: 0 0 10px #333, 0 0 5px #333;
-    height: 1px;
-}
-
-
-.scroll_percentage{
-  color: #fff;
-}
-
 //评论样式
 
 .v .vlist .vcard .vhead .bozhu {
@@ -587,7 +587,7 @@ body::before {
   height: 100%;
   top: 0;
   left: 0;
-  will-change: auto;
+  will-change: transform;
   z-index: -100;
   background-image: url(/images/bg.jpg);
   background-repeat: repeat;

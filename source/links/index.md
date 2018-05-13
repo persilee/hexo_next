@@ -72,7 +72,7 @@ copyright: true
         </li>
         <li class="per-links-item">
             <a href="http://zhang18.top/" class="group-picture" title="ZLOE" target="_blank">
-                <img class="per-links-icon" src="http://wx1.sinaimg.cn/large/006gFOhdly1fr0hdrzlolj30b40b4dg7.jpg" alt="">
+                <img class="per-links-icon" src="/links/index/zloe.jpg" alt="">
                 <h3 class="per-links-title">ZLOE</h3>
                 <p class="per-links-des">人生苦短。</p>
             </a>

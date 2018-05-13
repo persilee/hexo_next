@@ -1,4 +1,6 @@
 <meta charset="UTF-8"/>
+<link href="//lishaoy.net" rel="dns-prefetch">
+<link href="//www.lishaoy.net" rel="dns-prefetch">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="baidu-site-verification" content="7S8EhsCBzP" />
