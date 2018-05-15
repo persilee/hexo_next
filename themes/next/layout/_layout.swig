@@ -218,6 +218,11 @@
       font-size: 90%;
     }
 
+    .v .vlist .vcard .vcontent img{
+      max-width:18px;
+      display:inline-block
+    }
+
   .v .vwrap .vheader .vinput:focus {
       border-bottom: 1px solid #87daff;
   }

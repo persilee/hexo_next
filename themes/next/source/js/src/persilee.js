@@ -186,7 +186,7 @@ $(function () {
       $(_this).prepend('<img class="Firefox" src="/images/ua/Firefox.svg">')
     } else if ($(_this).text().indexOf('Windows 10') == 0) {
       $(_this).prepend('<img class="Windows10" src="/images/ua/windows10.svg">')
-    } else if ($(_this).text().indexOf('Windows 7') == 0 || $(_this).text().indexOf('Windows 8') == 0 || $(_this).text().indexOf('Windows 9') == 0) {
+    } else if ($(_this).text().indexOf('Windows') == 0 || $(_this).text().indexOf('Windows 7') == 0 || $(_this).text().indexOf('Windows 8') == 0 || $(_this).text().indexOf('Windows 9') == 0) {
       $(_this).prepend('<img class="Windows7" src="/images/ua/windows7.svg">')
     } else if ($(_this).text().indexOf('Android') == 0) {
       $(_this).prepend('<img class="Android" src="/images/ua/Android.svg">')
