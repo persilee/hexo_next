@@ -12,6 +12,39 @@
 
   <article class="{{ post_class }}" itemscope itemtype="http://schema.org/Article">
   {##################}
+  {### POST-DATE BLOCK ###}
+  {##################}
+  <div class="post-date">
+    <div class="post-month">{{ date(post.updated, 'MM') }}月</div>
+    <div class="post-day">{{ date(post.updated, 'DD') }}</div>
+    <div class="text-desc">
+			<span class="date-text">更新</span>
+		</div>
+  </div>
+  {######################}
+  {### END POST-DATE BLOCK ###}
+  {######################}
+
+  <div class="post-badge">
+    {% if post.categories and post.categories.length and theme.post_meta.categories %}
+            <span class="post-category" >
+              {% for cat in post.categories %}
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="{{ url_for(cat.path) }}" itemprop="url" rel="index">
+                    <span itemprop="name">{{ cat.name }}</span>
+                  </a>
+                </span>
+
+                {% set cat_length = post.categories.length %}
+                {% if cat_length > 1 and loop.index !== cat_length %}
+                  {{ __('symbol.comma') }}
+                {% endif %}
+              {% endfor %}
+            </span>
+    {% endif %}
+  </div>
+
+  {##################}
   {### POST BLOCK ###}
   {##################}
   <div class="post-block">
@@ -67,10 +100,10 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               {% if theme.post_meta.item_text %}
-                <span class="post-meta-item-text">{{ __('post.modified') }}</span>
+                <span class="post-meta-item-text">{{ __('post.posted') }}</span>
               {% endif %}
-              <time title="{{ __('post.modified') }}" itemprop="dateCreated datePublished" datetime="{{ moment(post.updated).format() }}">
-                {{ date(post.updated, config.date_format) }}
+              <time title="{{ __('post.posted') }}" itemprop="dateCreated datePublished" datetime="{{ moment(post.date).format() }}">
+                {{ date(post.date, config.date_format) }}
               </time>
             {% endif %}
 
@@ -91,6 +124,7 @@
             {% endif %}
           </span>
 
+          {#######
           {% if post.categories and post.categories.length and theme.post_meta.categories %}
             <span class="post-category" >
             {% if theme.post_meta.created_at or theme.post_meta.updated_at %}
@@ -116,6 +150,8 @@
               {% endfor %}
             </span>
           {% endif %}
+          ######}
+
 
           {% if post.comments %}
             {% if (theme.duoshuo and theme.duoshuo.shortname) or theme.duoshuo_shortname %}
@@ -179,7 +215,7 @@
             {% endif %}
           {% endif %}
 
-          {# LeanCould PageView #}
+          {# LeanCould PageView  #}
           {% if theme.leancloud_visitors.enable %}
              <span id="{{ url_for(post.path) }}" class="leancloud_visitors" data-flag-title="{{ post.title }}">
                <span class="post-meta-divider">|</span>
@@ -199,6 +235,7 @@
             <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>{{ theme.busuanzi_count.page_pv_footer }}
             </span>
           {% endif %}
+         
 
           {% if theme.post_wordcount.wordcount or theme.post_wordcount.min2read %}
             <div class="post-wordcount">
