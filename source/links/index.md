@@ -92,6 +92,13 @@ copyright: true
                 <p class="per-links-des">樱花庄的白猫</p>
             </a>
         </li>
+        <li class="per-links-item">
+            <a href="https://diygod.me/" class="group-picture" title="DIYgod" target="_blank">
+                <img class="per-links-icon" src="https://cdn.lishaoy.net/images/links/DIYgod.jpg" alt="">
+                <h3 class="per-links-title">DIYgod</h3>
+                <p class="per-links-des">人气网红 | 前端小萌新 | bilibili | 有猫 | 开源</p>
+            </a>
+        </li>
     </ul>
     <hr>
     <div class="instructions">

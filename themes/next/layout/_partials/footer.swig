@@ -8,7 +8,6 @@
   <span class="author" itemprop="copyrightHolder">{{ config.author }}</span> - &nbsp;
   <span> Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></span>
 </div>
-<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 <div class="powered-by">
   <i class="fa fa-users fa-fw"></i>
   <span id="busuanzi_container_site_uv">

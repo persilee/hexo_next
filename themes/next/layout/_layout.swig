@@ -119,7 +119,7 @@
   <div id="load" style=""></div>
   <!-- 新增看娘 -->
   <script async src="/live2dw/js/perTips.js"></script>
-  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script>
+  <script src="/live2dw/lib/L2Dwidget.min.js"></script>
   <!-- 页面点击小红心 -->
   <script type="text/javascript" src="/js/src/love.js"></script>
   <!-- 背景动画
@@ -129,6 +129,9 @@
    <!-- 输入爆炸效果来自 http://xiaowiba.com （小尾巴） 如有侵权，请通知我撤销 -->
   <script type="text/javascript" src="/js/src/activate-power-mode.js"></script>
 
+   <!-- UV、PV统计 -->
+  <script async src="https://cdn.lishaoy.net/js/busuanzi.pure.mini.js"></script>
+
    <!-- 自己的脚本 -->
   <script type="text/javascript" src="/js/src/persilee.js"></script>
   <script>
@@ -137,7 +140,7 @@
     });
   </script>
   <style>
-    .no-post.comments .comments.no-post {
+    .comments.no-post {
       background: transparent;
     }
     .no-post.v *{
@@ -238,12 +241,15 @@
       box-shadow: 0 0 2px #87daff05;
   }
   .v .vlist .vcard .vcontent.expand:after {
-    color: #fdfafa;
+    color: #ff0000de;
     font-size: 110%;
     font-weight: bold;
     background: #87daff38;
     border-bottom-right-radius: 4px;
     border-bottom-left-radius: 4px;
+  }
+  .comments.no-post .vlist .vcard .vcontent.expand:after {
+    color: #fff;
   }
   @media screen and (max-width: 414px) {
       .v .vlist {

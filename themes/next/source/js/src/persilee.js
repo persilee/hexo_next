@@ -155,7 +155,9 @@ $(function () {
         if (!$('#header').hasClass('slideOutUp')) $('#header').addClass('slideOutUp').removeClass('slideInDown');
         if ($('#load').hasClass('header')) $('#load').removeClass('header');
       }
-      if ($(window).scrollTop() == $(document).height() - $(window).height()) showMessage('喵~ 页面到底了，点击右下角箭头 ⬆️ ，可回到顶部', 3000);
+      if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+        if (typeof showMessage == 'function') showMessage('喵~ 页面到底了，点击右下角箭头 ⬆️ ，可回到顶部', 3000);
+      }
     } else { //上滚
       if (!$('#load').hasClass('header')) $('#load').addClass('header');
       if ($('#header').hasClass('slideOutUp')) $('#header').removeClass('slideOutUp').addClass('slideInDown');
