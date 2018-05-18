@@ -31,7 +31,7 @@ copyright: true
     <div class="instructions">
         <ul>
             <li>排版：<span class="mark-secondary">简洁风格</span>，布局整洁、界面干净</li>
-            <li>色调：主色调以黑白为主，以天空蓝、红色点缀</li>
+            <li>色调：主色调以黑<span class="color-box black"></span>(#000)白<span class="color-box white"></span>(#ddd)为主，以天空蓝<span class="color-box blue"></span>(#87daff)、红色<span class="color-box red"></span>(#ef2f11)点缀</li>
             <li>交互：稍做了一点点而已 😁</li>
             <li>美观：功能为主，颜值略有 🤐</li>
         </ul>

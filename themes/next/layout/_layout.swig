@@ -167,7 +167,7 @@
     }
     .v ul li {
       list-style: disc;
-      padding: 2px 0 0 0;
+      padding: 2px 15px 0 0;
     }
     .v .vlist strong {
       color: #87daff;
@@ -219,6 +219,10 @@
       border-radius: 4px;
       box-shadow: 0 0 2px #87daff;
       font-size: 90%;
+    }
+    .v .vlist .vcard .vcontent img {
+      max-width: 18px;
+      display: inline-block;
     }
 
     .v .vlist .vcard .vcontent img{
