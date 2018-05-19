@@ -48,6 +48,16 @@
 #live2d-widget #live2dcanvas {
   position: relative;
 }
+@media screen and (min-width: 1024px) and (max-width: 1440px) {
+  .per-tips {
+    background-color: rgba(120, 195, 229, 0.66);
+  }
+  #live2d-widget {
+    width: 100px;
+    height: 160px;
+    transform: scale(0.7) translate(-20px, 36px);
+  }
+}
 
 @media screen and (min-width: 768px) and (max-width: 991px) {
   .per-tips {
@@ -69,7 +79,6 @@
     height: 160px;
     /* transform: scale(0.6) translate(-150px, 125px); */
     transform: scale(0.6) translate(-40px, 52px);
-
   }
 }
 
