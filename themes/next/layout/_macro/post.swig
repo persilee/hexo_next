@@ -14,11 +14,13 @@
   {##################}
   {### POST-DATE BLOCK ###}
   {##################}
-  <div class="post-date">
-    <div class="post-month">{{ date(post.updated, 'MM') }}月</div>
-    <div class="post-day">{{ date(post.updated, 'DD') }}</div>
+  <div class="post-date" data-datetime="{{ moment(post.updated).format() }}">
+    <div class="post-time-text"></div>
+    <div class="post-time-count"></div>
     <div class="text-desc">
-			<span class="date-text">更新</span>
+			<div class="date-text">更新于</div>
+      <div class="post-tiem">{{ date(post.updated, 'MM') }}月{{ date(post.updated, 'DD') }}</div>
+      <div class="post-year">{{ date(post.updated, 'YYYY') }}</div>
 		</div>
   </div>
   {######################}
@@ -235,7 +237,7 @@
             <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>{{ theme.busuanzi_count.page_pv_footer }}
             </span>
           {% endif %}
-         
+
 
           {% if theme.post_wordcount.wordcount or theme.post_wordcount.min2read %}
             <div class="post-wordcount">

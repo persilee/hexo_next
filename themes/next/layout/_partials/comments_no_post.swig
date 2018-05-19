@@ -25,9 +25,9 @@
     {% elseif theme.youyan_uid %}
       <div id="uyan_frame"></div>
     {% elseif theme.valine.appid and theme.valine.appkey %}
-      <div class="comments no-post" id="comments"></div>
+      <div class="comments v no-post" id="comments"></div>
     {% elseif theme.valine_modify.appid and theme.valine_modify.appkey %}
-      <div class="comments no-post" id="comments"></div>
+      <div class="comments v no-post" id="comments"></div>
     {% elseif theme.changyan.appid and theme.changyan.appkey %}
       <div id="SOHUCS"></div>
     {% endif %}
