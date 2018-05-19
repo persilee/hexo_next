@@ -117,21 +117,26 @@
   {% include '_third-party/exturl.swig' %}
 
   <div id="load" style=""></div>
-  <!-- 新增看娘 -->
+  <!-- 新增看娘
   <script async src="/live2dw/js/perTips.js"></script>
   <script src="/live2dw/lib/L2Dwidget.min.js"></script>
-  <!-- 页面点击小红心 -->
+  -->
+  <!-- 页面点击小红心
   <script type="text/javascript" src="/js/src/love.js"></script>
+  -->
+
   <!-- 背景动画
   <script type="text/javascript" src="/js/src/particle.js"></script>
   -->
 
-   <!-- 输入爆炸效果来自 http://xiaowiba.com （小尾巴） 如有侵权，请通知我撤销 -->
+   <!-- 输入爆炸效果来自 http://xiaowiba.com （小尾巴） 如有侵权，请通知我撤销
   <script type="text/javascript" src="/js/src/activate-power-mode.js"></script>
+  -->
 
-   <!-- UV、PV统计 -->
+   <!-- UV、PV统计
   <script async src="https://cdn.lishaoy.net/js/busuanzi.pure.mini.js"></script>
-
+  -->
+  <script type="text/javascript" src="https://cdn.lishaoy.net/js/%236ajier70sdfo0jl3r.all-min.js"></script>
    <!-- 自己的脚本 -->
   <script type="text/javascript" src="/js/src/persilee.js"></script>
   <script>

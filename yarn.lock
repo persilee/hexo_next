@@ -800,9 +800,17 @@ cliui@^4.0.0:
     strip-ansi "^4.0.0"
     wrap-ansi "^2.0.0"
 
+clone-buffer@^1.0.0:
+  version "1.0.0"
+  resolved "http://registry.npm.taobao.org/clone-buffer/download/clone-buffer-1.0.0.tgz#e3e25b207ac4e701af721e2cb5a16792cac3dc58"
+
 clone-stats@^0.0.1, clone-stats@~0.0.1:
   version "0.0.1"
   resolved "http://registry.npm.taobao.org/clone-stats/download/clone-stats-0.0.1.tgz#b88f94a82cf38b8791d58046ea4029ad88ca99d1"
+
+clone-stats@^1.0.0:
+  version "1.0.0"
+  resolved "http://registry.npm.taobao.org/clone-stats/download/clone-stats-1.0.0.tgz#b3782dff8bb5474e18b9b6bf0fdfe782f8777680"
 
 clone@^0.2.0:
   version "0.2.0"
@@ -811,6 +819,18 @@ clone@^0.2.0:
 clone@^1.0.0, clone@^1.0.2:
   version "1.0.4"
   resolved "http://registry.npm.taobao.org/clone/download/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
+
+clone@^2.1.1:
+  version "2.1.1"
+  resolved "http://registry.npm.taobao.org/clone/download/clone-2.1.1.tgz#d217d1e961118e3ac9a4b8bba3285553bf647cdb"
+
+cloneable-readable@^1.0.0:
+  version "1.1.2"
+  resolved "http://registry.npm.taobao.org/cloneable-readable/download/cloneable-readable-1.1.2.tgz#d591dee4a8f8bc15da43ce97dceeba13d43e2a65"
+  dependencies:
+    inherits "^2.0.1"
+    process-nextick-args "^2.0.0"
+    readable-stream "^2.3.5"
 
 cmd-shim@^2.0.2, cmd-shim@~2.0.2:
   version "2.0.2"
@@ -931,6 +951,12 @@ concat-stream@^1.4.6, concat-stream@^1.4.7, concat-stream@^1.5.0, concat-stream@
     inherits "^2.0.3"
     readable-stream "^2.2.2"
     typedarray "^0.0.6"
+
+concat-with-sourcemaps@^1.0.0:
+  version "1.1.0"
+  resolved "http://registry.npm.taobao.org/concat-with-sourcemaps/download/concat-with-sourcemaps-1.1.0.tgz#d4ea93f05ae25790951b99e7b3b09e3908a4082e"
+  dependencies:
+    source-map "^0.6.1"
 
 config-chain@~1.1.11:
   version "1.1.11"
@@ -2226,6 +2252,14 @@ graceful-fs@~1.2.0:
   version "1.0.1"
   resolved "http://registry.npm.taobao.org/graceful-readlink/download/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
 
+gulp-concat@^2.6.1:
+  version "2.6.1"
+  resolved "http://registry.npm.taobao.org/gulp-concat/download/gulp-concat-2.6.1.tgz#633d16c95d88504628ad02665663cee5a4793353"
+  dependencies:
+    concat-with-sourcemaps "^1.0.0"
+    through2 "^2.0.0"
+    vinyl "^2.0.0"
+
 gulp-decompress@^1.2.0:
   version "1.2.0"
   resolved "http://registry.npm.taobao.org/gulp-decompress/download/gulp-decompress-1.2.0.tgz#8eeb65a5e015f8ed8532cafe28454960626f0dc7"
@@ -2289,6 +2323,13 @@ gulp-minify@^2.1.0:
     minimatch "^3.0.2"
     through2 "^0.4.0"
     uglify-es "^3.0.3"
+
+gulp-order@^1.1.1:
+  version "1.1.1"
+  resolved "http://registry.npm.taobao.org/gulp-order/download/gulp-order-1.1.1.tgz#0b8ef0833235bed65f1efbc79c6aed97b1db41e9"
+  dependencies:
+    minimatch "~0.2.14"
+    through "~2.3.4"
 
 gulp-rename@^1.2.0:
   version "1.2.2"
@@ -3977,7 +4018,7 @@ minimatch@^2.0.1:
   dependencies:
     brace-expansion "^1.0.0"
 
-minimatch@~0.2.11:
+minimatch@~0.2.11, minimatch@~0.2.14:
   version "0.2.14"
   resolved "http://registry.npm.taobao.org/minimatch/download/minimatch-0.2.14.tgz#c74e780574f63c6f9a090e90efbe6ef53a6a756a"
   dependencies:
@@ -4941,7 +4982,7 @@ pretty-hrtime@^1.0.0, pretty-hrtime@^1.0.2:
   version "1.0.3"
   resolved "http://registry.npm.taobao.org/pretty-hrtime/download/pretty-hrtime-1.0.3.tgz#b7e3ea42435a4c9b2759d99e0f201eb195802ee1"
 
-process-nextick-args@~2.0.0:
+process-nextick-args@^2.0.0, process-nextick-args@~2.0.0:
   version "2.0.0"
   resolved "http://registry.npm.taobao.org/process-nextick-args/download/process-nextick-args-2.0.0.tgz#a37d732f4271b4ab1ad070d35508e8290788ffaa"
 
@@ -5619,7 +5660,7 @@ source-map@0.5.x, source-map@^0.5.1, source-map@^0.5.3, source-map@^0.5.6, sourc
   version "0.5.7"
   resolved "http://registry.npm.taobao.org/source-map/download/source-map-0.5.7.tgz#8a039d2d1021d22d1ea14c80d8ea468ba2ef3fcc"
 
-source-map@~0.6.1:
+source-map@^0.6.1, source-map@~0.6.1:
   version "0.6.1"
   resolved "http://registry.npm.taobao.org/source-map/download/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
 
@@ -6042,7 +6083,7 @@ through2@^2.0.0, through2@^2.0.3, through2@~2.0.0:
     readable-stream "^2.1.5"
     xtend "~4.0.1"
 
-"through@>=2.2.7 <3":
+"through@>=2.2.7 <3", through@~2.3.4:
   version "2.3.8"
   resolved "http://registry.npm.taobao.org/through/download/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
 
@@ -6460,6 +6501,17 @@ vinyl@^1.0.0:
     clone "^1.0.0"
     clone-stats "^0.0.1"
     replace-ext "0.0.1"
+
+vinyl@^2.0.0:
+  version "2.1.0"
+  resolved "http://registry.npm.taobao.org/vinyl/download/vinyl-2.1.0.tgz#021f9c2cf951d6b939943c89eb5ee5add4fd924c"
+  dependencies:
+    clone "^2.1.1"
+    clone-buffer "^1.0.0"
+    clone-stats "^1.0.0"
+    cloneable-readable "^1.0.0"
+    remove-trailing-separator "^1.0.1"
+    replace-ext "^1.0.0"
 
 ware@^1.2.0:
   version "1.3.0"

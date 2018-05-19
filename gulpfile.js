@@ -4,6 +4,10 @@ var minify = require('gulp-minify');
 var htmlmin = require('gulp-htmlmin');
 var htmlclean = require('gulp-htmlclean');
 var imagemin = require('gulp-imagemin');
+var order = require("gulp-order");
+var concat = require("gulp-concat");
+
+
 // 压缩 public 目录 css
 gulp.task('minify-css', function () {
     return gulp.src('./public/**/*.css')
@@ -21,6 +25,27 @@ gulp.task('minify-html', function () {
             minifyURLs: true,
         }))
         .pipe(gulp.dest('./public'))
+});
+//合并js
+gulp.task('scripts', function () {
+    return gulp.src([
+        './public/lib/fastclick/lib/fastclick.min.js',
+        './public/lib/jquery_lazyload/jquery.lazyload.js',
+        './public/lib/velocity/velocity.min.js',
+        './public/lib/velocity/velocity.ui.min.js',
+        './public/lib/fancybox/source/jquery.fancybox.pack.js',
+        './public/js/src/utils.js',
+        './public/js/src/motion.js',
+        './public/js/src/scrollspy.js',
+        './public/js/src/post-details.js',
+        './public/js/src/bootstrap.js',
+        './public/js/src/push.js',
+        './public/live2dw/js/perTips.js',
+        './public/live2dw/lib/L2Dwidget.min.js',
+        './public/js/src/love.js',
+        './public/js/src/busuanzi.pure.mini.js',
+        './public/js/src/activate-power-mode.js'
+    ]).pipe(concat('all.js')).pipe(minify()).pipe(gulp.dest('./public/dist/'));
 });
 // 压缩 public/js 目录 js
 gulp.task('minify-js', function () {
@@ -43,7 +68,5 @@ gulp.task('imagemin', function () {
 });
 // 执行 gulp 命令时执行的任务
 gulp.task('default', [
-    'minify-html', 'minify-css', 'minify-js', 'imagemin'
+    'scripts', 'minify-html', 'minify-css', 'minify-js', 'imagemin'
 ]);
-
-// , 'minify-js'

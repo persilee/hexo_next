@@ -1,7 +1,7 @@
 {% if theme.valine_modify.enable and theme.valine_modify.appid and theme.valine_modify.appkey %}
-  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="https://cdn.lishaoy.net/js/av-min.js"></script>
   {# <script src='//unpkg.com/valine/dist/Valine.min.js'></script> #}
-  <script src='//unpkg.com/valine@1.1.9-beta9/dist/Valine.min.js'></script>
+  <script src='https://cdn.lishaoy.net/js/%233479dsfjdseruijersdf3r.Valine.min.js'></script>
 
   <script type="text/javascript">
     var GUEST = ['nick','mail','link'];
