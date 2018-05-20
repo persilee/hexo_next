@@ -11,7 +11,7 @@ top: 107
 photos:
 ---
 
-{% fi webOptimize/Optimize.png, web optimize, web optimize %}
+{% fi https://cdn.lishaoy.net/webOptimize/Optimize.png, web optimize, web optimize %}
 
 关于 **性能优化** 是个大的面，这篇文章主要涉及到 **前端** 的几个点，如 **前端性能优化** 的流程、常见技术手段、工具等。
 
@@ -63,3 +63,57 @@ photos:
 
 ### 压缩 合并
 
+对于 **前端性能优化** 自然要关注 **首屏** 打开速度，而这个速度，很大因素是花费在网络请求上，那么怎么减少网络请求的时间呢？
+
+- 减少网络请求次数 
+- 减小文件体积
+- 使用 `CDN` 加速
+
+所以 **压缩、合并** 就是一个解决方案，当然可以用 `gulp` 、 `webpack` 、 `grunt` 等构建工具 **压缩、合并**
+
+例如：`gulp` 代码如下 👇
+
+```javascript gulpfile.js
+//合并js
+gulp.task('scripts', function () {
+    return gulp.src([
+        './public/lib/fastclick/lib/fastclick.min.js',
+        './public/lib/jquery_lazyload/jquery.lazyload.js',
+        './public/lib/velocity/velocity.min.js',
+        './public/lib/velocity/velocity.ui.min.js',
+        './public/lib/fancybox/source/jquery.fancybox.pack.js',
+        './public/js/src/utils.js',
+        './public/js/src/motion.js',
+        './public/js/src/scrollspy.js',
+        './public/js/src/post-details.js',
+        './public/js/src/bootstrap.js',
+        './public/js/src/push.js',
+        './public/live2dw/js/perTips.js',
+        './public/live2dw/lib/L2Dwidget.min.js',
+        './public/js/src/love.js',
+        './public/js/src/busuanzi.pure.mini.js',
+        './public/js/src/activate-power-mode.js'
+    ]).pipe(concat('all.js')).pipe(minify()).pipe(gulp.dest('./public/dist/'));
+});
+```
+然后，再把 **压缩、合并** 的文件放入 `CDN` , 👀 看看效果如何
+
+如图：* **压缩、合并** 且放入 `CND` 之后的效果 *
+
+<img src="https://cdn.lishaoy.net/webOptimize/concatJs.png" alt="Netlity" width="100%" title="首页请求速度" align="center" />
+
+以上是 [lishaoy.net](https://lishaoy.net) 清除缓存后的 **首页** 请求速度。
+
+可见，请求时间是 **4.59 s** ，总请求个数 **51** ， 而 `js` 的请求个数是 **8** ，而没使用 **压缩、合并** 时候，请求时间是 **10** 多秒，总请求个数有 **70** 多个，`js` 的请求个数是 **20** 多个 ，对比请求时间 **性能** 提升 **1倍** 多
+
+如图：*缓存下的首页效果*
+
+<img src="https://cdn.lishaoy.net/webOptimize/concatJs2.png" alt="Netlity" width="100%" title="首页请求速度（缓存）" align="center" />
+
+基本都是秒开 😝
+
+{% note warning %}
+*Tips：在 `压缩、合并` 后，单个文件控制在 25 ~ 30 KB左右，同一个域下，最好不要多于5个资源*
+{% endnote %} 
+
+### 未完，待续。。。 😜
