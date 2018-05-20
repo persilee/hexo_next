@@ -33,9 +33,11 @@
   {% include '_partials/head.swig' %}
   <title>{% block title %}{% endblock %}</title>
   {% include '_third-party/analytics/index.swig' %}
-
+  {# 优化
   <link href="//cdn.jsdelivr.net/gh/moezx/cdn@v2.52/css/lib.css" rel="stylesheet" type="text/css">
   <link href="/live2dw/css/perTips.css" rel="stylesheet" type="text/css">
+  #}
+  <link href="https://cdn.lishaoy.net/css/all.css" rel="stylesheet" type="text/css">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="{{ page.lang || page.language || config.language }}">
@@ -136,7 +138,7 @@
    <!-- UV、PV统计
   <script async src="https://cdn.lishaoy.net/js/busuanzi.pure.mini.js"></script>
   -->
-  <script type="text/javascript" src="https://cdn.lishaoy.net/js/%236ajier70sdfo0jl3r.all-min.js"></script>
+  <script type="text/javascript" src="https://cdn.lishaoy.net/js/7jsiur8kje934fj3kjf%25hh.all-min.js"></script>
    <!-- 自己的脚本 -->
   <script type="text/javascript" src="/js/src/persilee.js"></script>
   <script>
@@ -150,6 +152,9 @@
     }
     .no-post.v *{
       color: #ddd;
+    }
+    .v .vlist p {
+      margin: 12px 0;
     }
     .v .vbtn {
       background: #fbfbfb;
@@ -176,7 +181,8 @@
       padding: 2px 15px 0 0;
     }
     .v .vlist strong , .vinput.vpreview strong {
-      color: #87daff;
+        color: #87daff;
+        font-size: 108%;
     }
     .v .vlist .vcard .vhead .vsys {
         background: #87daff17;
@@ -207,7 +213,7 @@
     }
 
     .no-post.v .vlist .vcard section {
-    border-bottom: 1px dashed #f5f5f55e;
+        border-bottom: 1px dashed #f5f5f55e;
     }
 
     .v .vwrap .vheader .vinput {
@@ -215,13 +221,13 @@
         border-bottom: 1px dashed #dedede45;
     }
     .no-post.v .vwrap .vheader .vinput::-webkit-input-placeholder {
-      color: #808080;
+        color: #808080;
     }
     .no-post.v .vwrap .vheader .vinput:-ms-input-placeholder{  /* Internet Explorer 10-11 */
-      color: #808080;
+        color: #808080;
     }
     .v .txt-right {
-      display: none;
+        display: none;
     }
 
     .v .vlist .vcard .vcontent .code, .v .vlist .vcard .vcontent code, .v .vlist .vcard .vcontent pre , .vinput.vpreview code , .vinput.vpreview pre {

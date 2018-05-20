@@ -60,7 +60,7 @@
   <meta name="360-site-verification" content="{{ theme.qihu_site_verification }}" />
 {% endif %}
 
-
+{# 优化
 {% if theme.fancybox %}
   {% set fancybox_css_uri = url_for(theme.vendors._internal + '/fancybox/source/jquery.fancybox.css?v=2.1.5') %}
   {% if theme.vendors.fancybox_css %}
@@ -68,9 +68,10 @@
   {% endif %}
   <link href="{{ fancybox_css_uri }}" rel="stylesheet" type="text/css" />
 {% endif %}
+#}
 
 {% include "./head/external-fonts.swig" %}
-
+{# 优化
 {% set font_awesome_uri = url_for(theme.vendors._internal + '/font-awesome/css/font-awesome.min.css?v=4.6.2') %}
 {% if theme.vendors.fontawesome %}
   {% set font_awesome_uri = theme.vendors.fontawesome %}
@@ -78,7 +79,7 @@
 <link href="{{ font_awesome_uri }}" rel="stylesheet" type="text/css" />
 
 <link href="{{ url_for(theme.css) }}/main.css?v={{ theme.version }}" rel="stylesheet" type="text/css" />
-
+#}
 {% if page.keywords %}
   <meta name="keywords" content="{{ page.keywords }}" />
 {% elif page.tags and page.tags.length %}

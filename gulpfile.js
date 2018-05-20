@@ -7,7 +7,16 @@ var imagemin = require('gulp-imagemin');
 var order = require("gulp-order");
 var concat = require("gulp-concat");
 
-
+// 合并 CSS
+gulp.task('css', function () {
+    return gulp.src([
+        './public/lib/font-awesome/css/font-awesome.min.css',
+        './public/lib/fancybox/source/jquery.fancybox.css',
+        './public/css/main.css',
+        './public/css/lib.css',
+        './public/live2dw/css/perTips.css'
+    ]).pipe(concat('all.css')).pipe(minify()).pipe(gulp.dest('./public/dist/'));
+});
 // 压缩 public 目录 css
 gulp.task('minify-css', function () {
     return gulp.src('./public/**/*.css')
@@ -68,5 +77,5 @@ gulp.task('imagemin', function () {
 });
 // 执行 gulp 命令时执行的任务
 gulp.task('default', [
-    'scripts', 'minify-html', 'minify-css', 'minify-js', 'imagemin'
+    'css', 'scripts', 'minify-html', 'minify-css', 'minify-js', 'imagemin'
 ]);
