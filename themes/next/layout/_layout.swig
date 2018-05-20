@@ -154,6 +154,7 @@
     .v .vbtn {
       background: #fbfbfb;
       padding: .3rem 1.2em;
+      border: 1px solid #dddddd75;
     }
     .no-post.v .vbtn {
       background: #2222220a;
@@ -162,7 +163,7 @@
       background-color: #fff;
     }
     .no-post.v .vwrap {
-      border: 1px solid #f0f0f0a3;
+      border: 1px solid #f0f0f036;;
     }
     .no-post.v a {
       color: #ddd;
@@ -174,7 +175,7 @@
       list-style: disc;
       padding: 2px 15px 0 0;
     }
-    .v .vlist strong {
+    .v .vlist strong , .vinput.vpreview strong {
       color: #87daff;
     }
     .v .vlist .vcard .vhead .vsys {
@@ -208,6 +209,11 @@
     .no-post.v .vlist .vcard section {
     border-bottom: 1px dashed #f5f5f55e;
     }
+
+    .v .vwrap .vheader .vinput {
+        width: 33.33%;
+        border-bottom: 1px dashed #dedede45;
+    }
     .no-post.v .vwrap .vheader .vinput::-webkit-input-placeholder {
       color: #808080;
     }
@@ -218,12 +224,13 @@
       display: none;
     }
 
-    .v .vlist .vcard .vcontent .code, .v .vlist .vcard .vcontent code, .v .vlist .vcard .vcontent pre {
+    .v .vlist .vcard .vcontent .code, .v .vlist .vcard .vcontent code, .v .vlist .vcard .vcontent pre , .vinput.vpreview code , .vinput.vpreview pre {
       color: #005098fc;
       background: #87daffb8;
       border-radius: 4px;
       box-shadow: 0 0 2px #87daff;
       font-size: 90%;
+      padding: 2px 6px;
     }
     .v .vlist .vcard .vcontent img {
       max-width: 18px;
@@ -238,12 +245,12 @@
   .v .vwrap .vheader .vinput:focus {
       border-bottom: 1px solid #87daff;
   }
-  .v .vlist .vcard .vcontent pre {
+  .v .vlist .vcard .vcontent pre , .vinput.vpreview pre {
       background: #87daff21;
       border-radius: 4px;
       box-shadow: 0 0 2px #ffffff33;
   }
-  .v .vlist .vcard .vcontent pre code {
+  .v .vlist .vcard .vcontent pre code ,.vinput.vpreview pre code {
       color: #87daff;
       background: #87daff00;
       border-radius: 4px;
