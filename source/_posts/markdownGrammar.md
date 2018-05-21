@@ -10,7 +10,7 @@ top: 104
 photos:
 ---
 
-{% fi markdownGrammar/markdown.png, markdown, markdown %}
+{% fi https://cdn.lishaoy.net/markdownGrammar/markdown.png, markdown, markdown %}
 
 平时我写日记、文档和博客都会用到 `markdown` 语法，我用的是 `马克飞象` 先在本地写好，而且可以和 `印象笔记` 同步，如果知识积累的多了，也会总结下，分享到社区，直接 <kbd>⌘ -  C</kbd>  然后 <kbd>⌘ -  V</kbd>  就可以了，特别方便。 🙂
 

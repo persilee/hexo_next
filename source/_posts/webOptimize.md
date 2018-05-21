@@ -71,10 +71,12 @@ photos:
 
 所以 **压缩、合并** 就是一个解决方案，当然可以用 `gulp` 、 `webpack` 、 `grunt` 等构建工具 **压缩、合并**
 
-例如：`gulp` 代码如下 👇
+#### `JS、CSS` 压缩 合并
 
-```javascript gulpfile.js
-//合并js
+例如：`gulp js、css` 压缩、合并代码如下 👇
+
+```javascript javascript https://lishaoy.net/webOptimize.html gulpfile.js
+//压缩、合并js
 gulp.task('scripts', function () {
     return gulp.src([
         './public/lib/fastclick/lib/fastclick.min.js',
@@ -95,18 +97,31 @@ gulp.task('scripts', function () {
         './public/js/src/activate-power-mode.js'
     ]).pipe(concat('all.js')).pipe(minify()).pipe(gulp.dest('./public/dist/'));
 });
+
+// 压缩、合并 CSS 
+gulp.task('css', function () {
+    return gulp.src([
+        './public/lib/font-awesome/css/font-awesome.min.css',
+        './public/lib/fancybox/source/jquery.fancybox.css',
+        './public/css/main.css',
+        './public/css/lib.css',
+        './public/live2dw/css/perTips.css'
+    ]).pipe(concat('all.css')).pipe(minify()).pipe(gulp.dest('./public/dist/'));
+});
 ```
-然后，再把 **压缩、合并** 的文件放入 `CDN` , 👀 看看效果如何
+然后，再把 **压缩、合并** 的 `JS、CSS` 放入 `CDN` , 👀 看看效果如何
 
 如图：* **压缩、合并** 且放入 `CND` 之后的效果 *
 
-<img src="https://cdn.lishaoy.net/webOptimize/concatJs.png" alt="Netlity" width="100%" title="首页请求速度" align="center" />
+<img src="https://cdn.lishaoy.net/webOptimize/concatJs.png" alt="Netlity" width="100%" title="首页请求速度(js)" align="center" />
+
+<img src="https://cdn.lishaoy.net/webOptimize/concatCss.png" alt="Netlity" width="100%" title="首页请求速度(css)" align="center" />
 
 以上是 [lishaoy.net](https://lishaoy.net) 清除缓存后的 **首页** 请求速度。
 
-可见，请求时间是 **4.59 s** ，总请求个数 **51** ， 而 `js` 的请求个数是 **8** ，而没使用 **压缩、合并** 时候，请求时间是 **10** 多秒，总请求个数有 **70** 多个，`js` 的请求个数是 **20** 多个 ，对比请求时间 **性能** 提升 **1倍** 多
+可见，请求时间是 **4.59 s** ，总请求个数 **51** ， 而 `js` 的请求个数是 **8** ，`css` 的请求个数是 **3** _（其实就 all.css 一个，其它 2 个是 Google浏览器加载的）_， 而没使用 **压缩、合并** 时候，请求时间是 **10** 多秒，总请求个数有 **70** 多个，`js` 的请求个数是 **20** 多个 ，对比请求时间 **性能** 提升 **1倍** 多
 
-如图：*缓存下的首页效果*
+如图：*有缓存下的首页效果*
 
 <img src="https://cdn.lishaoy.net/webOptimize/concatJs2.png" alt="Netlity" width="100%" title="首页请求速度（缓存）" align="center" />
 
@@ -115,5 +130,35 @@ gulp.task('scripts', function () {
 {% note warning %}
 *Tips：在 `压缩、合并` 后，单个文件控制在 25 ~ 30 KB左右，同一个域下，最好不要多于5个资源*
 {% endnote %} 
+
+#### 图片压缩、合并 
+
+例如：`gulp` 图片压缩代码如下 👇
+
+```javascript javascript https://lishaoy.net/webOptimize.html gulpfile.js
+//压缩image
+gulp.task('imagemin', function () {
+    gulp.src('./public/**/*.{png,jpg,gif,ico,jpeg}')
+        .pipe(imagemin())
+        .pipe(gulp.dest('./public'));
+});
+```
+
+图片的合并可以采用 `CSS Spirite`，方法就是把一些小图用 `PS` 合成一张图，用 `css` 定位显示每张图片的位置
+
+```css css
+.top_right .phone {
+	background: url(../images/top_right.png) no-repeat 7px -17px;
+	padding: 0 38px;
+}
+
+.top_right .help {
+	background: url(../images/top_right.png) no-repeat 0 -47px;
+	padding: 0 38px;
+}
+```
+
+然后，把 **压缩** 的图片放入 `CDN` , 👀 看看，效果如何
+
 
 ### 未完，待续。。。 😜

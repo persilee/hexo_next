@@ -12,7 +12,7 @@ top: 100
 comments: true
 photos:
 ---
-{% fi hexoGithubpagesNext/git_hexo.jpeg, GitHubPages + Hexo, GitHubPages + Hexo %}
+{% fi https://cdn.lishaoy.net/hexoGithubpagesNext/git_hexo.jpeg, GitHubPages + Hexo, GitHubPages + Hexo %}
 <div class="text-center">
     <h3>今天搭建了自己的博客 😝</h3>
 </div>
@@ -125,7 +125,7 @@ photos:
 ```
 
 **如图:** 🌁 </br>
-<img src="hexoGithubpagesNext/hexoinit.png" alt="hexo" width="100%" title="hexo最初的样子 😂" align="center" />
+<img src="https://cdn.lishaoy.net/hexoGithubpagesNext/hexoinit.png" alt="hexo" width="100%" title="hexo最初的样子 😂" align="center" />
 
 ----
 ### 关联 GitHub
@@ -146,15 +146,15 @@ photos:
 
 - 点击如图 `Settings` 开启，**GitHub Pages** 功能
 
-<img src="hexoGithubpagesNext/gitpages.png" alt="GitHubPages" width="100%" title="GitHubPages Settings" align="center" />
+<img src="https://cdn.lishaoy.net/hexoGithubpagesNext/gitpages.png" alt="GitHubPages" width="100%" title="GitHubPages Settings" align="center" />
 
 - 选择 `master branch` , 然后 **Save** 
 
-<img src="hexoGithubpagesNext/gitpages2.png" alt="GitHubPages" width="100%" title="GitHubPages Source" align="center" />
+<img src="https://cdn.lishaoy.net/hexoGithubpagesNext/gitpages2.png" alt="GitHubPages" width="100%" title="GitHubPages Source" align="center" />
 
 - 复制你的项目连接，如图
 
-<img src="hexoGithubpagesNext/gitpages3.png" alt="GitHubPages" width="100%" title="GitHubPages URL" align="center" />
+<img src="https://cdn.lishaoy.net/hexoGithubpagesNext/gitpages3.png" alt="GitHubPages" width="100%" title="GitHubPages URL" align="center" />
 
 - 然后在你本地项目根目录找到 `_config.yml` 文件，粘贴到以下位置
 
@@ -242,7 +242,7 @@ yarn add hexo-server -S
 
 当然，这里我提供2种方式绑定域名，一种是 `HTTP` (不安全的网络协议)、一种是 `HTTPS` （安全的网络协议，在 **Google** 浏览器上回有一把小锁，如图）
 
-<img src="hexoGithubpagesNext/lock.png" alt="Netlity" width="100%" title="Google HTTPS 状态标识" align="center" />
+<img src="https://cdn.lishaoy.net/hexoGithubpagesNext/lock.png" alt="Netlity" width="100%" title="Google HTTPS 状态标识" align="center" />
 
 #### `HTTP` 绑定域名
 
@@ -250,7 +250,7 @@ yarn add hexo-server -S
 
 首先，我们需要去运行商，新增域名解析规则，如图
 
-<img src="hexoGithubpagesNext/domain.png" alt="domain" width="100%" title="域名解析规则" align="center" />
+<img src="https://cdn.lishaoy.net/hexoGithubpagesNext/domain.png" alt="domain" width="100%" title="域名解析规则" align="center" />
 
 ##### 新增 `CNAME` 文件
 
@@ -275,41 +275,41 @@ yarn add hexo-server -S
 
 首先，我们需要注册一个 [Netlify](https://app.netlify.com/sites/lishaoy/settings/domain#ssl-tls-certificate) 账号，地址：[Netlify](https://app.netlify.com/sites/lishaoy/settings/domain#ssl-tls-certificate) ，可以选择用 **GitHub** 注册。
 
-<img src="hexoGithubpagesNext/netlify.png" alt="Netlity" width="100%" title="Netlity Login" align="center" />
+<img src="https://cdn.lishaoy.net/hexoGithubpagesNext/netlify.png" alt="Netlity" width="100%" title="Netlity Login" align="center" />
 
 ##### 新增站点
 
 - 点击如图按钮 `New site from Git`,来新增 **站点**
 
-<img src="hexoGithubpagesNext/netlify1.png" alt="Netlity" width="100%" title="New site from Git" align="center" />
+<img src="https://cdn.lishaoy.net/hexoGithubpagesNext/netlify1.png" alt="Netlity" width="100%" title="New site from Git" align="center" />
 
 - 然后，点击如图按钮 `GitHub` 
 
-<img src="hexoGithubpagesNext/netlify2.png" alt="Netlity" width="100%" title="GitHub" align="center" />
+<img src="https://cdn.lishaoy.net/hexoGithubpagesNext/netlify2.png" alt="Netlity" width="100%" title="GitHub" align="center" />
 
 - 选择你的项目，比如我的 `MyBlog`
 
-<img src="hexoGithubpagesNext/netlify3.png" alt="Netlity" width="100%" title="Select Site" align="center" />
+<img src="https://cdn.lishaoy.net/hexoGithubpagesNext/netlify3.png" alt="Netlity" width="100%" title="Select Site" align="center" />
 
 - 点击 `Deploy site`
 
-<img src="hexoGithubpagesNext/netlify4.png" alt="Netlity" width="100%" title="Deploy site" align="center" />
+<img src="https://cdn.lishaoy.net/hexoGithubpagesNext/netlify4.png" alt="Netlity" width="100%" title="Deploy site" align="center" />
 
 - 看到如图页面，表示成功，再点击 `Site settings` 
 
-<img src="hexoGithubpagesNext/netlify5.png" alt="Netlity" width="100%" title="Getting started" align="center" />
+<img src="https://cdn.lishaoy.net/hexoGithubpagesNext/netlify5.png" alt="Netlity" width="100%" title="Getting started" align="center" />
 
-<img src="hexoGithubpagesNext/netlify6.png" alt="Netlity" width="100%" title="Site details" align="center" />
+<img src="https://cdn.lishaoy.net/hexoGithubpagesNext/netlify6.png" alt="Netlity" width="100%" title="Site details" align="center" />
 
 - 再点击 `Change site name` 修改短名称，方便记忆
 
 - 在自己的域名管理中设置 **DNS** ，我使用的是 **阿里云** ，在管理界面添加如图规则
 
-<img src="hexoGithubpagesNext/netlify7.png" alt="Netlity" width="100%" title="设置域名规则" align="center" />
+<img src="https://cdn.lishaoy.net/hexoGithubpagesNext/netlify7.png" alt="Netlity" width="100%" title="设置域名规则" align="center" />
 
 - 在点击 `Domain management` 下的 `HTTPS` ，按照步骤完成操作，稍等片刻，即可看到我们的 **域名** 已经上锁 🔐 
 
-<img src="hexoGithubpagesNext/netlify8.png" alt="Netlity" width="100%" title="lishaoy.net上锁" align="center" />
+<img src="https://cdn.lishaoy.net/hexoGithubpagesNext/netlify8.png" alt="Netlity" width="100%" title="lishaoy.net上锁" align="center" />
 
 😝 😜 😄 😆 😂 🤣 ...
 
@@ -358,7 +358,7 @@ theme: next
 
 本地服务启动后，可以在浏览器输入 `http://localhost:4000` 预览，如图
 
-<img src="hexoGithubpagesNext/nextpage.png" alt="next" width="100%" title="next 主题最初的样子🙃" align="center" />
+<img src="https://cdn.lishaoy.net/hexoGithubpagesNext/nextpage.png" alt="next" width="100%" title="next 主题最初的样子🙃" align="center" />
 
 **本文到此告一段落，关于 `next` 主题美化的问题，可以参考以下链接文章 🤗**
 

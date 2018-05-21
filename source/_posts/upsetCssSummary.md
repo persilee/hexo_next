@@ -10,7 +10,7 @@ top: 103
 photos:
 ---
 
-{% fi upsetCssSummary/css.png, css, css %}
+{% fi https://cdn.lishaoy.net/upsetCssSummary/css.png, css, css %}
 
 平时在工作中遇到一些比较偏门的 `css` ，用过一两次，但是老是记不住，于是又需要去 **baidu、 google** ，所以都积累起来，方便以后查看（持续更新...） 😀
 

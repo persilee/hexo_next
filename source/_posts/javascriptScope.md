@@ -12,7 +12,7 @@ comments: true
 photos:
 ---
 
-{% fi javascriptScope/javascriptScope01.png, ,  %}
+{% fi https://cdn.lishaoy.net/javascriptScope/javascriptScope01.png , javascript Scope, javascript Scope %}
 
 我们在面试时，总会碰到一些奇奇怪怪的关于 **作用域** 的面试题，其实弄清楚原理，万变不离其宗，大部分的面试题都可以得 '姐'。 
 

@@ -11,7 +11,7 @@ comments: true
 photos:
 ---
 
-{% fi phpThinkPHPBasis/php.png, php && thinkPHP 基础, php && thinkPHP 基础 %}
+{% fi https://cdn.lishaoy.net/phpThinkPHPBasis/php.png, php && thinkPHP 基础, php && thinkPHP 基础 %}
 
 这篇文章主要带大家认识一下 `PHP` 、 `thinkPHP` ，都是一下基础，其中包括 **PHP语法（变量、字符串、数组、表单、数据库）** 、**面向对象（Class创建、属性、继承、访问控制、抽象、接口等）** 、 **thinkPHP（控制器、视图、模型等）** 😝
 

@@ -102,7 +102,9 @@
 {% block script_extra %}
   {% if theme.use_motion %}
     <script type="text/javascript" id="motion.page.archive">
+    $(function(){
       $('.archive-year').velocity('transition.slideLeftIn');
+    });
     </script>
   {% endif %}
 {% endblock %}

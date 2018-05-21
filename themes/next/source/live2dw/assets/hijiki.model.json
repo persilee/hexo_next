@@ -1,7 +1,7 @@
 {
   "version": "Sample 1.0.0",
   "model": "moc/hijiki.moc",
-  "textures": ["moc/hijiki.2048/texture_00.png"],
+  "textures": ["https://cdn.lishaoy.net/live2dw/texture_00.png"],
   "name": "hijiki",
   "pose": "hijiki.pose.json",
   "motions": {

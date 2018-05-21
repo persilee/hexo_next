@@ -38,7 +38,7 @@
   <link href="/live2dw/css/perTips.css" rel="stylesheet" type="text/css">
   #}
 
-  <link href="https://cdn.lishaoy.net/css/8uj38j&jk3y%25jkud6j3.all.css" rel="stylesheet" type="text/css">
+  <link href="https://cdn.lishaoy.net/css/9ksiejeyk%23hhu72@huy7.all.css" rel="stylesheet" type="text/css">
 
 </head>
 

@@ -12,8 +12,8 @@ copyright: true
 top: 104
 comments: true
 photos:
-    - "https://yoshikiito.net/blog/wp-content/uploads/2016/09/electorn-logo.png"
-    - "nwjsElectronjs/nw1.png"
+    - "https://cdn.lishaoy.net/nwjsElectronjs/electorn-logo.png"
+    - "https://cdn.lishaoy.net/nwjsElectronjs/nw1.png"
 ---
 
 最近研究了一下基于 `Chromium` 定制浏览器的方案，查阅了大量资料，具体方案也有了大概的蓝图 😉 

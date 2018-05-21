@@ -7,7 +7,7 @@ var imagemin = require('gulp-imagemin');
 var order = require("gulp-order");
 var concat = require("gulp-concat");
 
-// 合并 CSS
+// 压缩、合并 CSS
 gulp.task('css', function () {
     return gulp.src([
         './public/lib/font-awesome/css/font-awesome.min.css',
@@ -35,7 +35,7 @@ gulp.task('minify-html', function () {
         }))
         .pipe(gulp.dest('./public'))
 });
-//合并js
+//压缩、合并js
 gulp.task('scripts', function () {
     return gulp.src([
         './public/lib/fastclick/lib/fastclick.min.js',

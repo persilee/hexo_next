@@ -11,7 +11,7 @@ top: 104
 photos:
 ---
 
-{% fi CSSModules/cssmodules.png, CSS Modules, CSS Modules %}
+{% fi https://cdn.lishaoy.net/CSSModules/cssModules.png, CSS Modules, CSS Modules %}
 
 这篇文章来一起了解 `css` 模块化的用法和原理 ，**dome** 地址：[css modules](https://github.com/persilee/webpack_test) 😮
 
