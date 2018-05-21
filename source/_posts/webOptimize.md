@@ -160,5 +160,16 @@ gulp.task('imagemin', function () {
 
 然后，把 **压缩** 的图片放入 `CDN` , 👀 看看，效果如何
 
+<img src="https://cdn.lishaoy.net/webOptimize/minImages.png" alt="Netlity" width="100%" title="首页请求速度（images）" align="center" />
+
+可见，请求时间是 **1.70 s** ,总请求个数 **50** ， 而 `img` 的请求个数是 **15** _（这里因为首页都是大图，就没有合并，只是压缩了）_ ，但是，效果很好 😀 ，从 **4.59 s** 缩短到 **1.70 s**, 性能又提升一倍。
+
+再看看有缓存情况如何 😏
+
+<img src="https://cdn.lishaoy.net/webOptimize/minImages1.png" alt="Netlity" width="100%" title="首页请求速度（images 缓存）" align="center" />
+
+请求时间是 **1.05 s** ，有缓存和无缓存基本差不多
+
+整个 **压缩、合并** _（js、css、img）_ 再放入 `CDN` ，请求时间是 **10** 多秒 ，到最后的 **1.70 s** ，性能提升 **5** 倍多，可见，这个操作必要性。
 
 ### 未完，待续。。。 😜
