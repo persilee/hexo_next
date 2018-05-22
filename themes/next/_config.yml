@@ -145,7 +145,7 @@ links:
 # Sidebar Avatar
 # in theme directory(source/images): /images/avatar.jpg
 # in site  directory(source/uploads): /uploads/avatar.jpg
-avatar: /images/lsy.png
+avatar: https://cdn.lishaoy.net/images/lsy.png
 
 # Table Of Contents in the Sidebar
 toc:
