@@ -53,7 +53,8 @@ gulp.task('scripts', function () {
         './public/live2dw/lib/L2Dwidget.min.js',
         './public/js/src/love.js',
         './public/js/src/busuanzi.pure.mini.js',
-        './public/js/src/activate-power-mode.js'
+        './public/js/src/activate-power-mode.js',
+        './public/js/src/persilee.js'
     ]).pipe(concat('all.js')).pipe(minify()).pipe(gulp.dest('./public/dist/'));
 });
 // 压缩 public/js 目录 js

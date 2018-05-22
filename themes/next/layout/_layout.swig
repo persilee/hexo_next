@@ -38,7 +38,7 @@
   <link href="/live2dw/css/perTips.css" rel="stylesheet" type="text/css">
   #}
 
-  <link href="https://cdn.lishaoy.net/css/9ksiejeyk%23hhu72@huy7.all.css" rel="stylesheet" type="text/css">
+  <link href="https://cdn.lishaoy.net/css/7je8jjsi9jlu%23jsa8%25jasd9k.all.css" rel="stylesheet" type="text/css">
 
 </head>
 
@@ -140,9 +140,10 @@
    <!-- UV、PV统计
   <script async src="https://cdn.lishaoy.net/js/busuanzi.pure.mini.js"></script>
   -->
-  <script type="text/javascript" src="https://cdn.lishaoy.net/js/7jsiur8kje934fj3kjf%25hh.all-min.js"></script>
-   <!-- 自己的脚本 -->
+  <script type="text/javascript" src="https://cdn.lishaoy.net/js/u37i&jksdfy5hejh$hd.all-min.js"></script>
+   <!-- 自己的脚本
   <script type="text/javascript" src="/js/src/persilee.js"></script>
+  -->
   <script>
     $(function(){
       $('#loader').css('display','none');
