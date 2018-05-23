@@ -187,10 +187,10 @@ gulp.task('imagemin', function () {
 
 **浏览器第一次请求**
 
-![no-shadow](/webOptimize/webCache.png "第一次请求")
+![no-shadow](https://cdn.lishaoy.net/webOptimize/webCache.png "第一次请求")
 
 **浏览器再次请求**
 
-![no-shadow](/webOptimize/webCache1.png "再次请求")
+![no-shadow](https://cdn.lishaoy.net/webOptimize/webCache1.png "再次请求")
 
 ### 未完，待续。。。 😜
