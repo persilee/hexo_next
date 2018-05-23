@@ -183,4 +183,14 @@ gulp.task('imagemin', function () {
 - 减少相应延迟，提升相应时间
 - 减少网络带宽消耗，节省流量
 
+我们用两幅图来了解下浏览器的 **缓存机制**
+
+**浏览器第一次请求**
+
+![no-shadow](/webOptimize/webCache.png "第一次请求")
+
+**浏览器再次请求**
+
+![no-shadow](/webOptimize/webCache1.png "再次请求")
+
 ### 未完，待续。。。 😜
