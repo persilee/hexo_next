@@ -5,18 +5,17 @@
   <span class="with-love">
     <i class="fa fa-{{ theme.authoricon }}"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">{{ config.author }}</span> - &nbsp;
-  <span> Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></span>
+  <span class="author" itemprop="copyrightHolder">{{ config.author }}</span>
 </div>
 <div class="powered-by">
   <i class="fa fa-users fa-fw"></i>
   <span id="busuanzi_container_site_uv">
-    终于等到你（UV）: <span id="busuanzi_value_site_uv"></span>
+    终于等到你(UV): <span id="busuanzi_value_site_uv"></span>
   </span>
   &nbsp;&nbsp;|&nbsp;&nbsp;
   <i class="fa fa-bar-chart-o fa-fw"></i>
   <span id="busuanzi_container_site_pv">
-    欢迎再来哟（PV）: <span id="busuanzi_value_site_pv"></span>
+    欢迎再来(PV): <span id="busuanzi_value_site_pv"></span>
   </span>
 
   <div class="theme-info">
