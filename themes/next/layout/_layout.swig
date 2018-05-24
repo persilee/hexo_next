@@ -37,9 +37,7 @@
   <link href="//cdn.jsdelivr.net/gh/moezx/cdn@v2.52/css/lib.css" rel="stylesheet" type="text/css">
   <link href="/live2dw/css/perTips.css" rel="stylesheet" type="text/css">
   #}
-
-  <link href="https://cdn.lishaoy.net/css/jf8emufj7erjkjufy%5Ejkwje%25hhf8all.css" rel="stylesheet" type="text/css">
-
+<link href="https://cdn.lishaoy.net/css/jf8emufj7erjkjufy%5Ejkwje%25hhf8all.css" rel="stylesheet" type="text/css">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="{{ page.lang || page.language || config.language }}">
