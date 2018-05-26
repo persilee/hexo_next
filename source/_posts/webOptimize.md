@@ -61,7 +61,7 @@ photos:
 
 如对 **雅虎军规** 的具体细则内容不是很了解，可自行去各搜索 🔍 引擎 ，搜索 **雅虎军规** 了解详情。
 
-### 压缩 合并
+## 压缩 合并
 
 对于 **前端性能优化** 自然要关注 **首屏** 打开速度，而这个速度，很大因素是花费在网络请求上，那么怎么减少网络请求的时间呢？
 
@@ -71,7 +71,7 @@ photos:
 
 所以 **压缩、合并** 就是一个解决方案，当然可以用 `gulp` 、 `webpack` 、 `grunt` 等构建工具 **压缩、合并**
 
-#### `JS、CSS` 压缩 合并
+### `JS、CSS` 压缩 合并
 
 例如：`gulp js、css` 压缩、合并代码如下 👇
 
@@ -131,7 +131,7 @@ gulp.task('css', function () {
 *Tips：在 **压缩、合并** 后，单个文件控制在 25 ~ 30 KB左右，同一个域下，最好不要多于5个资源*
 {% endnote %} 
 
-#### 图片压缩、合并 
+### 图片压缩、合并 
 
 例如：`gulp` 图片压缩代码如下 👇
 
@@ -176,7 +176,7 @@ gulp.task('imagemin', function () {
 
 整个 **压缩、合并** _（js、css、img）_ 再放入 `CDN` ，请求时间从 **10** 多秒 ，到最后的 **1.70 s** ，性能提升 **5** 倍多，可见，这个操作必要性。
 
-### 缓存
+## 缓存
 
 缓存会根据请求保存输出内容的副本，例如 **页面、图片、文件**，当下一个请求来到的时候:如果是相同的`URL`，缓存直接使 用本地的副本响应访问请求，而不是向源服务器再次发送请求。因此，可以从以下 **2** 个方面提升性能。
 
@@ -187,11 +187,11 @@ gulp.task('imagemin', function () {
 
 **浏览器第一次请求**
 
-![no-shadow](https://cdn.lishaoy.net/webOptimize/webCache.png "第一次请求")
+![no-shadow](https://cdn.lishaoy.net/webOptimize/webCache3.png "第一次请求")
 
 **浏览器再次请求**
 
-![no-shadow](https://cdn.lishaoy.net/webOptimize/webCache1.png "再次请求")
+![no-shadow](https://cdn.lishaoy.net/webOptimize/webCache4.png "再次请求")
 
 从以上两幅图中，可以清楚的了解浏览器 **缓存** 的过程。
 首次访问一个 `URL` ，没有 **缓存** ，但是，服务器会响应一些 `header` 信息，如：`expires、cache-control、last-modified、etag` 等，来记录下次请求是否缓存、如何缓存。
@@ -212,17 +212,17 @@ gulp.task('imagemin', function () {
 |  强缓存     | 从缓存取      | 200（from memory cache）  |  否，直接从缓存取               |
 |  协商缓存   | 从缓存取      | 304（not modified）       |  是，通过服务器来告知缓存是否可用  |
 
-#### 强缓存相关的header字段
+### 强缓存相关的header字段
 
 与强缓存相关的 `header` 字段有两个：
 
-##### expires
+#### expires
 
 **expires：** 这是 `http1.0` 时的规范，它的值为一个绝对时间的 **GMT** 格式的时间字符串，如 `Mon, 10 Jun 2015 21:31:12 GMT` ，如果发送请求的时间在 **expires** 之前，那么本地缓存始终有效，否则就会发送请求到服务器来获取资源
 
-##### cache-control
+#### cache-control
 
-**cache-control：** `max-age=number` ，这是 `http1.1` 时出现的 `header` 信息，主要是利用该字段的 `max-age` 值来进行判断，它是一个相对值；资源第一次的请求时间和 **Cache-Control** 设定的有效期，计算出一个资源过期时间，再拿这个过期时间跟当前的请求时间比较，如果请求时间在过期时间之前，就能命中缓存，否则未命中， **cache-control** 除了该字段外，还有下面几个比较常用的设置值：
+**cache-control:** `max-age=number` ，这是 `http1.1` 时出现的 `header` 信息，主要是利用该字段的 `max-age` 值来进行判断，它是一个相对值；资源第一次的请求时间和 **Cache-Control** 设定的有效期，计算出一个资源过期时间，再拿这个过期时间跟当前的请求时间比较，如果请求时间在过期时间之前，就能命中缓存，否则未命中， **cache-control** 除了该字段外，还有下面几个比较常用的设置值：
 
 - **no-cache：** 不使用本地缓存。需要使用缓存协商，先与服务器确认返回的响应是否被更改，如果之前的响应中存在 `ETag` ，那么请求的时候会与服务端验证，如果资源未被更改，则可以避免重新下载。
 - **no-store：** 直接禁止游览器缓存数据，每次用户请求该资源，都会向服务器发送一个请求，每次都会下载完整的资源。
@@ -233,11 +233,11 @@ gulp.task('imagemin', function () {
 *Tips：如果 cache-control 与 expires 同时存在的话，cache-control 的优先级高于 expires*
 {% endnote %} 
 
-#### 协商缓存相关的header字段
+### 协商缓存相关的header字段
 
-协商缓存都是由浏览器和服务器协商，来确定是否缓存，协商主要通过下面两组 `header` 字段，这两组字段都是成对出现的，即第一次请求的响应头带上某个字段 _（ **Last-Modified** 或者 **Etag** ）_ ，则后续请求则会带上对应的请求字段 _（**If-Modified-Since** 或者 **If-None-Match** ）_ ，若响应头没有 **Last-Modified** 或者 **Etag** 字段，则请求头也不会有对应的字段。
+协商缓存都是由浏览器和服务器协商，来确定是否缓存，协商主要通过下面两组 `header` 字段，这两组字段都是成对出现的，即第一次请求的响应头带上某个字段 _（ **Last-Modified** 或者 **Etag** ）_ ，则后续请求会带上对应的请求字段 _（**If-Modified-Since** 或者 **If-None-Match** ）_ ，若响应头没有 **Last-Modified** 或者 **Etag** 字段，则请求头也不会有对应的字段。
 
-##### Last-Modified/If-Modified-Since
+#### Last-Modified/If-Modified-Since
 
 二者的值都是 `GMT` 格式的时间字符串，具体过程：
 
@@ -251,7 +251,7 @@ gulp.task('imagemin', function () {
 
 - 如果协商缓存没有命中，浏览器直接从服务器加载资源时，**Last-Modified** 的 `Header` 在重新加载的时候会被更新，下次请求时，**If-Modified-Since** 会启用上次返回的**Last-Modified** 值
 
-##### Etag/If-None-Match
+#### Etag/If-None-Match
 
 这两个值是由服务器生成的每个资源的唯一标识字符串，只要资源有变化就这个值就会改变；其判断过程与 **Last-Modified、If-Modified-Since** 类似，与 **Last-Modified** 不一样的是，当服务器返回 `304 Not Modified` 的响应时，由于 **ETag** 重新生成过，`response header` 中还会把这个 **ETag** 返回，即使这个 **ETag** 跟之前的没有变化。
 
