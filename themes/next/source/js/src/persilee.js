@@ -414,5 +414,20 @@ const dateFormat = (date) => {
       };
     }, 1000);
   })
+  //百度统计
+  var _hmt = _hmt || [];
+  (function () {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?5fd52c901f2213883f51a476eab3914b";
+    var l = document.getElementsByTagName("script").length;
+    var s = document.getElementsByTagName("script")[l - 1];
+    s.parentNode.insertBefore(hm, s);
+  })();
+  // service worker 缓存
+  "serviceWorker" in navigator ? navigator.serviceWorker.register('/sw.js').then(function () {
+    navigator.serviceWorker.controller ? console.log("Assets cached by the controlling service worker.") : console.log("Please reload this page to allow the service worker to handle network operations.")
+  }).catch(function (e) {
+    console.log("ERROR: " + e)
+  }) : console.log("Service workers are not supported in the current browser.")
 });
 

@@ -256,4 +256,8 @@ gulp.task('imagemin', function () {
 这两个值是由服务器生成的每个资源的唯一标识字符串，只要资源有变化就这个值就会改变；其判断过程与 **Last-Modified、If-Modified-Since** 类似，与 **Last-Modified** 不一样的是，当服务器返回 `304 Not Modified` 的响应时，由于 **ETag** 重新生成过，`response header` 中还会把这个 **ETag** 返回，即使这个 **ETag** 跟之前的没有变化。
 
 
+{% note warning %}
+*Tips：Last-Modified与ETag是可以一起使用的，服务器会优先验证ETag，一致的情况下，才会继续比对Last-Modified，最后才决定是否返回304。*
+{% endnote %} 
+
 ### 未完，待续。。。 😜

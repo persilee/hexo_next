@@ -6,6 +6,7 @@ var htmlclean = require('gulp-htmlclean');
 var imagemin = require('gulp-imagemin');
 var order = require("gulp-order");
 var concat = require("gulp-concat");
+const rev = require('gulp-rev');
 
 // 压缩、合并 CSS
 gulp.task('css', function () {
@@ -15,7 +16,7 @@ gulp.task('css', function () {
         './public/css/main.css',
         './public/css/lib.css',
         './public/live2dw/css/perTips.css'
-    ]).pipe(concat('all.css')).pipe(minify()).pipe(gulp.dest('./public/dist/'));
+    ]).pipe(concat('all.css')).pipe(minify()).pipe(rev()).pipe(gulp.dest('./public/dist/'));
 });
 // 压缩 public 目录 css
 gulp.task('minify-css', function () {
@@ -55,7 +56,7 @@ gulp.task('scripts', function () {
         './public/js/src/busuanzi.pure.mini.js',
         './public/js/src/activate-power-mode.js',
         './public/js/src/persilee.js'
-    ]).pipe(concat('all.js')).pipe(minify()).pipe(gulp.dest('./public/dist/'));
+    ]).pipe(concat('all.js')).pipe(minify()).pipe(rev()).pipe(gulp.dest('./public/dist/'));
 });
 // 压缩 public/js 目录 js
 gulp.task('minify-js', function () {

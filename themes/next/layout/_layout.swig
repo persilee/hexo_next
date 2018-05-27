@@ -138,16 +138,12 @@
    <!-- UV、PV统计
   <script async src="https://cdn.lishaoy.net/js/busuanzi.pure.mini.js"></script>
   -->
-  <script type="text/javascript" src="https://cdn.lishaoy.net/js/u37i&jksdfy5hejh$hd.all-min.js"></script>
+  <script type="text/javascript" src="https://cdn.lishaoy.net/js/all-min-ef4950790d.js"></script>
    <!-- 自己的脚本
   <script type="text/javascript" src="/js/src/persilee.js"></script>
   -->
-  <script>
-    $(function(){
-      $('#loader').css('display','none');
-    });
-  </script>
-  <style>
+  <script> $(function(){ $('#loader').css('display','none');});</script>
+<style>
     .comments.no-post {
       background: transparent;
     }
@@ -249,40 +245,41 @@
       display:inline-block
     }
 
-  .v .vwrap .vheader .vinput:focus {
+    .v .vwrap .vheader .vinput:focus {
       border-bottom: 1px solid #87daff;
-  }
-  .v .vlist .vcard .vcontent pre , .vinput.vpreview pre {
-      background: #87daff21;
-      border-radius: 4px;
-      box-shadow: 0 0 2px #ffffff33;
-  }
-  .v .vlist .vcard .vcontent pre code ,.vinput.vpreview pre code {
-      color: #87daff;
-      background: #87daff00;
-      border-radius: 4px;
-      box-shadow: 0 0 2px #87daff05;
-  }
-  .v .vlist .vcard .vcontent.expand:after {
-    color: #ff0000de;
-    font-size: 110%;
-    font-weight: bold;
-    background: #87daff38;
-    border-bottom-right-radius: 4px;
-    border-bottom-left-radius: 4px;
-  }
-  .comments.no-post .vlist .vcard .vcontent.expand:after {
-    color: #fff;
-  }
-  @media screen and (max-width: 414px) {
-      .v .vlist {
-          padding-left: 0;
-      }
-  }
-  .v .vlist .vcard .vcontent.expand:before {
-      background: linear-gradient(180deg,hsla(0, 0%, 100%, 0),hsla(199, 100%, 76%, 0.22));
-      background: -webkit-gradient(linear,left top,left bottom,from(hsla(0,0%,100%,0)),to(hsla(199, 100%, 76%, 0.22));
-  }
-  </style>
+    }
+    .v .vlist .vcard .vcontent pre , .vinput.vpreview pre {
+        background: #87daff21;
+        border-radius: 4px;
+        box-shadow: 0 0 2px #ffffff33;
+    }
+    .v .vlist .vcard .vcontent pre code ,.vinput.vpreview pre code {
+        color: #87daff;
+        background: #87daff00;
+        border-radius: 4px;
+        box-shadow: 0 0 2px #87daff05;
+    }
+    .v .vlist .vcard .vcontent.expand:after {
+      color: #ff0000de;
+      font-size: 110%;
+      font-weight: bold;
+      background: #87daff38;
+      border-bottom-right-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+    .comments.no-post .vlist .vcard .vcontent.expand:after {
+      color: #fff;
+    }
+    @media screen and (max-width: 414px) {
+        .v .vlist {
+            padding-left: 0;
+        }
+    }
+    .v .vlist .vcard .vcontent.expand:before {
+        background: linear-gradient(180deg,hsla(0, 0%, 100%, 0),hsla(199, 100%, 76%, 0.22));
+        background: -webkit-gradient(linear,left top,left bottom,from(hsla(0,0%,100%,0)),to(hsla(199, 100%, 76%, 0.22));
+    }
+</style>
+
 </body>
 </html>
