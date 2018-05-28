@@ -148,13 +148,13 @@ gulp.task('imagemin', function () {
 
 ```css css
 .top_right .phone {
-	background: url(../images/top_right.png) no-repeat 7px -17px;
-	padding: 0 38px;
+    background: url(../images/top_right.png) no-repeat 7px -17px;
+    padding: 0 38px;
 }
 
 .top_right .help {
-	background: url(../images/top_right.png) no-repeat 0 -47px;
-	padding: 0 38px;
+    background: url(../images/top_right.png) no-repeat 0 -47px;
+    padding: 0 38px;
 }
 ```
 
@@ -263,24 +263,26 @@ gulp.task('imagemin', function () {
 ### Service Worker
 
 #### 什么是 Service Worker
+    
 {% blockquote Service Worker API http://sethgodin.typepad.com/seths_blog/2009/07/welcome-to-island-marketing.html developer.mozilla.org %} 
 **Service Worker** 本质上充当Web应用程序与浏览器之间的代理服务器，也可以在网络可用时作为浏览器和网络间的代理。它们旨在（除其他之外）使得能够创建有效的离线体验，拦截网络请求并基于网络是否可用以及更新的资源是否驻留在服务器上来采取适当的动作。他们还允许访问推送通知和后台同步API。
-{% endblockquote %}<br>
-**Service worker** 可以解决目前离线应用的问题，同时也可以做更多的事。 **Service Worker** 可以使你的应用先访问本地缓存资源，所以在离线状态时，在没有通过网络接收到更多的数据前，仍可以提供基本的功能（一般称之为 Offline First）。这是原生APP 本来就支持的功能，这也是相比于 `web app` ，原生 `app` 更受青睐的主要原因。
+{% endblockquote %}
+</br>
+**Service worker** 可以解决目前离线应用的问题，同时也可以做更多的事。 **Service Worker** 可以使你的应用先访问本地缓存资源，所以在离线状态时，在没有通过网络接收到更多的数据前，仍可以提供基本的功能（一般称之为 Offline First）。这是原生APP 本来就支持的功能，这也是相比于 `web app` ，原生 `app` 更受青睐的主要原因
 
-再来看看 👀 **service worker** 能做些什么：
+再来看看 👀 **service worker** 能做些什么
 
 - 后台消息传递
 - 网络代理，转发请求，伪造响应
 - 离线缓存
 - 消息推送
--  … …
+- ...
+
 {% note success %} 
 ***本文主要以（[lishaoy.net](https://lishaoy.net)）资源缓存为例,阐述下 service worker如何工作***
 {% endnote %}  
 
 #### 生命周期
-
 **service worker** 初次安装的生命周期，如图 🌠
 
 ![no-shadow](https://cdn.lishaoy.net/webOptimize/serviceWorker.png "sw生命周期")
@@ -457,3 +459,4 @@ self.addEventListener('fetch', function(event) {
 <img src="https://cdn.lishaoy.net/webOptimize/serviceWorker3.png" alt="Cache Storage" width="100%" title="Cache Storage" align="center" />
 
 ## 未完，待续。。。 😜
+
