@@ -454,6 +454,12 @@ self.addEventListener('fetch', function(event) {
 ```
 就这样搞定了 🍉 _(具体的用法可以去 [sw-toolbox](https://googlechromelabs.github.io/sw-toolbox/api.html#main) 查看)_
 
+有的同学就问，`service worker` 这么好用，这个缓存空间到底是多大？其实，在  **Chrome** 可以看到，如图
+
+<img src="https://cdn.lishaoy.net/webOptimize/storageQuota.png" alt="fstorage quota" width="100%" title="storage quota" align="center" />
+
+可以看到，大概有 **30G** ，我的站点只用了 **183MB** ，完全够用了 🍓
+
 最后，来两张图 
 
 <img src="https://cdn.lishaoy.net/webOptimize/serviceWorker2.png" alt="from ServiceWorker" width="100%" title="from ServiceWorker" align="center" />

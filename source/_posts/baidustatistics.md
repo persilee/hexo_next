@@ -65,6 +65,6 @@ photos:
 
 会统计访客来自哪个 _国家、省份、城市、网络运营商_ 等
 
-<img src="https://cdn.lishaoy.net/baidustatistics/5.png" alt="新老访客" width="100%" title="新老访客" align="center" />
+<img src="https://cdn.lishaoy.net/baidustatistics/5.png" alt="地域分布" width="100%" title="地域分布" align="center" />
 
 这里我只展示部分统计功能，如想了解其它更多功能，可去 [百度统计](https://tongji.baidu.com/web/welcome/login) 网站查看。
