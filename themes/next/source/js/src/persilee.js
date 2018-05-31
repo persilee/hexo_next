@@ -234,7 +234,7 @@ const dateFormat = (date) => {
       }
     });
   }
-  // 鼠标往上滚动 隐藏 header , 鼠标往下滚动 显示 header
+  // 鼠标往下滚动 隐藏 header , 鼠标往上滚动 显示 header
   var p = 0,
     t = 0;
   $(document).on("scroll", function (e) {
