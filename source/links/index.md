@@ -78,6 +78,13 @@ copyright: true
             </a>
         </li>
         <li class="per-links-item">
+            <a href="http://weblogger.club/" class="group-picture" title="声钟博客" target="_blank">
+                <img class="per-links-icon" src="https://cdn.lishaoy.net/images/links/webblogger.jpg" alt="">
+                <h3 class="per-links-title">声钟博客</h3>
+                <p class="per-links-des">学习笔记</p>
+            </a>
+        </li>
+        <li class="per-links-item">
             <a href="https://www.dreamwings.cn/" class="group-picture" title="千千" target="_blank">
                 <img class="per-links-icon" src="https://cdn.lishaoy.net/images/links/dreamwings.jpeg"
                     alt="">
