@@ -37,7 +37,7 @@ copyright: true
         </li>
         <li class="per-links-item">
             <a href="https://lolili.cc/" class="group-picture" title="洛哩哩~" target="_blank">
-                <img class="per-links-icon" src="https://cdn.lishaoy.net/images/links/head.png" alt="">
+                <img class="per-links-icon" src="https://cdn.lishaoy.net/images/links/lolili.png" alt="">
                 <h3 class="per-links-title">洛哩哩~</h3>
                 <p class="per-links-des">只要你能幸福，我是谁，又有什么关系？记不记得住，又有什么关系啊！</p>
             </a>
@@ -46,7 +46,7 @@ copyright: true
             <a href="https://tongtaos.com/" class="group-picture" title="Mr. 童的博客" target="_blank">
                 <img class="per-links-icon" src="https://cdn.lishaoy.net/images/links/mrTong.jpg" alt="">
                 <h3 class="per-links-title">Mr. 童的博客</h3>
-                <p class="per-links-des">Mr.童的博客｜这是我的人生</p>
+                <p class="per-links-des">这是我的人生</p>
             </a>
         </li>
         <li class="per-links-item">
