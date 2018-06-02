@@ -79,7 +79,7 @@ copyright: true
         </li>
         <li class="per-links-item">
             <a href="http://weblogger.club/" class="group-picture" title="声钟博客" target="_blank">
-                <img class="per-links-icon" src="https://cdn.lishaoy.net/images/links/webblogger.jpg" alt="">
+                <img class="per-links-icon" src="https://cdn.lishaoy.net/images/links/webblogger.png" alt="">
                 <h3 class="per-links-title">声钟博客</h3>
                 <p class="per-links-des">学习笔记</p>
             </a>
@@ -97,6 +97,13 @@ copyright: true
                 <img class="per-links-icon" src="https://cdn.lishaoy.net/images/links/2heng.jpeg" alt="">
                 <h3 class="per-links-title">Mashiro</h3>
                 <p class="per-links-des">樱花庄的白猫</p>
+            </a>
+        </li>
+        <li class="per-links-item">
+            <a href="https://www.coolecho.net/" class="group-picture" title="Alchemy" target="_blank">
+                <img class="per-links-icon" src="https://cdn.lishaoy.net/images/links/Alchemy.png" alt="">
+                <h3 class="per-links-title">Alchemy</h3>
+                <p class="per-links-des">千里之行，始于足下</p>
             </a>
         </li>
         <li class="per-links-item">

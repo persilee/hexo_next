@@ -37,7 +37,7 @@
   <link href="//cdn.jsdelivr.net/gh/moezx/cdn@v2.52/css/lib.css" rel="stylesheet" type="text/css">
   <link href="/live2dw/css/perTips.css" rel="stylesheet" type="text/css">
   #}
-<link href="https://cdn.lishaoy.net/css/all-29f80e5ade.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.lishaoy.net/css/all-94893fb2d8.css" rel="stylesheet" type="text/css">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="{{ page.lang || page.language || config.language }}">
@@ -138,7 +138,7 @@
    <!-- UV、PV统计
   <script async src="https://cdn.lishaoy.net/js/busuanzi.pure.mini.js"></script>
   -->
-  <script type="text/javascript" src="https://cdn.lishaoy.net/js/all-min-ef4950790d.js"></script>
+  <script type="text/javascript" src="https://cdn.lishaoy.net/js/all-min-c2647aaa4b.js"></script>
    <!-- 自己的脚本
   <script type="text/javascript" src="/js/src/persilee.js"></script>
   -->
