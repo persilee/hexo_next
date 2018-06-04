@@ -260,45 +260,57 @@ const dateFormat = (date) => {
   $(window).resize(function () {
     //优化 添加 requestAnimationFrame
     throttle(scroll_fn, 1000 / 60, 100)();
+    var addUVTime_g_re = setInterval(function () {
+      if ($(window).width() <= 520) {
+        $('.vhead .vsys').each(function () {
+          _this = this;
+          isUA();
+        });
+      } else {
+        clearInterval(addUVTime_g_re);
+      }
+    }, 100);
     if ($(window).width() <= 990) {
       $('#header').removeClass('header-has-sidebar');
     } else if ($('#sidebar').width() > 0) {
       $('#header').addClass('header-has-sidebar');
     }
-    if($(window).width() <= 520){
-      $('.vhead .vsys').each(function(){
-        $(this).text($(this).text().split(' ').shift());
-      })
-    }
   });
 
   var _this = null;
+  function UA(){
+      if ($(_this).text().indexOf('Safari') == 0) {
+        $(_this).prepend('<img class="Safari" src="/images/ua/Safari.svg">')
+      } else if ($(_this).text().indexOf('Mac') == 0 || $(_this).text().indexOf('iOS') == 0) {
+        $(_this).prepend('<img class="Apple" src="/images/ua/Apple.svg">')
+      } else if ($(_this).text().indexOf('Chrome') == 0) {
+        $(_this).prepend('<img class="Chrome" src="/images/ua/Chrome.svg">')
+      } else if ($(_this).text().indexOf('Firefox') == 0) {
+        $(_this).prepend('<img class="Firefox" src="/images/ua/Firefox.svg">')
+      } else if ($(_this).text().indexOf('Windows 10') == 0) {
+        $(_this).prepend('<img class="Windows10" src="/images/ua/windows10.svg">')
+      } else if ($(_this).text().indexOf('Windows') == 0 || $(_this).text().indexOf('Windows 7') == 0 || $(_this).text().indexOf('Windows 8') == 0 || $(_this).text().indexOf('Windows 9') == 0) {
+        $(_this).prepend('<img class="Windows7" src="/images/ua/windows7.svg">')
+      } else if ($(_this).text().indexOf('Android') == 0) {
+        $(_this).prepend('<img class="Android" src="/images/ua/Android.svg">')
+      } else if ($(_this).text().indexOf('Ubuntu') == 0) {
+        $(_this).prepend('<img class="Ubuntu" src="/images/ua/ubuntu.svg">')
+      } else if ($(_this).text().indexOf('Linux') == 0) {
+        $(_this).prepend('<img class="Linux" src="/images/ua/Linux.svg">')
+      } else if ($(_this).text().indexOf('Microsoft Edge') == 0 || $(_this).text().indexOf('MSIE') == 0) {
+        $(_this).prepend('<img class="IE" src="/images/ua/IE.png">')
+      } else if ($(_this).text().indexOf('Sogou') == 0) {
+        $(_this).prepend('<img class="sogou" src="/images/ua/sogou.svg">')
+
+      }
+  };
   function isUA(){
-    if ($(_this).text().indexOf('Safari') == 0) {
-      $(_this).prepend('<img class="Safari" src="/images/ua/Safari.svg">')
-    } else if ($(_this).text().indexOf('Mac OS') == 0 || $(_this).text().indexOf('iOS') == 0) {
-      $(_this).prepend('<img class="Apple" src="/images/ua/Apple.svg">')
-    } else if ($(_this).text().indexOf('Chrome') == 0) {
-      $(_this).prepend('<img class="Chrome" src="/images/ua/Chrome.svg">')
-    } else if ($(_this).text().indexOf('Firefox') == 0) {
-      $(_this).prepend('<img class="Firefox" src="/images/ua/Firefox.svg">')
-    } else if ($(_this).text().indexOf('Windows 10') == 0) {
-      $(_this).prepend('<img class="Windows10" src="/images/ua/windows10.svg">')
-    } else if ($(_this).text().indexOf('Windows') == 0 || $(_this).text().indexOf('Windows 7') == 0 || $(_this).text().indexOf('Windows 8') == 0 || $(_this).text().indexOf('Windows 9') == 0) {
-      $(_this).prepend('<img class="Windows7" src="/images/ua/windows7.svg">')
-    } else if ($(_this).text().indexOf('Android') == 0) {
-      $(_this).prepend('<img class="Android" src="/images/ua/Android.svg">')
-    } else if ($(_this).text().indexOf('Ubuntu') == 0) {
-      $(_this).prepend('<img class="Ubuntu" src="/images/ua/ubuntu.svg">')
-    } else if ($(_this).text().indexOf('Linux') == 0) {
-      $(_this).prepend('<img class="Linux" src="/images/ua/Linux.svg">')
-    } else if ($(_this).text().indexOf('Microsoft Edge') == 0 || $(_this).text().indexOf('MSIE') == 0) {
-      $(_this).prepend('<img class="IE" src="/images/ua/IE.png">')
-    } else if ($(_this).text().indexOf('Sogou') == 0) {
-      $(_this).prepend('<img class="sogou" src="/images/ua/sogou.svg">')
-
+    if($(window).width() <= 520){
+      $(_this).text($(_this).text().split(' ').shift());
+      UA();
+    }else{
+      UA();
     }
-
   };
   var addTipsTime = setInterval(function(){
     var text;
