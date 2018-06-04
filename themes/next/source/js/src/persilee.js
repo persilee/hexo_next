@@ -265,6 +265,11 @@ const dateFormat = (date) => {
     } else if ($('#sidebar').width() > 0) {
       $('#header').addClass('header-has-sidebar');
     }
+    if($(window).width() <= 520){
+      $('.vhead .vsys').each(function(){
+        $(this).text($(this).text().split(' ').shift());
+      })
+    }
   });
 
   var _this = null;

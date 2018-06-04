@@ -11,7 +11,7 @@ top: 107
 photos:
 ---
 
-{% fi https://cdn.lishaoy.net/baidustatistics/lishaoy.net.1.png, lishaoy.net, lishaoy.net %}
+{% li https://cdn.lishaoy.net/baidustatistics/lishaoy.net.990x699.jpg, lishaoy.net, lishaoy.net %}
 
 前天，把 **站点**（[lishaoy.net](https://lishaoy.net)） 接入了 **百度统计**，看了看这些统计的数据，还是挺有意思 🐶
 

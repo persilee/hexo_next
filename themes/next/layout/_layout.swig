@@ -37,7 +37,7 @@
   <link href="//cdn.jsdelivr.net/gh/moezx/cdn@v2.52/css/lib.css" rel="stylesheet" type="text/css">
   <link href="/live2dw/css/perTips.css" rel="stylesheet" type="text/css">
   #}
-<link href="https://cdn.lishaoy.net/css/all-9097fb9015.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.lishaoy.net/css/all-2808d4e4a3.css" rel="stylesheet" type="text/css">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="{{ page.lang || page.language || config.language }}">
@@ -138,7 +138,7 @@
    <!-- UV、PV统计
   <script async src="https://cdn.lishaoy.net/js/busuanzi.pure.mini.js"></script>
   -->
-  <script type="text/javascript" src="https://cdn.lishaoy.net/js/all-min-c2647aaa4b.js"></script>
+  <script type="text/javascript" src="https://cdn.lishaoy.net/js/all-min-158a56bdbf.js"></script>
    <!-- 自己的脚本
   <script type="text/javascript" src="/js/src/persilee.js"></script>
   -->
@@ -236,13 +236,7 @@
       padding: 2px 6px;
     }
     .v .vlist .vcard .vcontent img {
-      max-width: 18px;
       display: inline-block;
-    }
-
-    .v .vlist .vcard .vcontent img{
-      max-width:18px;
-      display:inline-block
     }
 
     .v .vwrap .vheader .vinput:focus {
@@ -274,6 +268,11 @@
         .v .vlist {
             padding-left: 0;
         }
+    }
+    @media screen and (max-width: 520px) {
+      .v .vlist .vcard .vhead .vsys {
+        display: inline-block;
+      }
     }
     .v .vlist .vcard .vcontent.expand:before {
         background: linear-gradient(180deg,hsla(0, 0%, 100%, 0),hsla(199, 100%, 76%, 0.22));
