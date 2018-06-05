@@ -260,16 +260,6 @@ const dateFormat = (date) => {
   $(window).resize(function () {
     //优化 添加 requestAnimationFrame
     throttle(scroll_fn, 1000 / 60, 100)();
-    var addUVTime_g_re = setInterval(function () {
-      if ($(window).width() <= 520) {
-        $('.vhead .vsys').each(function () {
-          _this = this;
-          isUA();
-        });
-      } else {
-        clearInterval(addUVTime_g_re);
-      }
-    }, 100);
     if ($(window).width() <= 990) {
       $('#header').removeClass('header-has-sidebar');
     } else if ($('#sidebar').width() > 0) {
