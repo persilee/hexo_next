@@ -248,7 +248,7 @@
         box-shadow: 0 0 2px #ffffff33;
     }
     .v .vlist .vcard .vcontent pre code ,.vinput.vpreview pre code {
-        color: #87daff;
+        color: #005098e3;
         background: #87daff00;
         border-radius: 4px;
         box-shadow: 0 0 2px #87daff05;
