@@ -253,6 +253,9 @@
         border-radius: 4px;
         box-shadow: 0 0 2px #87daff05;
     }
+    .comments.no-post .vlist .vcard .vcontent pre code , .comments.no-post .vinput.vpreview pre code {
+        color: #7fd3f9;
+    }
     .v .vlist .vcard .vcontent.expand:after {
       color: #ff0000de;
       font-size: 110%;
