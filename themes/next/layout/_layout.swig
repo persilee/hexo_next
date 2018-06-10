@@ -37,7 +37,7 @@
   <link href="//cdn.jsdelivr.net/gh/moezx/cdn@v2.52/css/lib.css" rel="stylesheet" type="text/css">
   <link href="/live2dw/css/perTips.css" rel="stylesheet" type="text/css">
   #}
-<link href="https://cdn.lishaoy.net/css/all-2808d4e4a3.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.lishaoy.net/css/all-19e9974709.css" rel="stylesheet" type="text/css">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="{{ page.lang || page.language || config.language }}">
@@ -63,6 +63,16 @@
       <div class="main-inner">
         <div class="content-wrap">
           <div id="content" class="content">
+          {% if is_home() %}
+            <div class="status_list_item icon_kyubo">
+              <div class="status_user" style="background-image: url(https://cdn.lishaoy.net/images/wp.1920x1549.jpg);">
+                <div class="status_section">
+                  <a href="http://wp.lishaoy.net/" class="status_btn" target="_blank">WordPress的站终于搭好了</a>
+                  <p class="section_p">这个周末，花了1天半的时间，这个 WordPress 的站终于是搭好了，欢迎大家光临！😜</p>
+                </div>
+			        </div>
+		        </div>
+          {% endif %}
             {% block content %}{% endblock %}
           </div>
           {% include '_third-party/duoshuo-hot-articles.swig' %}

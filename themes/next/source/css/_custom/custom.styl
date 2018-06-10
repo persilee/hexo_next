@@ -1,4 +1,53 @@
 // Custom styles.
+.status_list_item {
+    position: relative;
+    width: 100%;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(249,249,249,0.08), 0 0 0 1px rgba(26,53,71,.04), 0 1px 1px rgba(26,53,71,.06);
+}
+.status_user {
+    background-size: contain;
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-position: right center;
+    border-radius: 6px;
+    padding: 25px 20% 25px 2%;
+    margin: 0 auto 40px;
+}
+.status_section {
+    position: relative;
+    z-index: 1;
+}
+
+.status_section a {
+  border-bottom: none;
+}
+
+.status_btn {
+    width: auto;
+    font-size: 20px;
+    font-weight: 700;
+    display: block;
+    position: relative;
+}
+.section_p {
+    line-height: 1.75;
+    margin: 20px auto;
+}
+.status_user:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    // background: -webkit-linear-gradient(right,rgba(255,255,255,0) 0%,#fff 20%);
+    // background: linear-gradient(to left,rgba(255,255,255,0) 0%,#fff 20%);
+}
+
+
 // pages 样式
 .post-button {
     text-align: center;
