@@ -153,6 +153,7 @@
   <script type="text/javascript" src="/js/src/persilee.js"></script>
   -->
   <script> $(function(){ $('#loader').css('display','none');});</script>
+  <script async src = "https://www.googletagmanager.com/gtag/js?id=UA-120619444-2">< /script>
 <style>
     .comments.no-post {
       background: transparent;
