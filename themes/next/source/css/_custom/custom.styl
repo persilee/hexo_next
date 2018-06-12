@@ -4,6 +4,7 @@
     width: 100%;
     border-radius: 6px;
     box-shadow: 0 1px 3px rgba(249,249,249,0.08), 0 0 0 1px rgba(26,53,71,.04), 0 1px 1px rgba(26,53,71,.06);
+    margin: 120px auto 80px
 }
 .status_user {
     background-size: contain;
@@ -43,9 +44,27 @@
     z-index: 0;
     top: 0;
     left: 0;
-    // background: -webkit-linear-gradient(right,rgba(255,255,255,0) 0%,#fff 20%);
-    // background: linear-gradient(to left,rgba(255,255,255,0) 0%,#fff 20%);
+    background: -webkit-linear-gradient(right,rgba(255,255,255,0) 0%,#fff 20%);
+    background: linear-gradient(to left,rgba(255,255,255,0) 0%,#fff 20%);
 }
+
+@media screen and (max-width: 760px){
+    .status_list_item {
+        color: #fff;
+        text-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+        width: 90%;
+    }
+    .status_user {
+        background-position: center;
+        background-size: cover!important;
+        padding: 1.3rem 1.3rem 2rem!important;
+    }
+    .status_user:after {
+        border-radius: 6px;
+        background: rgba(0,0,0,0.2) url(/images/dot.png) repeat!important;
+    }
+}
+
 
 
 // pages 样式
