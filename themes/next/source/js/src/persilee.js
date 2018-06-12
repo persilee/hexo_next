@@ -430,14 +430,16 @@ const dateFormat = (date) => {
     var s = document.getElementsByTagName("script")[l - 1];
     s.parentNode.insertBefore(hm, s);
   })();
-  <!-- Global site tag (gtag.js) - Google Analytics -->
+  //<!-- Global site tag (gtag.js) - Google Analytics -->
   // <script async src = "https://www.googletagmanager.com/gtag/js?id=UA-120619444-2">< /script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag() {
-    dataLayer.push(arguments);
-  }
-  gtag('js', new Date());
-  gtag('config', 'UA-120619444-2'); <
+  (function () {
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'UA-120619444-2');
+  })();
   // service worker 缓存
   "serviceWorker" in navigator ? navigator.serviceWorker.register('/sw.js').then(function () {
     navigator.serviceWorker.controller ? console.log("Assets cached by the controlling service worker.") : console.log("Please reload this page to allow the service worker to handle network operations.")
