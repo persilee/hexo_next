@@ -68,7 +68,7 @@
               <div class="status_user" style="background-image: url(https://cdn.lishaoy.net/images/v2.jpg);">
                 <div class="status_section">
                   <a href="http://wp.lishaoy.net/" class="status_btn" target="_blank">WordPress的站终于搭好了</a>
-                  <p class="section_p">周末，花了1天半的时间，WordPress 的站终于是搭好了，欢迎大家光临! 😜 <a href="http://wp.lishaoy.net/" target="_blank" style="color: #05b2ff;">http://wp.lishaoy.net</a></p>
+                  <p class="section_p">周末，花了1天半的时间，WordPress 的站终于是搭好了，欢迎大家光临! 😜 <a href="http://wp.lishaoy.net/" target="_blank" style="color: #05b2ff;">https://wp.lishaoy.net</a></p>
                 </div>
 			        </div>
 		        </div>
@@ -148,7 +148,7 @@
    <!-- UV、PV统计
   <script async src="https://cdn.lishaoy.net/js/busuanzi.pure.mini.js"></script>
   -->
-  <script type="text/javascript" src="https://cdn.lishaoy.net/js/all-min-2bcda3256c.js"></script>
+  <script type="text/javascript" src="https://cdn.lishaoy.net/js/all-min-443b765c63.js"></script>
    <!-- 自己的脚本
   <script type="text/javascript" src="/js/src/persilee.js"></script>
   -->
