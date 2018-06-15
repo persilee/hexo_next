@@ -65,10 +65,10 @@
           <div id="content" class="content">
           {% if is_home() %}
             <div class="status_list_item icon_kyubo">
-              <div class="status_user" style="background-image: url(https://cdn.lishaoy.net/images/v2.jpg);">
+              <div class="status_user" style="background-image: url(https://cdn.lishaoy.net/images/zongzi.1.1.jpg);">
                 <div class="status_section">
-                  <a href="http://wp.lishaoy.net/" class="status_btn" target="_blank">WordPress的站终于搭好了</a>
-                  <p class="section_p">周末，花了1天半的时间，WordPress 的站终于是搭好了，欢迎大家光临! 😜 <a href="http://wp.lishaoy.net/" target="_blank" style="color: #05b2ff;">https://wp.lishaoy.net</a></p>
+                  <a href="http://wp.lishaoy.net/" class="status_btn" target="_blank">祝大家端午节安康！🍙 ☘ </a>
+                  <p class="section_p">吃着粽子 🍙 🍙 🍙 看世界杯 ⚽️ ⚽️ ⚽️ ，欢迎大家光临我的另外一个 WordPress 博客! 😜 <a href="http://wp.lishaoy.net/" target="_blank" style="color: #05b2ff;">https://wp.lishaoy.net</a></p>
                 </div>
 			        </div>
 		        </div>
