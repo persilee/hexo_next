@@ -423,9 +423,10 @@ const dateFormat = (date) => {
   })
   //百度统计
   var _hmt = _hmt || [];
-  (function () {
+  (function() {
     var hm = document.createElement("script");
-    hm.src = "https://hm.baidu.com/hm.js?5fd52c901f2213883f51a476eab3914b";
+    hm.src = "https://hm.baidu.com/hm.js?a6c4f77e87e7fd898fd9fff81505d737";
+    var s = document.getElementsByTagName("script")[0];
     var l = document.getElementsByTagName("script").length;
     var s = document.getElementsByTagName("script")[l - 1];
     s.parentNode.insertBefore(hm, s);
@@ -433,12 +434,11 @@ const dateFormat = (date) => {
   //<!-- Global site tag (gtag.js) - Google Analytics -->
   // <script async src = "https://www.googletagmanager.com/gtag/js?id=UA-120619444-2">< /script>
   (function () {
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-    gtag('config', 'UA-120619444-2');
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-120619444-1');
   })();
   // service worker 缓存
   "serviceWorker" in navigator ? navigator.serviceWorker.register('/sw.js').then(function () {

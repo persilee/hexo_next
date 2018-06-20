@@ -65,10 +65,10 @@
           <div id="content" class="content">
           {% if is_home() %}
             <div class="status_list_item icon_kyubo">
-              <div class="status_user" style="background-image: url(https://cdn.lishaoy.net/images/zongzi.1.1.jpg);">
+              <div class="status_user" style="background-image: url(https://cdn.lishaoy.net/images/v2.jpg);">
                 <div class="status_section">
-                  <a href="http://wp.lishaoy.net/" class="status_btn" target="_blank">祝大家端午节安康！🍙 ☘ </a>
-                  <p class="section_p">吃着粽子 🍙 🍙 🍙 看世界杯 ⚽️ ⚽️ ⚽️ ，欢迎大家光临我的另外一个 WordPress 博客! 😜 <a href="http://wp.lishaoy.net/" target="_blank" style="color: #05b2ff;">https://wp.lishaoy.net</a></p>
+                  <a href="http://lishaoy.net/" class="status_btn" target="_blank">域名更换通知</a>
+                  <p class="section_p">本站域名已更换为 <a href="https://h.lishaoy.net/" target="_blank" style="color: #05b2ff;">https://h.lishaoy.net</a> ，欢迎大家光临我的主站! 😜 <a href="https://lishaoy.net/" target="_blank" style="color: #05b2ff;">https://lishaoy.net</a></p>
                 </div>
 			        </div>
 		        </div>
@@ -148,12 +148,12 @@
    <!-- UV、PV统计
   <script async src="https://cdn.lishaoy.net/js/busuanzi.pure.mini.js"></script>
   -->
-  <script type="text/javascript" src="https://cdn.lishaoy.net/js/all-min-443b765c63.js"></script>
+  <script type="text/javascript" src="https://cdn.lishaoy.net/js/all-min-6961e3cca2.js"></script>
    <!-- 自己的脚本
   <script type="text/javascript" src="/js/src/persilee.js"></script>
   -->
   <script> $(function(){ $('#loader').css('display','none');});</script>
-  <script async src = "https://www.googletagmanager.com/gtag/js?id=UA-120619444-2"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120619444-1"></script>
 <style>
     .comments.no-post {
       background: transparent;
