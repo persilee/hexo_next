@@ -445,6 +445,7 @@ const dateFormat = (date) => {
     navigator.serviceWorker.controller ? console.log("Assets cached by the controlling service worker.") : console.log("Please reload this page to allow the service worker to handle network operations.")
   }).catch(function (e) {
     console.log("ERROR: " + e)
-  }) : console.log("Service workers are not supported in the current browser.")
+  }) : console.log("Service workers are not supported in the current browser.");
+  $('img.hidden').parent('a.fancybox').css('display','none');
 });
 

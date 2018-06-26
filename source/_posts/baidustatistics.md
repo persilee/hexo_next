@@ -13,11 +13,11 @@ photos:
 
 {% li https://cdn.lishaoy.net/baidustatistics/lishaoy.net.990x699.jpg, lishaoy.net, lishaoy.net %}
 
-前天，把 **站点**（[lishaoy.net](https://lishaoy.net)） 接入了 **百度统计**，看了看这些统计的数据，还是挺有意思 🐶
+前天，弄了个百度统计，看看数据还挺有意思。。。
 
 <!-- more -->
 
-**站点** 接入 **百度统计**，还是挺简单的：
+**站点** 接入 **百度统计** ，还是挺简单的：
 
 - 首先，去 [百度统计](https://tongji.baidu.com/web/welcome/login) 注册账号，根据提示绑定自己站点域名
 - 之后，把提供的 `js` 代码放到自己站点

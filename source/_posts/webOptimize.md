@@ -466,5 +466,7 @@ self.addEventListener('fetch', function(event) {
 
 <img src="https://cdn.lishaoy.net/webOptimize/serviceWorker3.png" alt="Cache Storage" width="100%" title="Cache Storage" align="center" />
 
+<img class="hidden" src="https://cdn.lishaoy.net/webOptimize/Optimize.png" alt="web optimize" width="100%" title="web optimize" align="center">
+
 ## 未完，待续。。。 😜
 
