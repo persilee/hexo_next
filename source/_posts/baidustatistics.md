@@ -14,7 +14,7 @@ photos:
 {% li https://cdn.lishaoy.net/baidustatistics/lishaoy.net.990x699.jpg, lishaoy.net, lishaoy.net %}
 
 前天，弄了个百度统计，看看数据还挺有意思。。。
-
+ 
 <!-- more -->
 
 **站点** 接入 **百度统计** ，还是挺简单的：
