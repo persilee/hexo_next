@@ -148,7 +148,7 @@
    <!-- UV、PV统计
   <script async src="https://cdn.lishaoy.net/js/busuanzi.pure.mini.js"></script>
   -->
-  <script type="text/javascript" src="https://cdn.lishaoy.net/js/all-min-543cc7fe7c.js"></script>
+  <script type="text/javascript" src="https://cdn.lishaoy.net/js/all-min-16daf385e1.js"></script>
    <!-- 自己的脚本
   <script type="text/javascript" src="/js/src/persilee.js"></script>
   -->
