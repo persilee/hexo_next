@@ -391,6 +391,8 @@ const dateFormat = (date) => {
     var addUBZime = setInterval(function () {
       if ($('.vhead').eq(0).find('.vname[href="https://h.lishaoy.net"]~.bozhu').length == 0) {
         $('.vhead').eq(0).find('.vname[href="https://h.lishaoy.net"]').after('<span class = "bozhu">博主</span>');
+      } else if ($('.vhead').eq(0).find('.vname[href="https://lishaoy.net"]~.bozhu').length == 0) {
+        $('.vhead').eq(0).find('.vname[href="https://lishaoy.net"]').after('<span class = "bozhu">博主</span>');
       } else {
         clearInterval(addUBZime);
       };
