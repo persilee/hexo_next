@@ -129,7 +129,7 @@ photos:
 
 ### 光标
 
-1. 把光标移到文件的首部活尾部 
+1. 把光标移到文件的首部或尾部
 
 <img src="https://cdn.lishaoy.net/VSCodeCodingSkills/vs-code_1.gif" alt="⌘ - ↑ 或 ⌘ - ↓" width="100%" title="⌘ - ↑ 或 ⌘ - ↓" align="center" />
 
