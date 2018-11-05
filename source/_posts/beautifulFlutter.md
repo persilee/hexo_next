@@ -15,4 +15,11 @@ photos:
 
 {% li beautifulFlutter/flutter_750x400.png, Flutter, Flutter %}
 
-{% dplayer 'url=https://cdn.lishaoy.net/goodbook/GoodBook.mp4' "id=someid" "api=https://api.prprpr.me/dplayer/" "autoplay" %} 
+<!-- more -->
+
+<hr />
+
+<video id="text1" class="video-js vjs-default-skin" controls preload="auto" poster="https://cdn.lishaoy.net/flutter_start/flutter5.1.png"
+    data-setup="{'example_option':true}">
+    <source src="https://cdn.lishaoy.net/flutter_start/flutter7.mp4" type='video/mp4' />
+</video>

@@ -38,6 +38,7 @@
   <link href="/live2dw/css/perTips.css" rel="stylesheet" type="text/css">
   #}
 <link href="https://cdn.lishaoy.net/css/all-8fe366073f.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="/video/video-js.css">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="{{ page.lang || page.language || config.language }}">
@@ -149,6 +150,7 @@
   <script async src="https://cdn.lishaoy.net/js/busuanzi.pure.mini.js"></script>
   -->
   <script type="text/javascript" src="https://cdn.lishaoy.net/js/all-min-6da1d90143.js"></script>
+  <script src="/video/video.js"></script>
    <!-- 自己的脚本
   <script type="text/javascript" src="/js/src/persilee.js"></script>
   -->
