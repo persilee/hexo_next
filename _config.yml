@@ -82,8 +82,8 @@ deploy:
 - type: baidu_url_submitter
 - type: git
   repo:
-    # github: https://github.com/persilee/MyBlog.git
-    github: git@github.com:persilee/MyBlog.git
+    github: https://github.com/persilee/MyBlog.git,gh-pages
+    # github: git@github.com:persilee/MyBlog.git
     # coding: git@git.coding.net:persilee/MyBlog.git
     # coding: https://git.coding.net/persilee/MyBlog.git
     
