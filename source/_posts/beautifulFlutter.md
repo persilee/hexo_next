@@ -1,8 +1,8 @@
 ---
-title: Flutter：手拉手带你极速构建漂亮的跨平台(IOS/Android)移动应用 ✿ 初识
+title: Flutter：手拉手带你极速构建漂亮的跨平台(iOS/Android)移动应用 ✿ 初识
 tags:
   - Flutter
-  - IOS
+  - iOS
   - Android
   - Dart
 copyright: true
@@ -13,9 +13,9 @@ top: 109
 photos:
 ---
 
-{% li beautifulFlutter/flutter_750x400.png, Flutter, Flutter %}
+{% li https://cdn.lishaoy.net/beautifulFlutter/flutter_750x400.png, Flutter, Flutter %}
 
-最近，学习了一些 `Flutter` 相关的知识，做了如下的小移动应用，当然是一套代码即可在 `IOS` 平台运行,也可以在 `Android` 运行。
+最近，学习了一些 `Flutter` 相关的知识，做了如下的小移动应用，当然是一套代码即可在 `iOS` 平台运行,也可以在 `Android` 运行。
 
 下面我将手拉手带您快速构建出漂亮的移动应用界面（如下👇小视频）
 
@@ -70,7 +70,7 @@ Google 的广告应用 Adwords，阿里的闲鱼 App 都是基于 `Flutter` 框�
 
 ### 设计
 
-`Flutter` 自带 Google 推行的设计系统：[Material Design](https://www.material.io) ，它提供了丰富的 **Material Design** 风格的组件（比如：按钮、输入框、对话框、导航栏、边栏等），而且也提供了丰富的 **IOS（Cupertino）** 风格的组件，利用这些风格的组件能够快速的构建应用，如图
+`Flutter` 自带 Google 推行的设计系统：[Material Design](https://www.material.io) ，它提供了丰富的 **Material Design** 风格的组件（比如：按钮、输入框、对话框、导航栏、边栏等），而且也提供了丰富的 **iOS（Cupertino）** 风格的组件，利用这些风格的组件能够快速的构建应用，如图
 
 ![no-shadow](https://cdn.lishaoy.net/beautifulFlutter/Material.jpg "Material Design")
 
@@ -98,3 +98,5 @@ Dart 是 Google 发布的一种高效、简洁、拥有完整类型系统的 `�
 现在想必您对 `Flutter` 已经有了一定的认识，在之后的篇幅了会手拉手带你极速构如文头小视频的小应用。
 
 ## 未完待续...
+
+<img class="hidden" src="https://cdn.lishaoy.net/beautifulFlutter/flutter_750x400.png" alt="VS Code" width="100%" title="VS Code" align="center">
