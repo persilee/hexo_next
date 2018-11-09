@@ -131,6 +131,8 @@ flutter create new_flutter
 
 前面我们已经配置好了 **Flutter SDK** 、**iOS 模拟器** 、**Android 模拟器** ，最后我们还需要配置一下编辑器，当然您可以选择 `Android Studio` 或者 `VS Code`，这里我选择的是轻量级的 `VS Code`。
 
+{% note default %} 如对 VS Code 不是很熟悉，可参考我之前写的 [VS Code 编辑技巧](https://h.lishaoy.net/VSCodeCodingSkills.html) {% endnote %}  
+
 打开终端进入我们刚才新建的 Flutter 项目
 
 ```bash
@@ -146,3 +148,55 @@ code ./
 打开项目之后 <kbd>⌘</kbd> - <kbd>⇧</kbd> - <kbd>X</kbd> ,打开扩展，安装 **Flutter** 插件，如图
 
 
+<img src="https://cdn.lishaoy.net/flutterInstall/flutter_install.gif" alt="Android Studio" width="88%" title="Flutter install" align="center" />
+
+完成之后，打开项目目录 `lib->main.dart` 文件， VS Code 会自动提示你安装 Dart 语言扩展包。
+
+## 运行项目
+
+现在，所有的准备工作都完成了，就可以开发、测试或运行项目了，在上面我们用 `Flutter create` 命令创建的 Flutter 项目，自带一个计算器的小功能，我们可以运行看看效果
+
+首先，您需要执行 `flutter doctor` 来检查一下环境是否正常
+
+![no-shadow](https://cdn.lishaoy.net/flutterInstall/flutter_run.png "Flutter run" )
+
+如上图第二项提示 `Android license status unknown.` Android 协议安装好，可以执行以下命令，来解决问题
+
+```bash
+flutter doctor --android-licenses
+```
+
+如上图第三项是 iOS 真机的检查项，可以按照提示操作
+如上图第四项是 Java 的编辑器检查，可不用理会，如你没有安装 IDEA 也不会有这个提示
+
+其实在我另一台电脑上全部都配置好了 😝 ，如图
+
+![no-shadow](https://cdn.lishaoy.net/flutterInstall/flutter_run1.png "Flutter run" )
+
+最后，在 VS Code 编辑器里按 **F5** 后，会让你选择模拟器来运行 Flutter 程序，如图
+
+<img src="https://cdn.lishaoy.net/flutterInstall/flutter_run1.gif" alt="Flutter run" width="88%" title="Flutter run" align="center" />
+
+这个是分别在 iOS 和 Android 运行 Flutter 的效果，如图
+
+![no-shadow](https://cdn.lishaoy.net/flutterInstall/demo.png "Flutter run" )
+
+## 运行 Flutter 案例
+
+现在所有的都准备好了，您可以去我的 GitHub 上下载上篇文章中的案例代码，也可以 `git clone`
+
+```bash
+cd $HOME/Desktop #进到桌面
+git clone https://github.com/persilee/flutter_pro.git #下载案例
+cd flutter_pro #进入案例目录
+flutter packages get #获依赖取包
+code ./ #用 VS Code 打开
+```
+
+完成以上步骤后，在 VS Code 按 F5 选择模拟器，查看运行效果，如图
+
+![no-shadow](https://cdn.lishaoy.net/flutterInstall/flutter_run5.png "Flutter Demo" )
+
+这篇到处为止，下篇将手拉手带大家完成一个实操小案例 。
+
+##未完待续
