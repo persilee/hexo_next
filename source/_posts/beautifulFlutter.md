@@ -1,5 +1,5 @@
 ---
-title: Flutter：手拉手带你极速构建漂亮的跨平台(iOS/Android)移动应用 ✿ 初识
+title: Flutter：手拉手带你极速构建漂亮的跨平台移动应用 ✿ 初识
 tags:
   - Flutter
   - iOS
