@@ -38,7 +38,7 @@ code ./ #用 VS Code 打开
 
 这个是 `flutter create` 命令创建项目时，给我们的案例（计数器），这些代码在 *lib->main.dart* 文件里，如你关注的话可以看看这些代码都做了些什么，不过现在我们不需要这些代码，<kbd>⌘</kbd> - <kbd>A</kbd> 全选删除，我们需要自己写。
 
-```dart
+```dart Dart https://h.lishaoy.net/fristFlutter.html#创建项目 main.dart
 import 'package:flutter/material.dart';
 
 void main() {
@@ -54,13 +54,13 @@ void main() {
 }
 ```
 
-写上以上代码，<kbd>⌘</kbd> - <kbd>⇧</kbd> - <kbd>P</kbd> 打开 VS Code 的命令面板，搜索 `hot restart` 执行命令，效果如图：
+写上以上代码，按 <kbd>⌘</kbd> - <kbd>⇧</kbd> - <kbd>P</kbd> 打开 VS Code 的命令面板，搜索 `hot restart` 执行命令，效果如图：
 
 <div style="padding: 0 30%;">![no-shadow](https://cdn.lishaoy.net/fristFlutter/flutter_hello.png "hello" )</div>
 
 `main()` 是 Flutter 的入口函数，我们一般不会把代码写在里面，我们来修改下代码（自定义已 widget）：
 
-```dart
+```dart Dart https://h.lishaoy.net/fristFlutter.html#创建项目 main.dart
 import 'package:flutter/material.dart';
 
 void main() => runApp(App());
@@ -85,7 +85,7 @@ class App extends StatelessWidget {
 
 我们再来修改下代码，让我们的应用去使用 Material Design 的 AppBar
 
-```dart
+```dart Dart https://h.lishaoy.net/fristFlutter.html#新增-Material-AppBar main.dart
 import 'package:flutter/material.dart';
 
 void main() => runApp(App());
