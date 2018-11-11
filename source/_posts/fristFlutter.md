@@ -15,7 +15,7 @@ photos:
 
 {% li https://cdn.lishaoy.net/fristFlutter/flutterCover7.png, Flutter, Flutter %}
 
-我们上篇文章已经把 **Flutter** 的开发运行环境搭建好了 [Flutter：环境搭建](https://h.lishaoy.net/flutterInstall.html) ，本篇文章将完成您的第一个 **Flutter** 小应用，不用但是不会，跟着文章做就行，开始不必太纠结这些代码细节，明白它是干什么的就行，只是一个开放体验，体验 **Flutter** 框架给你带来的开发感受，后面会有具体的组件（widget）的文章。
+我们上篇文章已经把 **Flutter** 的开发运行环境搭建好了 [Flutter：环境搭建](https://h.lishaoy.net/flutterInstall.html) ，本篇文章将完成您的第一个 **Flutter** 小应用，不用但是不会，跟着文章做就行，开始不必太纠结这些代码细节，明白它是干什么的就行，只是一个使用体验，体验 **Flutter** 框架给你带来的开发感受，后面会有具体的组件（widget）的文章。
 
 <hr />
 
@@ -23,7 +23,7 @@ photos:
 
 ## 创建项目
 
-在上篇文章我们已经创建了一个 Flutter 项目 `new_flutter`，如果您还没有创建，可以在终端执行以下命令：
+在上篇文章我们已经创建了一个 Flutter 项目 {% label success@new_flutter %}，如果您还没有创建，可以在终端执行以下命令：
 
 ```bash
 cd ~/desktop #进入桌面
@@ -36,7 +36,7 @@ code ./ #用 VS Code 打开
 
 ![no-shadow](https://cdn.lishaoy.net/flutterInstall/demo.png "Flutter run" )
 
-这个是 `flutter create` 命令创建项目时，给我们的案例（计数器），这些代码在 *lib->main.dart* 文件里，如你关注的话可以看看这些代码都做了些什么，不过现在我们不需要这些代码，<kbd>⌘</kbd> - <kbd>A</kbd> 全选删除，我们需要自己写。
+上图界面是 `flutter create` 命令创建项目时，给我们的案例（计数器），这些代码在 *{% label default@ lib->main.dart %}* 文件里，如你关注的话可以看看这些代码都做了些什么，不过现在我们不需要这些代码，<kbd>⌘</kbd> - <kbd>A</kbd> 全选删除，我们需要自己写，如下：
 
 ```dart Dart https://h.lishaoy.net/fristFlutter.html#创建项目 main.dart
 import 'package:flutter/material.dart';
@@ -54,11 +54,11 @@ void main() {
 }
 ```
 
-写上以上代码，按 <kbd>⌘</kbd> - <kbd>⇧</kbd> - <kbd>P</kbd> 打开 VS Code 的命令面板，搜索 `hot restart` 执行命令，效果如图：
+写入以上代码，按 <kbd>⌘</kbd> - <kbd>⇧</kbd> - <kbd>P</kbd> 打开 VS Code 的命令面板，搜索 `hot restart` 执行命令，效果如图：
 
 <div style="padding: 0 30%;">![no-shadow](https://cdn.lishaoy.net/fristFlutter/flutter_hello.png "hello" )</div>
 
-`main()` 是 Flutter 的入口函数，我们一般不会把代码写在里面，我们来修改下代码（自定义已 widget）：
+`main()` 是 Flutter 的入口函数，我们一般不会把代码写在里面，我们来修改下代码（自定义 widget）：
 
 ```dart Dart https://h.lishaoy.net/fristFlutter.html#创建项目 main.dart
 import 'package:flutter/material.dart';
@@ -79,11 +79,11 @@ class App extends StatelessWidget {
 }
 ```
 
-运行效果是一样的，这里我们自定义了一个 `StatelessWidget` 类型的 widget。
+运行效果是一样的，这里我们自定义了一个 `StatelessWidget` 类型的 widget 叫 {% label primary@App %}。
 
 ## 新增 Material AppBar
 
-我们再来修改下代码，让我们的应用去使用 Material Design 的 AppBar
+我们再来修改下代码，让我们的应用去使用 {% label success@Material Design %} 的 AppBar
 
 ```dart Dart https://h.lishaoy.net/fristFlutter.html#新增-Material-AppBar main.dart
 import 'package:flutter/material.dart';
@@ -131,16 +131,16 @@ class Hello extends StatelessWidget {
 2. 新增了 MaterialApp ，这里面就有我们需要用的 AppBar （MaterialApp 里面有很多 {% label info@Material Design %} 风格的组件，后面的文章提到）
 3. Scaffold 可以理解为 MaterialApp 布局的架子，{% label info@Material Design %} 风格的组件都会放到这里面
 4. AppBar 就是顶部蓝色这部分，加了一个 title 转为大写和增加词间距
-5. body 主体下面白色部分，放的是我们自定义的 Hello 小部件
+5. body 是主显示区，下面白色部分，放的是我们自定义的 Hello 小部件
 {% endnote %}  
 
 ## 新增列表视图（ListView）
 
-在新增列表视图（ListView）之前，我们需要准备一些数据，我们可以在 lib 目录下新建一个目录 model 和文件 post.dart ，如图：
+在新增列表视图（ListView）之前，我们需要准备一些数据，我们可以在 lib 目录下新建一个目录 model 和文件 {% label default@post.dart %}，如图：
 
 <img src="https://cdn.lishaoy.net/fristFlutter/model.png" alt="post.dart" width="26%" title="post.dart" align="center">
 
-然后，把我 {% label success@GitHub %} 准备好的 [post.dart](https://github.com/persilee/flutter_pro/blob/master/lib/model/post.dart) 数据放到里面。
+然后，把在 {% label success@GitHub %} 准备好的 [post.dart](https://github.com/persilee/flutter_pro/blob/master/lib/model/post.dart) 数据放到里面。
 
 现在我们再来改进下代码，让它更具有维护性，我们把 `home` 属性下的 Scaffold 放到单独的 widget ，取名为 {% label default@HomePage %}
 
@@ -176,7 +176,7 @@ class HomePage extends StatelessWidget {
 
 接下来，我们来创建 {% label primary@视图列表 %} 
 
-首先，在头部引入刚才创建的数据 `post.dart` 
+首先，在头部引入刚才创建的数据 `post.dart` 文件
 
 ```Dart
 import './model/post.dart';
@@ -325,5 +325,3 @@ class HomePage extends StatelessWidget {
 ```
 
 现在，第一个漂亮的界面已经完成，后面的文章我们一起来完成其他部分。
-
-## 未完待续...

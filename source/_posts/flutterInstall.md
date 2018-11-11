@@ -27,7 +27,7 @@ photos:
 
 首先，我们有 2 种方法获取 **SDK**
 
-- 可以到 [下载 Flutter SDK ](https://flutter.io/docs/development/tools/sdk/archive#macos) 本地电脑
+- 可以到 [下载 Flutter SDK ](https://flutter.io/docs/development/tools/sdk/archive#macos) 到本地电脑
 - 可以用 `git clone` 命令下载到本地电脑
 
 ```bash
@@ -93,7 +93,7 @@ source $HOME/.bash_profile
 
 <img src="https://cdn.lishaoy.net/flutterInstall/AndroidStudio.png" alt="Android Studio" width="50%" title="Android Studio" align="center" />
 
-如果遇到这个问题应该就是网络问题（需要科学上网），**Setup Proxy** 来设置代理，如图：
+如果遇到这个问题应该就是网络问题（需要科学上网），点 **Setup Proxy** 来设置代理，如图：
 
 <img src="https://cdn.lishaoy.net/flutterInstall/AndroidStudio1.png" alt="Android Studio" width="50%" title="Android Studio" align="center" />
 
@@ -112,7 +112,7 @@ cd ~/desktop
 flutter create new_flutter
 ```
 
-命令执行完成后，在桌面就会生成一个 Flutter 项目，再用 Android Studio 打开，项目打开后会提示安装 Flutter 插件和依赖 Dart ，安装完之后我们可以去创建一个模拟器。
+命令执行完成后，在桌面就会生成一个 Flutter 项目，再用 Android Studio 打开，项目打开后会提示安装 Flutter 插件和依赖 Dart 语言插件 ，安装完之后我们可以去创建一个模拟器。
 
 打开 **Tools>AVD Manager** ，点击 `Create Virtual Device...` 来创建一个模拟器，选择一个设备，点击 Next，如图
 
@@ -154,19 +154,19 @@ code ./
 
 ## 运行项目
 
-现在，所有的准备工作都完成了，就可以开发、测试或运行项目了，在上面我们用 `Flutter create` 命令创建的 Flutter 项目，自带一个计算器的小功能，我们可以运行看看效果
+现在，所有的准备工作都完成了，就可以开发、测试或运行项目了，在上面我们用 `Flutter create` 命令创建的 Flutter 项目，自带一个计数器的小功能，我们可以运行看看效果
 
 首先，您需要执行 `flutter doctor` 来检查一下环境是否正常
 
 ![no-shadow](https://cdn.lishaoy.net/flutterInstall/flutter_run.png "Flutter run" )
 
-如上图第二项提示 `Android license status unknown.` Android 协议安装好，可以执行以下命令，来解决问题
+如上图第二项提示 `Android license status unknown.` 意思是 Android 协议没安装好，可以执行以下命令，来解决问题
 
 ```bash
 flutter doctor --android-licenses
 ```
 
-如上图第三项是 iOS 真机的检查项，可以按照提示操作
+如上图第三项是 iOS 真机的检查项，可以按照提示操作<br />>
 如上图第四项是 Java 的编辑器检查，可不用理会，如你没有安装 IDEA 也不会有这个提示
 
 其实在我另一台电脑上全部都配置好了 😝 ，如图
@@ -189,7 +189,7 @@ flutter doctor --android-licenses
 cd $HOME/Desktop #进到桌面
 git clone https://github.com/persilee/flutter_pro.git #下载案例
 cd flutter_pro #进入案例目录
-flutter packages get #获依赖取包
+flutter packages get #获取依赖包
 code ./ #用 VS Code 打开
 ```
 
@@ -197,4 +197,4 @@ code ./ #用 VS Code 打开
 
 ![no-shadow](https://cdn.lishaoy.net/flutterInstall/flutter_run5.png "Flutter Demo" )
 
-这篇到处为止，下篇将手拉手带大家完成一个实操小案例 。
+好的，大功告成，这篇到处为止，下篇将手拉手带大家完成一个实操小案例 。
