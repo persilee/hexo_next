@@ -977,8 +977,9 @@ nav.pagination a:hover {
   }
 
   .post-body p a {
-    color: #0593d3;
-    border-bottom: none;
+    color: #9E9E9E;
+    border-bottom: 1px dashed #9E9E9E;
+    padding-bottom: 2px;
     &:hover {
         color: #0477ab;
         text-decoration: underline;
@@ -1107,7 +1108,7 @@ kbd {
 }
 
 b, strong {
-    color: #87daff;
+    color: #222222;
     font-size: 104%;
     text-shadow: none;
 }
@@ -1274,6 +1275,44 @@ pre, .highlight {
     -webkit-animation: spin 1.5s linear infinite;
     animation: spin 1.5s linear infinite;
 }
+
+.post-body .note.success {
+    border-left-color: #5cb85c;
+    background-color: #5cb85c52;
+    color: #009688;
+}
+
+.post-body .note.default {
+    border-left-color: #777;
+    background-color: #77777738;
+    color: #717171;
+}
+
+.post-body .note.primary {
+    border-left-color: #6f42c1;
+    background-color: #6f42c12b;
+    color: #512da8f0;
+}
+
+.post-body .note.info {
+    border-left-color: #428bca;
+    background-color: #428bca2e;
+    color: #1e82d2;
+}
+
+.post-body .note.warning {
+    border-left-color: #f0ad4e;
+    background-color: #f0ad4e30;
+    color: #ff9800;
+}
+
+.post-body .note.danger {
+    border-left-color: #d9534f;
+    background-color: #d9534f2e;
+    color: #E91E63;
+}
+
+
 @keyframes spin {
   0% {
     -webkit-transform: rotate(0);

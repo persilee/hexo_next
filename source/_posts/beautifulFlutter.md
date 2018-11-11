@@ -97,6 +97,4 @@ Dart 是 Google 发布的一种高效、简洁、拥有完整类型系统的 `�
 
 现在想必您对 `Flutter` 已经有了一定的认识，在之后的篇幅了会手拉手带你极速构如文头小视频的小应用。
 
-## 未完待续...
-
 <img class="hidden" src="https://cdn.lishaoy.net/beautifulFlutter/flutter_750x400.png" alt="VS Code" width="100%" title="VS Code" align="center">

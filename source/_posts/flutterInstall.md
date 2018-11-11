@@ -56,8 +56,8 @@ export PUB_HOSTED_URL=https://pub.flutter-io.cn
 export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
 ```
 {% note warning %} 
-<i class="fa fa-fw fa-bell faa-horizontal animated faa-slow" style="color: #faab33;;"></i> **Tips：** <br/>
-第一行 `export PATH=$PATH:/Applications/flutter/bin` 中的 `/Applications/flutter/bin` 就是刚才下载的 **Flutter SDK** 解压后放在本地电脑的目录，您要根据自己操作更改为自己电脑对应的目录。<br/>
+<i class="fa fa-fw fa-bell faa-horizontal animated faa-slow" style="color: #faab33;"></i> **Tips：** <br/>
+第一行 {% label danger@export PATH=$PATH:/Applications/flutter/bin %} 中的 {% label danger@/Applications/flutter/bin %} 就是刚才下载的 **Flutter SDK** 解压后放在本地电脑的目录，您要根据自己操作更改为自己电脑对应的目录。<br/>
 第二、三行为解决国内下载或更新资源慢的国内镜像，配置这个下载或更新资源会快一些。
 {% endnote %}  
 
@@ -72,7 +72,7 @@ source $HOME/.bash_profile
 ![no-shadow](https://cdn.lishaoy.net/flutterSDK3.png "flutter help")
 
 {% note warning %} 
-<i class="fa fa-fw fa-bell  faa-horizontal animated faa-slow" style="color: #faab33;;"></i> **Tips：** 如果你使用的是 `zsh`，需要在 ~/.zshrc 文件中添加：`source ~/.bash_profile` ，否则 `flutter` 命令将无法运行。
+<i class="fa fa-fw fa-bell  faa-horizontal animated faa-slow" style="color: #faab33;"></i> **Tips：** 如果你使用的是 {% label danger@zsh %}，需要在 ~/.zshrc 文件中添加：{% label danger@source ~/.bash_profile %} ，否则 {% label danger@flutter %} 命令将无法运行。
 {% endnote %} 
 
 ## 配置 iOS 开发环境
@@ -198,5 +198,3 @@ code ./ #用 VS Code 打开
 ![no-shadow](https://cdn.lishaoy.net/flutterInstall/flutter_run5.png "Flutter Demo" )
 
 这篇到处为止，下篇将手拉手带大家完成一个实操小案例 。
-
-## 未完待续 ... 
