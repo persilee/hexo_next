@@ -15,7 +15,7 @@ copyright: true
 
 <div class="per-guestbook-page">
     <div class="instructions title">
-    本站是基于 **Hexo** 改造而来，小伙伴们对于本站，有任何疑问和建议，都可以在本页面讨论 🤗  
+    本站是基于 <span class="mark-secondary">Hexo</span> 改造而来，小伙伴们对于本站，有任何疑问和建议，都可以在本页面讨论 🤗  
     </div>
     <hr>
     <h5>发展方向（<span class="mark-secondary">技术型</span>）</h5>
