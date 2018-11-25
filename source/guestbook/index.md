@@ -38,6 +38,6 @@ copyright: true
     </div>
     <hr>
     <div class="instructions">
-    总之，如对 **技术、摄影、设计** 等方面的知识什么见解，欢迎留言 ✍️
+    总之，如对 <span class="mark-secondary">技术、摄影、设计</span> 等方面的知识什么见解，欢迎留言 ✍️
     </div>
 </div>
