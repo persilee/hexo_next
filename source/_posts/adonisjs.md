@@ -13,15 +13,17 @@ photos:
 
 {% li https://cdn.lishaoy.net/adonisjs/adonisjs.png, Adonisjs, Adonisjs %}
 
-最近在学习使用 `nodejs` 框架，边学习边使用，花了大概 **3周** 时间做完这个 **Web应用** 且在 <time>12月16</time> 凌晨左右上线成功（其实就是把开发环境搬到服务器）， 地址： [https://a.lishaoy.net](https://a.lishaoy.net)  
+最近在学习使用 `Node.js` 框架，边学习边使用，花了大概 **3周** 时间做完这个 **Web应用** 且在 <time>12月16</time> 凌晨左右上线成功（其实就是把开发环境搬到服务器）， 地址： [https://a.lishaoy.net](https://a.lishaoy.net)  
+
+这个 **Web应用** 的代码是开源的，如对这个应用感兴趣，想知道代码是如何运行的，可以去我 **GitHub** 下载或 `clone` ：[应用源码](https://github.com/persilee/adonis_pro)
 
 <hr />
 
 <!-- more -->
 
-## Web应用功能
+首先，来看看用 **3周** 时间做出来的应用都有些什么功能，之后再看看选用的 `Node.js` 框架，最后看看 `Node.js` 项目如何部署到服务器。
 
-首先，来看看用 **3周** 时间做出来的应用都有些什么功能，之后再看看选用的 `nodejs` 框架，最后看看 `nodejs` 项目如何部署到服务器。
+## Web应用功能
 
 ### 登录、注册验证
 
@@ -85,7 +87,7 @@ photos:
 - 发布文章列表：个人发布的所有文章
 - 已赞文章列表：点过赞的文章会记录在这里
 - 关注者列表：关注你的用户（关注过的用户，关注按钮高亮显示）
-- 已关注列表：你关注的用户（关注过的用户，关注按钮高亮显示）å
+- 已关注列表：你关注的用户（关注过的用户，关注按钮高亮显示)
 - 关注按钮：作者本人不可见，点击可关注，再次点击取消关注，关注后，用户会收到消息通知
 
 ![no-shadow](https://cdn.lishaoy.net/adonisjs/profile.gif "Profile" )
@@ -173,7 +175,7 @@ photos:
 
 ![no-shadow](https://cdn.lishaoy.net/adonisjs/chatroom.png "Chart Room" )
 
-## Nodejs 框架
+## Node.js 框架
 
 这个应用的开发我选择的是 `Adonisjs` 框架，他和 `PHP` 的 `Laravel` 有些像，`Adonisjs` 是在操作系统上运行的 `Node.js` **MVC** 框架。
 
@@ -300,42 +302,42 @@ adonis make:controller Post --resource
 
 class PostController {
  /**
-   * Show a list of all profiles.
+   * Show a list of all posts.
    * GET posts
    */
 async index ({ request, response, view }) {}
 
  /**
-   * Render a form to be used for creating a new profile.
+   * Render a form to be used for creating a new posts.
    * GET posts/create
    */
 async create ({ request, response, view }) {}
 
  /**
-   * Create/save a new profile.
+   * Create/save a new posts.
    * POST posts
    */
 async store ({ request, response, view }) {}
  /**
-   * Display a single profile.
+   * Display a single posts.
    * GET posts/:id
    */
 async show ({ request, response, view }) {}
 
  /**
-   * Render a form to update an existing profile.
+   * Render a form to update an existing posts.
    * GET posts/:id/edit
    */
 async edit ({ request, response, view }) {}
 
  /**
-   * Update profile details.
+   * Update posts details.
    * PUT or PATCH posts/:id
    */
 async update ({ request, response, view}) {}
 
  /**
-   * Delete a profile with id.
+   * Delete a posts with id.
    * DELETE posts/:id
    */
 async destroy ({ params, request, response }) {}
@@ -548,4 +550,269 @@ adonis make:view post
 
 ## Node.js项目发布到阿里云服务器
 
-## 未完待续...
+首先，我们需要用 `ssh` 连接到阿里云（或者其他服务器供应商）的主机上，安装一些必要的工具。
+
+### 工具安装
+
+#### 安装 epel-release 软件包仓库
+
+我们需要安装 `epel-release` 软件包仓库，`epel-release` 里面有很多最新的软件包，如，之后安装的 `git` 就会用到
+
+```bash
+sudo yum install epel-release - y
+```
+
+#### 安装 Git 版本控制命令行工具
+
+```
+sudo yum install git -y
+```
+
+### 准备 Node.js 运行环境
+
+接下来，我们需要安装 `Node.js` 以便我们的 `Node.js` 项目能够跑起来，我们可以使用 `nvm` 安装和管理 `Node.js` ，使用 `nrm` 来管理切换安装源。
+
+#### 安装 nvm
+
+```bash
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+```
+
+安装好之后,我们需要配置下环境变量，以便能够在命令行使用 `nvm` 命令，用 `vi ~/.bash_profile` 编辑下配置文件
+
+```bash
+vi ~/.bash_profile
+```
+
+加入以下代码：
+
+```bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+```
+
+然后，在 `source ~/.bash_profile` 刷新下配置文件，让它生效
+
+```bash
+source ~/.bash_profile
+```
+
+此时，我们就可以使用 `nvm` 来安装 `Node.js`
+
+```bash
+nvm install node
+```
+
+安装好后，可以使用 `nvm list` 来查看有哪些版本可以使用
+
+```bash
+nvm list
+```
+
+结果：
+
+```bash
+->     v10.13.0
+        v11.2.0
+         system
+default -> v10.13.0
+node -> stable (-> v11.2.0) (default)
+stable -> 11.2 (-> v11.2.0) (default)
+iojs -> N/A (default)
+lts/* -> lts/dubnium (-> v10.13.0)
+lts/argon -> v4.9.1 (-> N/A)
+lts/boron -> v6.14.4 (-> N/A)
+lts/carbon -> v8.13.0 (-> N/A)
+lts/dubnium -> v10.13.0
+```
+
+我使用的是 *v10.13.0* 的版本，默认安装的都是比较新的版本，可能是 *v11.2.0* 或 *v11.1.0*，所以我们也可以用 `nvm install v10.13.0` 来安装指定版本。
+
+```bash
+nvm install v10.13.0
+```
+
+然后，就可以使用 `nvm use  v10.13.0` 来使用指定版本
+
+```bash
+nvm use nvm v10.13.0
+```
+
+结果：
+
+```bash
+Now using node v10.13.0 (npm v6.4.1)
+```
+
+#### 安装 nrm 管理安装源
+
+使用 npm 安装的程序包，默认的来源是 [http://registry.npmjs.org](http://registry.npmjs.org)，国内的下载速度会有些慢，我们可以是 `nrm` 来切换到 `taobao` 的源
+
+**安装 nrm**
+
+```bash
+npm install nrm --global
+```
+
+**切换到 taobao 源**
+
+```bash
+nrm use taobao
+```
+
+### 准备项目
+
+以上工作完成之后，我们的服务器就可以正常运行 `Node.js` 项目，现在我们需要把本地的项目上传到服务器，上传方法有很多，如：
+
+- 可以使用 `git`，先把项目传到 **GitHub**，然后用 `git` 下载到服务器
+- 可以是 **FTP** 工具
+- 可以是命令上传 `scp -r 本地目录  root@服务器IP:/var/www/`
+
+发项目文件上传到服务器的指定目录下，如：`www`
+
+接下来，我们可以是 **PM2** 来管理 **Node** 进程，先需要安装 **PM2**
+
+#### 安装PM2
+
+```bash
+npm install pm2@latest --global
+```
+
+这些工作作为之后，就可以来测试一下，启动项目，在本地访问服务器 `IP:PORT` 来测试是否可以访问
+
+#### 测试项目是否可以运行
+
+在测试之前，我们需要改下应用的配置文件，`adonisjs` 框架里是 `.env` 文件，修改下 `HOST` 的值：
+
+```bash
+HOST=0.0.0.0
+PORT=3333
+...
+```
+
+`HOST` 默认是 *127.0.0.1*，需要改成 *0.0.0.0* 这样就可以在自己电脑上用服务器 `IP:PORT` 来访问应用
+
+改完后，进入到项目的根目录，运行应用，`adonisjs` 的启动文件是 `server.js`，如：
+
+```bash
+pm2 start server.js
+```
+
+如启动成功会提示：
+
+```bash
+[PM2] Applying action restartProcessId on app [server](ids: 0)
+[PM2] [server](0) ✓
+[PM2] Process successfully started
+┌──────────┬────┬─────────┬──────┬──────┬────────┬─────────┬────────┬─────┬──────────┬──────┬──────────┐
+│ App name │ id │ version │ mode │ pid  │ status │ restart │ uptime │ cpu │ mem      │ user │ watching │
+├──────────┼────┼─────────┼──────┼──────┼────────┼─────────┼────────┼─────┼──────────┼──────┼──────────┤
+│ server   │ 0  │ 4.1.0   │ fork │ 7171 │ online │ 30      │ 0s     │ 0%  │ 3.4 MB   │ root │ disabled │
+└──────────┴────┴─────────┴──────┴──────┴────────┴─────────┴────────┴─────┴──────────┴──────┴──────────┘
+ Use `pm2 show <id|name>` to get more details about an app
+```
+
+然后，在自己电脑上用服务器 `IP:PORT` 来访问应用。
+
+### Nginx 代理
+
+为了让服务器更好地处理网络请求，我们需要添加使用 **Nginx 反向代理** 把请求转发给 `Node.js` 应用
+
+#### 安装 Nginx
+
+```bash
+sudo yum install nginx -y
+```
+
+如果你的服务之前安装过可不用安装，我的阿里云服务器运行了 4 个站点之前安装过，之后我只需添加配置就行。
+
+#### 启动 Nginx
+
+```bash
+sudo systemctl start nginx
+```
+
+#### 配置 Nginx
+
+一般情况 **Nginx** 安装好后会有 */etc/nginx/conf.d*  目录，进入这个目录，创建一个配置文件为 `Node.js` 而准备，名字可随意命名，如：`adonis.conf`
+
+```bash
+server {
+  listen 80;
+  location / {
+      proxy_pass http://127.0.0.1:3333;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection 'upgrade';
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_cache_bypass $http_upgrade;
+  }
+}
+```
+
+然后，在 **Nginx** 的主配置文件里把刚才新创建的配置文件（*/etc/nginx/nginx.conf*） `include` 进去就可以,如：
+
+```bash
+include /etc/nginx/conf.d/*.conf;
+```
+
+因为，我的主机里运行了4个站点，`*` 的意思就是加载这个目录下的所有配置文件
+
+然后，记得把刚才项目里的 *.env* 配置文件改成 *127.0.0.1* ，因为我们现在使用了代理，网络请求交给了 **Nginx**
+
+再进入到项目的根目录下运行：
+
+```bash
+pm2 stop server.js #停止项目
+pm2 start server.js #启动项目
+```
+
+这时候再用服务器 **IP** 访问就是用的 **Nginx** 去处理请求
+
+#### 域名和SSL
+
+如果你有域名可以去对应的供应商解析好，如想使用 `https` 协议，也可以去对应的供应商下载好证书（下载好的证书要放到服务器某个目录里）。
+
+再修改下刚才创建的配置文件，让它能够支持 `https` 和 域名 访问：
+
+```bash
+server {
+  listen 80;
+      listen 443 ssl http2; #SSL
+  server_name a.lishaoy.net; #域名
+  ssl on;
+
+  ssl_certificate /etc/letsencrypt/live/a.lishaoy.net/server.pem; #证书目录
+  ssl_certificate_key /etc/letsencrypt/live/a.lishaoy.net/server.key; #证书目录
+  ssl_protocols TLSv1.1 TLSv1.2;
+  ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;
+  ssl_prefer_server_ciphers on;
+  ssl_session_cache shared:SSL:10m;
+  ssl_session_timeout 10m;
+  if ($ssl_protocol = "") {
+    rewrite ^(.*) https://$host$1 permanent;
+  }
+  error_page 497  https://$host$request_uri;
+
+  error_page 404 /404.html;
+  error_page 502 /502.html;
+
+  location / {
+      proxy_pass http://localhost:3333;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection 'upgrade';
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_cache_bypass $http_upgrade;
+  }
+}
+```
+
+这样再重启 `Ningx` 服务和项目的服务，就大功告成了。
