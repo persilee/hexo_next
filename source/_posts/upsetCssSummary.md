@@ -208,3 +208,11 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, p, .navbar, .brand, a, .td
 	background-color: rgba(0, 0, 0, 0.8);
 }
 ```
+
+#### 让背景图片大小自适应且居中
+
+```css
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+```
