@@ -11,7 +11,7 @@ top: 112
 photos:
 ---
 
-{% li https://cdn.lishaoy.net/adonisjs/adonisjs.png, Adonisjs, Adonisjs %}
+{% li https://cdn.lishaoy.net/adonisjs/adonisjs1.png, Adonisjs, Adonisjs %}
 
 最近在学习使用 `Node.js` 框架，边学习边使用，花了大概 **3周** 时间做完这个 **Web应用** 且在 <time>12月16</time> 凌晨左右上线成功（其实就是把开发环境搬到服务器）， 地址： [https://a.lishaoy.net](https://a.lishaoy.net)  
 
