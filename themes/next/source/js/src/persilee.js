@@ -70,8 +70,10 @@ const dateFormat = (date) => {
       var currTime = new Date().getTime();
       var diffValue = currTime - oldTime;
       var selectedMonth = date.getMonth() + 1;
+      var selectedYear = date.getYear();
+      var currYear = new Date().getYear();
       var currMonth = new Date().getMonth() + 1;
-      var months = currMonth - selectedMonth;
+      var months = (currYear - selectedYear) * 12 + (currMonth - selectedMonth);
       date.setMonth(selectedMonth);
       date.setDate(0);
       var dayMany = date.getDate();
