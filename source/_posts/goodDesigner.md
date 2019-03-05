@@ -23,7 +23,7 @@ photos:
 
 ## Iconfont的正确使用姿势 
 
-[Iconfont](https://www.iconfont.cn) 是阿里巴巴打造的矢量图标库，图标丰富多彩（单色和彩色），使用方便快捷（可筛选图片创建自己项目图标库），支持在线使用，拜托了传统的图片的繁琐和css字体图标库引入的冗余。
+[Iconfont](https://www.iconfont.cn) 是阿里巴巴打造的矢量图标库，图标丰富多彩（单色和彩色），使用方便快捷（可筛选图片创建自己项目图标库），支持在线使用，摆脱了传统的图片的繁琐和css字体图标库引入的冗余。
 
 下面介绍下如何使用 Iconfont
 
@@ -99,7 +99,7 @@ photos:
 
 其次，用 `<i class="iconfont icon-Userselect"></i>` 在页面中使用，大小颜色都可以用 `css` 调整
 
-阿里在代码的复制、搜索、编辑、下载、筛选等一些操作上做的很到位，使用起来方便快捷
+阿里在代码的复制、图标的搜索、编辑、下载、筛选等一些操作上做的很到位，使用起来方便快捷
 
 我在之前的项目里也使用过，还是很漂亮的 [https://a.lishaoy.net](https://a.lishaoy.net) ，如图是我在项目里使用的一些图标，每个图标是不是都做的很精致
 
@@ -107,7 +107,7 @@ photos:
 
 ## Lottie开源动画库
 
-**Lottie** 是Airbnb开源的一个面向 iOS、Android、React Native 的动画库，能够直接把 **AE** 导出的动画文件（json），引入到页面使用，一下是官方给出的效果图
+**Lottie** 是Airbnb开源的一个面向 iOS、Android、React Native 的动画库，能够直接把 **AE** 导出的动画文件（json），引入到页面使用，以下是官方给出的效果图
 
 ![no-shadow](https://cdn.lishaoy.net/goodDesigner/lottie.gif "Lottie" )
 
@@ -131,11 +131,11 @@ photos:
 
 ```html
 <div class="image-load d-flex justify-content-center align-items-center">
-    <div class="box">
-      <div class="lottie"></div>
-      <div class="text text-muted text-center">The picture is being uploaded ...</div>
-    </div>
+  <div class="box">
+    <div class="lottie"></div>
+    <div class="text text-muted text-center">The picture is being uploaded ...</div>
   </div>
+</div>
 ```
 
 然后，用 `js` 初始化动画，如下
@@ -219,4 +219,4 @@ AOS.init({
 
 更多的载入效果可以参考官方给出的 [示例](http://michalsnik.github.io/aos/)
 
-如在您做的页面或应用中使用这三招，**精致小图标** 、 **炫酷的动画** 、 **页面滚动载入动效** ，瞬间让您的页面或应用高大上且生动活泼起来。
+如在您做的页面或应用中使用了这三招，**精致小图标** 、 **炫酷的动画** 、 **页面滚动载入动效** ，那么瞬间让您的页面或应用高大上且生动活泼起来。
