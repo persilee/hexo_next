@@ -14,9 +14,9 @@
   {##################}
   {### POST-DATE BLOCK ###}
   {##################}
-  <div class="post-date" data-datetime="{{ moment(post.updated).format() }}">
-    <div class="post-time-text">{{ date(post.updated, 'M') }}月</div>
-    <div class="post-time-count">{{ date(post.updated, 'DD') }}</div>
+  <div class="post-date" data-datetime="{{ moment(post.date).format() }}">
+    <div class="post-time-text">{{ date(post.date, 'M') }}月</div>
+    <div class="post-time-count">{{ date(post.date, 'DD') }}</div>
     <div class="text-desc">
 			<div class="date-text">更新于</div>
       <div class="post-tiem">{{ date(post.updated, 'M') }}月{{ date(post.updated, 'DD') }}</div>

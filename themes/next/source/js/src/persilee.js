@@ -64,7 +64,7 @@ const dateFormat = (date) => {
   };
 }
 
-  var timeAgo = function(date) {
+  var timeAgo = function(date,data1) {
     try {
       var oldTime = date.getTime();
       var currTime = new Date().getTime();
@@ -122,7 +122,7 @@ const dateFormat = (date) => {
           "text": "月前"
         };
       }else {
-        return dateFormat(date)
+        return dateFormat(data1)
       }
     } catch (error) {
       console.log(error)
@@ -130,8 +130,8 @@ const dateFormat = (date) => {
   }
 
   $('.post-date').each(function(){
-    $(this).find('.post-time-text').text(timeAgo(new Date($(this).data('datetime'))).text);
-    $(this).find('.post-time-count').text(timeAgo(new Date($(this).data('datetime'))).counts);
+    $(this).find('.post-time-text').text(timeAgo(new Date($(this).data('datetime')), new Date($(this).data('datetime'))).text);
+    $(this).find('.post-time-count').text(timeAgo(new Date($(this).data('datetime')), new Date($(this).data('datetime'))).counts);
   });
 
 
