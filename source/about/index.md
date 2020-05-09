@@ -6,6 +6,6 @@ comments: false
 ---
 
 <div class="text-center">
-**职业：** 程序猿 👨‍💻‍
-**爱好：** 摄影 📷
+<span style="color: #87daff;font-size: 104%;text-shadow: none;">职业：</span> 程序猿 👨‍💻‍
+<span style="color: #87daff;font-size: 104%;text-shadow: none;">爱好：</span> 摄影 📷
 </div>
