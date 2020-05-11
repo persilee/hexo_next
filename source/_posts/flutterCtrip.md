@@ -62,7 +62,7 @@ photos:
 
 这个就不用多解释，大多是 flutter 生成及管理的，我们需要关注的是 **lib** 目录。
 
-我们再来看看二级目录，如下 (重点关注下lib目录)
+我们再来看看二级目录，如下 *(重点关注下lib目录)*
 
 ```bash
 ├── README.md
@@ -167,3 +167,142 @@ photos:
 整个项目就是以上这些文件了 *（具体的就不一个一个分析了，如，感兴趣，大家可以 clone 源码运行起来，自然就清除了）*。
 
 ## 项目功能详细概述（所用知识点）
+
+首先，来看看首页功能及所用知识点，首页重点看下以下功能实现：
+
+- 渐隐渐现的 **appBbar** 
+- 搜索组件的封装
+- banner组件
+- 浮动的 icon 导航
+- 渐变不规则带有背景图的网格导航
+
+### 渐隐渐现的 appBbar
+
+先来看看具体效果，一睹芳容，如图：
+
+<div style="width:36%; margin:auto">![no-shadow](/flutterCtrip/appBar.gif "appBar" )</div>
+
+滚动的时候 **appBar** 背景色从透明变成白色或白色变成透明，这里主要用来 **flutter** 的 `NotificationListener` 组件，它回去监听组件树冒泡时间，当被它包裹的的组件*（子组件）* 发生变化时，`Notification` 回调函数会被触发，所以，通过它可以去监听页面的滚动，来动态改变 **appBar** 的透明度*（alpha）*，代码如下：
+
+```dart
+NotificationListener(
+  onNotification: (scrollNotification) {
+    if (scrollNotification is ScrollUpdateNotification &&
+        scrollNotification.depth == 0) {
+      _onScroll(scrollNotification.metrics.pixels);
+    }
+    return true;
+  },
+  child: ...
+```
+
+{% note warning %} 
+<i class="fa fa-fw fa-bell  faa-horizontal animated faa-slow" style="color: #faab33;"></i> **Tips：** 
+{% label danger@scrollNotification.depth %}的值 0 表示其子组件*(只监听子组件，不监听孙组件)*；
+{% label danger@scrollNotification is ScrollUpdateNotification %}来判断组件是否已更新，**ScrollUpdateNotification** 是 notifications 的生命周期，分别有一下几种：
+- ScrollStartNotification 组件开始滚动
+- ScrollUpdateNotification 组件位置已经发生改变
+- ScrollEndNotification 组件停止滚动
+- UserScrollNotification 不清楚
+
+这里，我们不探究太深入，如想了解可多查看源码。
+
+{% endnote %} 
+
+**_onScroll** 方法代码如下：
+
+```dart
+  void _onScroll(offset) {
+    double alpha = offset / APPBAR_SCROLL_OFFSET;  // APPBAR_SCROLL_OFFSET 常量，值：100；offset 滚动的距离
+
+    //把 alpha 值控制值 0-1 之间
+    if (alpha < 0) {
+      alpha = 0;
+    } else if (alpha > 1) {
+      alpha = 1;
+    }
+    setState(() {
+      appBarAlpha = alpha;
+    });
+    print(alpha);
+  }
+```
+
+### 搜索组件的封装
+
+搜索组件效果如图：
+
+<div style="width:36%; margin:auto">![no-shadow](/flutterCtrip/searchBar.gif "searchBar" )</div>
+
+以下是首页调用 `searchBar` 的代码：
+
+```dart
+SearchBar(
+  searchBarType: appBarAlpha > 0.2  //searchBar 的类：暗色、亮色
+      ? SearchBarType.homeLight
+      : SearchBarType.home,
+  inputBoxClick: _jumpToSearch,     //点击回调函数
+  defaultText: SEARCH_BAR_DEFAULT_TEXT,   // 提示文字
+  leftButtonClick: () {},           //左边边按钮点击回调函数
+  speakClick: _jumpToSpeak,         //点击话筒回调函数
+  rightButtonClick: _jumpToUser,    //右边边按钮点击回调函数
+),
+```
+其实就是用 `TextField` 组件，再加一些样式，需要注意点是：**onChanged**，他是 **TextField** 用来监听文本框是否变化，通过它我们来监听用户输入，来请求接口数据;
+具体的实现细节，请查阅源码： [点击查看searchBar源码](https://github.com/persilee/flutter_ctrip/blob/master/lib/widget/search_bar.dart)
+
+### banner组件
+
+<div style="width:36%; margin:auto">![no-shadow](/flutterCtrip/banner.gif "searchBar" )</div>
+
+`banner`使用的是flutter的 [flutter_swiper](https://pub.dev/packages/flutter_swiper) 插件，代码如下：
+
+```dart
+Swiper(
+  itemCount: bannerList.length,              // 滚动图片的数量
+  autoplay: true,                            // 自动播放
+  pagination: SwiperPagination(              // 指示器
+      builder: SquareSwiperPagination(
+        size: 6,                             // 指示器的大小
+        activeSize: 6,                       // 激活状态指示器的大小
+        color: Colors.white.withAlpha(80),   // 颜色
+        activeColor: Colors.white,           // 激活状态的颜色
+      ),
+    alignment: Alignment.bottomRight,        // 对齐方式
+    margin: EdgeInsets.fromLTRB(0, 0, 14, 28), // 边距
+  ),
+  itemBuilder: (BuildContext context, int index) { // 构造器
+    return GestureDetector(
+      onTap: () {
+        CommonModel model = bannerList[index];
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => WebView(
+              url: model.url,
+            ),
+          ),
+        );
+      },
+      child: Image.network(
+        bannerList[index].icon,
+        fit: BoxFit.fill,
+      ),
+    );
+  },
+),
+```
+
+具体使用方法，可以去 flutter的官方插件库 [pub.dev](https://pub.dev/) 查看：[点击flutter_swiper查看](https://pub.dev/packages/flutter_swiper)。
+{% note warning %} 
+<i class="fa fa-fw fa-bell  faa-horizontal animated faa-slow" style="color: #faab33;"></i> **Tips：** 
+需要注意的是，我稍改造了一下指示器的样式，`flutter_swiper` 只提供了 3 种指示器样式，如下：
+- dots = const DotSwiperPaginationBuilder()，圆形
+- fraction = const FractionPaginationBuilder()，百分数类型的,如：1/6，表示6页的第一页
+- rect = const RectSwiperPaginationBuilder()，矩形
+
+并没有上图的激活状态的长椭圆形，其实就是按葫芦画瓢，自己实现一个长椭圆类型，如知详情，可[点击查看长椭圆形指示器源码](https://github.com/persilee/flutter_ctrip/blob/master/lib/plugin/square_swiper_pagination.dart)
+
+
+{% endnote %} 
+

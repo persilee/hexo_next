@@ -37,7 +37,7 @@
   <link href="//cdn.jsdelivr.net/gh/moezx/cdn@v2.52/css/lib.css" rel="stylesheet" type="text/css">
   <link href="/live2dw/css/perTips.css" rel="stylesheet" type="text/css">
   #}
-<link href="https://cdn.lishaoy.net/css/all-a26fb6bcc9.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.lishaoy.net/css/all-f6dd3f62d9.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="/video/video-js.css">
 </head>
 
