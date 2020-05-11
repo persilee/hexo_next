@@ -172,6 +172,7 @@ photos:
 
 - 渐隐渐现的 **appBbar** 
 - 搜索组件的封装
+- 语音搜索页面
 - banner组件
 - 浮动的 icon 导航
 - 渐变不规则带有背景图的网格导航
@@ -250,6 +251,66 @@ SearchBar(
 ```
 其实就是用 `TextField` 组件，再加一些样式，需要注意点是：**onChanged**，他是 **TextField** 用来监听文本框是否变化，通过它我们来监听用户输入，来请求接口数据;
 具体的实现细节，请查阅源码： [点击查看searchBar源码](https://github.com/persilee/flutter_ctrip/blob/master/lib/widget/search_bar.dart)
+
+### 语音搜索页面
+
+语音搜索页面效果如图：由于模拟器无法录音，所以无法展示正常流程，如果录音识别成功后会返回搜索页面，项目展示的视频可以看到正常流程。
+
+<div style="width:36%; margin:auto">![no-shadow](/flutterCtrip/speak.gif "speak" )</div>
+
+语音搜索功能使用的是百度的语言识别SDK，原生接入之后，通过 **MethodChannel** 和原生Native端通信，这里不做重点讲述（这里会设计原生Native的知识）。
+
+重点看看点击录音按钮时的动画实现，这个动画用了 **AnimatedWidget** 实现的，代码如下：
+
+```dart
+class AnimatedWear extends AnimatedWidget {
+  final bool isStart;
+  static final _opacityTween = Tween<double>(begin: 0.5, end: 0); // 设置透明度变化值
+  static final _sizeTween = Tween<double>(begin: 90, end: 260);   // 设置圆形线的扩散值
+
+  AnimatedWear({Key key, this.isStart, Animation<double> animation})
+      : super(key: key, listenable: animation);
+
+  @override
+  Widget build(BuildContext context) {
+    final Animation<double> animation = listenable;  // listenable 继承 AnimatedWidget，其实就是控制器，会自动监听组件的变化
+    return Container(
+      height: 90,
+      width: 90,
+      child: Stack(
+        overflow: Overflow.visible,
+        alignment: Alignment.center,
+        children: <Widget>[
+          ...
+          // 扩散的圆线，其实就是用一个圆实现的，设置圆为透明，设置border
+          Positioned(
+            left: -((_sizeTween.evaluate(animation) - 90) / 2), // 根据 _sizeTween 动态设置left偏移值
+            top: -((_sizeTween.evaluate(animation) - 90) / 2), //  根据 _sizeTween 动态设置top偏移值
+            child: Opacity(
+              opacity: _opacityTween.evaluate(animation),      // 根据 _opacityTween 动态设置透明值
+              child: Container(
+                width: isStart ? _sizeTween.evaluate(animation) : 0, // 设置 宽
+                height: _sizeTween.evaluate(animation),              // 设置 高
+                decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(
+                        _sizeTween.evaluate(animation) / 2),
+                    border: Border.all(
+                      color: Color(0xa8000000),
+                    )),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
+其他细节，如：点击时提示录音，录音失败提示，点击录音按钮出现半透明黑色圆边框，停止后消失等，[请查看源码](https://github.com/persilee/flutter_ctrip/blob/master/lib/pages/speak_page.dart)。
+
+
 
 ### banner组件
 
@@ -610,3 +671,5 @@ class TravelTabPage extends StatefulWidget {
 ```
 
 暂时只能想到这些知识点，以后如有新的会慢慢补充。
+
+**项目GitHub地址:** [https://github.com/persilee/flutter_ctrip](https://github.com/persilee/flutter_ctrip)
