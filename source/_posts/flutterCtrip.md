@@ -15,7 +15,7 @@ photos:
 
 {% li /flutterCtrip/flutter-ctrip.jpg, Flutter, Flutter %}
 
-之前，也写过几篇关于 `Flutter` 的博文，最近，又花了一些时间学习研究 `Flutter`，完成了高仿大厂 **App** 项目 *(项目使用的接口都是来自线上真实App抓包而来，可以做到和上线项目相同的效果)*，也总结积累了一些小技巧和知识点，所以，在这里记录分享出来，也希望 `Flutter` 生态越来越好 *（flutter开发App效率真的很高，开发体验也是很好的 🙂）*。
+之前，也写过几篇关于 `Flutter` 的博文，最近，又花了一些时间学习研究 `Flutter`，完成了高仿大厂 **App** 项目 *(项目使用的接口都是来自线上真实App抓包而来，可以做到和线上项目相同的效果)*，也总结积累了一些小技巧和知识点，所以，在这里记录分享出来，也希望 `Flutter` 生态越来越好 *（flutter开发App效率真的很高，开发体验也是很好的 🙂）*。
 
 <hr />
 
@@ -36,6 +36,7 @@ photos:
     <source src="/flutterCtrip/ctrip.mp4" type='video/mp4' />
 </video>
 
+<br />
 大家看完视频，大概了解到，完成度基本可以和线上的 **App** 相差无异了，大家如果对项目感兴趣，想了解具体怎么实现的，可以去我的 [GitHub](https://github.com/persilee) clone 源码查看。
 
 本视频是用真机录屏的，因为，语音搜索功能需要录音，模拟器无法录音，当然, `iOS` 和 `Andorid`都可以运行，效果是一样的，如图：
@@ -183,7 +184,7 @@ photos:
 
 <div style="width:36%; margin:auto">![no-shadow](/flutterCtrip/appBar.gif "appBar" )</div>
 
-滚动的时候 **appBar** 背景色从透明变成白色或白色变成透明，这里主要用来 **flutter** 的 `NotificationListener` 组件，它回去监听组件树冒泡时间，当被它包裹的的组件*（子组件）* 发生变化时，`Notification` 回调函数会被触发，所以，通过它可以去监听页面的滚动，来动态改变 **appBar** 的透明度*（alpha）*，代码如下：
+滚动的时候 **appBar** 背景色从透明变成白色或白色变成透明，这里主要用了 **flutter** 的 `NotificationListener` 组件，它会去监听组件树冒泡事件，当被它包裹的的组件*（子组件）* 发生变化时，`Notification` 回调函数会被触发，所以，通过它可以去监听页面的滚动，来动态改变 **appBar** 的透明度*（alpha）*，代码如下：
 
 ```dart
 NotificationListener(
@@ -200,7 +201,7 @@ NotificationListener(
 {% note warning %} 
 <i class="fa fa-fw fa-bell  faa-horizontal animated faa-slow" style="color: #faab33;"></i> **Tips：** 
 {% label danger@scrollNotification.depth %}的值 0 表示其子组件*(只监听子组件，不监听孙组件)*；
-{% label danger@scrollNotification is ScrollUpdateNotification %}来判断组件是否已更新，**ScrollUpdateNotification** 是 notifications 的生命周期，分别有一下几种：
+{% label danger@scrollNotification is ScrollUpdateNotification %}来判断组件是否已更新，**ScrollUpdateNotification** 是 notifications 的生命周期一种情况，分别有一下几种：
 - ScrollStartNotification 组件开始滚动
 - ScrollUpdateNotification 组件位置已经发生改变
 - ScrollEndNotification 组件停止滚动
@@ -254,11 +255,11 @@ SearchBar(
 
 ### 语音搜索页面
 
-语音搜索页面效果如图：由于模拟器无法录音，所以无法展示正常流程，如果录音识别成功后会返回搜索页面，项目展示的视频可以看到正常流程。
+语音搜索页面效果如图：由于模拟器无法录音，所以无法展示正常流程，如果录音识别成功后会返回搜索页面，在项目预览视频中可以看到正常流程。
 
 <div style="width:36%; margin:auto">![no-shadow](/flutterCtrip/speak.gif "speak" )</div>
 
-语音搜索功能使用的是百度的语言识别SDK，原生接入之后，通过 **MethodChannel** 和原生Native端通信，这里不做重点讲述（这里会设计原生Native的知识）。
+语音搜索功能使用的是百度的语言识别SDK，原生接入之后，通过 **MethodChannel** 和原生Native端通信，这里不做重点讲述（这里会涉及原生Native的知识）。
 
 重点看看点击录音按钮时的动画实现，这个动画用了 **AnimatedWidget** 实现的，代码如下：
 
@@ -314,9 +315,11 @@ class AnimatedWear extends AnimatedWidget {
 
 ### banner组件
 
+效果如图：
+
 <div style="width:36%; margin:auto">![no-shadow](/flutterCtrip/banner.gif "banner" )</div>
 
-`banner`使用的是flutter的 [flutter_swiper](https://pub.dev/packages/flutter_swiper) 插件，代码如下：
+`banner`使用的是flutter的 [flutter_swiper](https://pub.dev/packages/flutter_swiper) 插件实现的，代码如下：
 
 ```dart
 Swiper(
@@ -459,7 +462,7 @@ Column(                      // 最外面放在 Column 组件
 
 <div style="width:36%; margin:auto">![no-shadow](/flutterCtrip/destination.gif "destination" )</div>
 
-其实官方已经提供了 **tabBar** 和 **TabBarView** 组件可以实现上下布局的效果*(旅拍页面就是用这个实现的)*，但是它无法实现左右布局，而且不太灵活，所以，我使用的是 [vertical_tabs](https://pub.dev/packages/vertical_tabs), 代码如下：
+其实官方已经提供了 **tabBar** 和 **TabBarView** 组件可以实现上下布局的效果*(旅拍页面就是用这个实现的)*，但是它无法实现左右布局，而且不太灵活，所以，我使用的是 [vertical_tabs](https://pub.dev/packages/vertical_tabs)插件, 代码如下：
 
 ```dart
 VerticalTabView(
@@ -482,16 +485,16 @@ VerticalTabView(
 
 {% note warning %} 
 <i class="fa fa-fw fa-bell  faa-horizontal animated faa-slow" style="color: #faab33;"></i> **Tips：** 
-这里需要注意的是：**展开**显示更多span标签组件的实现，因为，这个组件在很多的其他组件里用到而且要根据接口数据动态渲染，且组件自身存在状态的变化，这种情况下，最后是把他单独封装成一个组件*(widget)*，否则，很难控制自身状态的变化，出现点击没有效果，或点击影响其他组件。 
+这里需要注意的是：**展开**显示更多span标签组件的实现，因为，这个组件在很多的其他组件里用到而且要根据接口数据动态渲染，且组件自身存在状态的变化，这种情况下，最好是把他单独封装成一个组件*(widget)*，否则，很难控制自身状态的变化，出现点击没有效果，或点击影响其他组件。 
 {% endnote %} 
 
 ### 目的地搜索页面
 
-效果如图：点击搜索结果，如：‘一日游‘，会搜索到‘一日游‘的相关数据
+效果如图：点击搜索结果，如：点击‘一日游‘，会搜索到‘一日游‘的相关数据
 
 <div style="width:36%; margin:auto">![no-shadow](/flutterCtrip/destination-search.gif "destination" )</div>
 
-目的地搜索页面，大多都是和布局和对接接口的事情，在这里就不再赘述。
+目的地搜索页面，大多都是和布局和对接接口的代码，在这里就不再赘述。
 
 然后就是**旅拍页面**功能及所用知识点，重点看下以下功能实现：
 
@@ -567,11 +570,11 @@ StaggeredGridView.countBuilder(
 
 ### 旅拍搜索页
 
-效果如图：首先显示热门旅拍标签，点击可搜索，输入关键字可搜索相关旅拍信息，地点、景点、用户等
+效果如图：首先显示热门旅拍标签，点击可搜索相关内容，输入关键字可搜索相关旅拍信息，地点、景点、用户等
 
 <div style="width:36%; margin:auto">![no-shadow](/flutterCtrip/travel-search.gif "travel-search" )</div>
 
-旅拍搜索页，大多也是和布局和对接接口的事情，在这里就不再赘述。
+旅拍搜索页，大多也是和布局和对接接口的代码，在这里就不再赘述。
 
 ## 小技巧积累总结
 
@@ -579,7 +582,7 @@ StaggeredGridView.countBuilder(
 
 ### PhysicalModel
 
-**PhysicalModel** 可以裁剪带背景图的容器，如，你在一个 Container 里放了一张图片，你想设置图片圆角，这是设置 Container 的 decoration 的 borderRadius 是无效的，这时候就要用到 **PhysicalModel**，代码如下：
+**PhysicalModel** 可以裁剪带背景图的容器，如，你在一个 Container 里放了一张图片，想设置图片圆角，设置 Container 的 decoration 的 borderRadius 是无效的，这时候就要用到 **PhysicalModel**，代码如下：
 
 ```dart
 PhysicalModel(
@@ -615,14 +618,15 @@ Container(
 
 ### Color(int.parse('0xff' + gridNavItem.startColor))
 
-颜色值转换成颜色，如果，没有变量的话，也可直接 `Color(0xff53bced)`，
+颜色值转换成颜色，如果，没有变量的话，也可直接这样用 `Color(0xff53bced)`，
 - ox：flutter要求，可固定不变
-- ff：代表透明贴，不知的如何设置的话，可以用取色器，或者 withOpacity(opacity) 、 withAlpha(a)
+- ff：代表透明贴，不知道如何设置的话，可以用取色器，或者 withOpacity(opacity) 、 withAlpha(a)
 - 53bced: 常规的6位RGB值
 
 ### Expanded、FractionallySizedBox
 
-**Expanded** 可以让子组件撑满父容器，通常和 **Row** 及 **Column** 组件搭配使用
+**Expanded** 可以让子组件撑满父容器，通常和 **Row** 及 **Column** 组件搭配使用；
+<br />
 **FractionallySizedBox** 可以让子组件撑满或超出父容器，可以单独使用，大小受 widthFactor 和 heightFactor 宽高因子的影响
 
 ### MediaQuery.removePadding
@@ -670,6 +674,6 @@ class TravelTabPage extends StatefulWidget {
 }
 ```
 
-暂时只能想到这些知识点，以后如有新的会慢慢补充。
+暂时只能想到这些常用的知识点，以后如有新的会慢慢补充。
 
 **项目GitHub地址:** [https://github.com/persilee/flutter_ctrip](https://github.com/persilee/flutter_ctrip)
