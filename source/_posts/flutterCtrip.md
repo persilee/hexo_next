@@ -13,7 +13,7 @@ top: 114
 photos:
 ---
 
-{% li /flutterCtrip/flutter-ctrip.jpg, Flutter, Flutter %}
+{% li https://cdn.lishaoy.net/flutterCtrip/flutter-ctrip.jpg, Flutter, Flutter %}
 
 之前，也写过几篇关于 `Flutter` 的博文，最近，又花了一些时间学习研究 `Flutter`，完成了高仿大厂 **App** 项目 *(项目使用的接口都是来自线上真实App抓包而来，可以做到和线上项目相同的效果)*，也总结积累了一些小技巧和知识点，所以，在这里记录分享出来，也希望 `Flutter` 生态越来越好 *（flutter开发App效率真的很高，开发体验也是很好的 🙂）*。
 
@@ -31,9 +31,9 @@ photos:
 
 首先，我们来通过一个视频来快速预览下项目完成的功能和运行效果，如下
 
-<video id="flutter" class="video-js vjs-default-skin" controls preload="auto" poster="/flutterCtrip/ctrip.png"
+<video id="flutter" class="video-js vjs-default-skin" controls preload="auto" poster="https://cdn.lishaoy.net/flutterCtrip/ctrip.png"
     data-setup="{'example_option':true}">
-    <source src="/flutterCtrip/ctrip.mp4" type='video/mp4' />
+    <source src="https://cdn.lishaoy.net/flutterCtrip/ctrip.mp4" type='video/mp4' />
 </video>
 
 <br />
@@ -41,7 +41,7 @@ photos:
 
 本视频是用真机录屏的，因为，语音搜索功能需要录音，模拟器无法录音，当然, `iOS` 和 `Andorid`都可以运行，效果是一样的，如图：
 
-![no-shadow](/flutterCtrip/iOS-andorid.png "iOS Andorid")
+![no-shadow](https://cdn.lishaoy.net/flutterCtrip/iOS-andorid.png "iOS Andorid")
 
 ## 项目结构分析
 
@@ -182,7 +182,7 @@ photos:
 
 先来看看具体效果，一睹芳容，如图：
 
-<div style="width:36%; margin:auto">![no-shadow](/flutterCtrip/appBar.gif "appBar" )</div>
+<div style="width:36%; margin:auto">![no-shadow](https://cdn.lishaoy.net/flutterCtrip/appBar.gif "appBar" )</div>
 
 滚动的时候 **appBar** 背景色从透明变成白色或白色变成透明，这里主要用了 **flutter** 的 `NotificationListener` 组件，它会去监听组件树冒泡事件，当被它包裹的的组件*（子组件）* 发生变化时，`Notification` 回调函数会被触发，所以，通过它可以去监听页面的滚动，来动态改变 **appBar** 的透明度*（alpha）*，代码如下：
 
@@ -234,7 +234,7 @@ NotificationListener(
 
 搜索组件效果如图：
 
-<div style="width:36%; margin:auto">![no-shadow](/flutterCtrip/searchBar.gif "searchBar" )</div>
+<div style="width:36%; margin:auto">![no-shadow](https://cdn.lishaoy.net/flutterCtrip/searchBar.gif "searchBar" )</div>
 
 以下是首页调用 `searchBar` 的代码：
 
@@ -257,7 +257,7 @@ SearchBar(
 
 语音搜索页面效果如图：由于模拟器无法录音，所以无法展示正常流程，如果录音识别成功后会返回搜索页面，在项目预览视频中可以看到正常流程。
 
-<div style="width:36%; margin:auto">![no-shadow](/flutterCtrip/speak.gif "speak" )</div>
+<div style="width:36%; margin:auto">![no-shadow](https://cdn.lishaoy.net/flutterCtrip/speak.gif "speak" )</div>
 
 语音搜索功能使用的是百度的语言识别SDK，原生接入之后，通过 **MethodChannel** 和原生Native端通信，这里不做重点讲述（这里会涉及原生Native的知识）。
 
@@ -317,7 +317,7 @@ class AnimatedWear extends AnimatedWidget {
 
 效果如图：
 
-<div style="width:36%; margin:auto">![no-shadow](/flutterCtrip/banner.gif "banner" )</div>
+<div style="width:36%; margin:auto">![no-shadow](https://cdn.lishaoy.net/flutterCtrip/banner.gif "banner" )</div>
 
 `banner`使用的是flutter的 [flutter_swiper](https://pub.dev/packages/flutter_swiper) 插件实现的，代码如下：
 
@@ -372,7 +372,7 @@ Swiper(
 
 **icon导航**效果如图：
 
-<img src="/flutterCtrip/iconBar.png" alt="iconBar" width="36%" title="iconBar" align="center">
+<img src="https://cdn.lishaoy.net/flutterCtrip/iconBar.png" alt="iconBar" width="36%" title="iconBar" align="center">
 
 **icon导航**浮动在banner之上，其实用的是 `flutter` 的 **Stack** 组件，Stack 组件能让其子组件堆叠显示，它通常和 **Positioned** 组件配合使用，布局结构代码如下：
 
@@ -396,7 +396,7 @@ ListView(
 
 网格导航效果如图：
 
-<img src="/flutterCtrip/gridNav.png" alt="gridNav" width="46%" title="gridNav" align="center">
+<img src="https://cdn.lishaoy.net/flutterCtrip/gridNav.png" alt="gridNav" width="46%" title="gridNav" align="center">
 
 如图，网格导航分为三行四栏，而第一行分为三栏，每一行的第一栏宽度大于其余三栏，其余三栏均等，每一行都有渐变色，而且第一、二栏都有背景图;
 `flutter` 里 **Column** 组件能让子组件竖轴排列， **Row** 组件能让子组件横轴排列，布局代码如下：
@@ -460,7 +460,7 @@ Column(                      // 最外面放在 Column 组件
 
 具体效果如图：点击左边标签可以切换页面，左右滑动也可切换页面，点击展开显示更多等
 
-<div style="width:36%; margin:auto">![no-shadow](/flutterCtrip/destination.gif "destination" )</div>
+<div style="width:36%; margin:auto">![no-shadow](https://cdn.lishaoy.net/flutterCtrip/destination.gif "destination" )</div>
 
 其实官方已经提供了 **tabBar** 和 **TabBarView** 组件可以实现上下布局的效果*(旅拍页面就是用这个实现的)*，但是它无法实现左右布局，而且不太灵活，所以，我使用的是 [vertical_tabs](https://pub.dev/packages/vertical_tabs)插件, 代码如下：
 
@@ -492,7 +492,7 @@ VerticalTabView(
 
 效果如图：点击搜索结果，如：点击‘一日游‘，会搜索到‘一日游‘的相关数据
 
-<div style="width:36%; margin:auto">![no-shadow](/flutterCtrip/destination-search.gif "destination" )</div>
+<div style="width:36%; margin:auto">![no-shadow](https://cdn.lishaoy.net/flutterCtrip/destination-search.gif "destination" )</div>
 
 目的地搜索页面，大多都是和布局和对接接口的代码，在这里就不再赘述。
 
@@ -506,7 +506,7 @@ VerticalTabView(
 
 效果如图：可左右滑动切换页面，上拉加载更多，下拉刷新等
 
-<div style="width:36%; margin:auto">![no-shadow](/flutterCtrip/travel.gif "travel" )</div>
+<div style="width:36%; margin:auto">![no-shadow](https://cdn.lishaoy.net/flutterCtrip/travel.gif "travel" )</div>
 
 这个是`flutter` 提供的组件，**tabBar** 和 **TabBarView**，代码如下：
 
@@ -572,7 +572,7 @@ StaggeredGridView.countBuilder(
 
 效果如图：首先显示热门旅拍标签，点击可搜索相关内容，输入关键字可搜索相关旅拍信息，地点、景点、用户等
 
-<div style="width:36%; margin:auto">![no-shadow](/flutterCtrip/travel-search.gif "travel-search" )</div>
+<div style="width:36%; margin:auto">![no-shadow](https://cdn.lishaoy.net/flutterCtrip/travel-search.gif "travel-search" )</div>
 
 旅拍搜索页，大多也是和布局和对接接口的代码，在这里就不再赘述。
 
