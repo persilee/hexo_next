@@ -1,5 +1,5 @@
 ---
-title: 10天高仿大厂App及小技巧积累总结
+title: Flutter 10天高仿大厂App及小技巧积累总结
 tags:
   - Flutter
   - iOS
@@ -7,7 +7,7 @@ tags:
   - Dart
 copyright: true
 comments: true
-date: 2020-05-08 22:53:05
+date: 2020-05-11 21:53:05
 categories: Dart
 top: 114
 photos:
