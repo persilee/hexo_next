@@ -447,7 +447,7 @@ Column(                      // 最外面放在 Column 组件
 其实，具体实现的细节还是很多的，比如：
 - 怎么设置第一栏宽度偏大，其他均等；
 - 第一行最后一栏宽度是其他的2倍；
-- 第一、二栏的别截图及浮动的红色气泡tip等;
+- 第一、二栏的背景图及浮动的红色气泡tip等;
 
 在这里就不细讲，否则篇幅太长，如想了解详情 [点击查看源码](https://github.com/persilee/flutter_ctrip/blob/master/lib/widget/grid_nav_new.dart)
 
@@ -620,7 +620,7 @@ Container(
 
 颜色值转换成颜色，如果，没有变量的话，也可直接这样用 `Color(0xff53bced)`，
 - ox：flutter要求，可固定不变
-- ff：代表透明贴，不知道如何设置的话，可以用取色器，或者 withOpacity(opacity) 、 withAlpha(a)
+- ff：代表透明度，不知道如何设置的话，可以用取色器，或者 withOpacity(opacity) 、 withAlpha(a)
 - 53bced: 常规的6位RGB值
 
 ### Expanded、FractionallySizedBox
