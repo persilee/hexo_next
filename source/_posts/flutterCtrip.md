@@ -31,7 +31,7 @@ photos:
 
 首先，我们来通过一个视频来快速预览下项目完成的功能和运行效果，如下
 
-<video id="flutter" class="video-js vjs-default-skin" controls preload="auto" poster="https://cdn.lishaoy.net/flutterCtrip/ctrip.png"
+<video id="flutter" class="video-js vjs-default-skin" controls preload="auto" poster="https://cdn.lishaoy.net/ctrip/ctripV.png"
     data-setup="{'example_option':true}">
     <source src="https://cdn.lishaoy.net/flutterCtrip/ctrip.mp4" type='video/mp4' />
 </video>
