@@ -36,6 +36,10 @@ photos:
     <source src="https://cdn.lishaoy.net/flutterCtrip/ctrip.mp4" type='video/mp4' />
 </video>
 
+{% note warning %} 
+<i class="fa fa-fw fa-bell  faa-horizontal animated faa-slow" style="color: #faab33;"></i> 如视频播放失败， [请移步这里点击观看](https://www.bilibili.com/video/BV16p4y1Q71f/) （可点击齿轮设置隐藏黑边）
+{% endnote %}
+
 <br />
 大家看完视频，大概了解到，完成度基本可以和线上的 **App** 相差无异了，大家如果对项目感兴趣，想了解具体怎么实现的，可以去我的 [GitHub](https://github.com/persilee) clone 源码查看。
 
