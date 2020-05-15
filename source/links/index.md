@@ -78,13 +78,6 @@ copyright: true
             </a>
         </li>
         <li class="per-links-item">
-            <a href="https://www.kooola.com/" class="group-picture" title="考拉的网络日志" target="_blank">
-                <img class="per-links-icon" src="https://www.kooola.com/user/img/logo.png" alt="">
-                <h3 class="per-links-title">考拉的网络日志</h3>
-                <p class="per-links-des">在平凡的工作生活中，记录碎片化的知识和生活感悟</p>
-            </a>
-        </li>
-        <li class="per-links-item">
             <a href="http://weblogger.club/" class="group-picture" title="声钟博客" target="_blank">
                 <img class="per-links-icon" src="https://cdn.lishaoy.net/images/links/webblogger.png" alt="">
                 <h3 class="per-links-title">声钟博客</h3>

@@ -20,7 +20,7 @@
                 {{ _p('counter.tag_cloud', site.tags.length) }}
             </div>
             <div class="tag-cloud-tags">
-              {{ tagcloud({min_font: 14, max_font: 25, amount: 200, color: true, start_color: '#f6f6f6', end_color: '#87daff'}) }}
+              {{ tagcloud({min_font: 14, max_font: 25, amount: 200, color: true, start_color: '#f6f6f6', end_color: '#FF5722'}) }}
             </div>
       </div>
     </div>
