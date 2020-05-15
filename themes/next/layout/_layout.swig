@@ -35,10 +35,14 @@
   {% include '_third-party/analytics/index.swig' %}
   {# 优化
   <link href="//cdn.jsdelivr.net/gh/moezx/cdn@v2.52/css/lib.css" rel="stylesheet" type="text/css">
+  <link href="/css/lib.css" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css" rel="stylesheet" type="text/css">
+  <link href="/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link href="/css/main.css" rel="stylesheet" type="text/css">
   <link href="/live2dw/css/perTips.css" rel="stylesheet" type="text/css">
   #}
-<link href="https://cdn.lishaoy.net/css/all-f6dd3f62d9.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="/video/video-js.css">
+  <link href="https://cdn.lishaoy.net/css/all-f9a3217fb0.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/video/video-js.css">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="{{ page.lang || page.language || config.language }}">
@@ -134,6 +138,7 @@
   <script async src="/live2dw/js/perTips.js"></script>
   <script src="/live2dw/lib/L2Dwidget.min.js"></script>
   -->
+
   <!-- 页面点击小红心
   <script type="text/javascript" src="/js/src/love.js"></script>
   -->
@@ -149,8 +154,11 @@
    <!-- UV、PV统计
   <script async src="https://cdn.lishaoy.net/js/busuanzi.pure.mini.js"></script>
   -->
-  <script type="text/javascript" src="https://cdn.lishaoy.net/js/all-min-0b992cbd38.js"></script>
+
+  <script type="text/javascript" src="https://cdn.lishaoy.net/js/all-min-c4451a734d.js"></script>
   <script src="/video/video.js"></script>
+
+
    <!-- 自己的脚本
   <script type="text/javascript" src="/js/src/persilee.js"></script>
   -->
@@ -161,7 +169,11 @@
       background: transparent;
     }
     .no-post.v *{
-      color: #ddd;
+      color: #fff;
+    }
+
+    .no-post.v::-webkit-input-placeholder{
+      color: #eee;
     }
     .v .vlist p {
       margin: 12px 0;
@@ -181,7 +193,7 @@
       border: 1px solid #f0f0f036;;
     }
     .no-post.v a {
-      color: #ddd;
+      color: #fff;
     }
     .v ul {
       padding-left: 25px;
@@ -204,8 +216,8 @@
     }
 
     .no-post.v .vlist .vcard .vhead .vsys{
-      background: #ededed1f;
-      color: #808080;
+      background: rgba(255, 255, 255, 0.36);
+      color: #898989;
       padding: 1px 5px;
       font-size: 12px;
       line-height: 1.4;
@@ -213,13 +225,13 @@
     }
 
     .v .vlist .vcard .vcontent a {
-      color: #86dbff;
-      border-bottom-color: #86dbff99;
+      color: #fffffff2;
+      border-bottom-color: #ccc;
     }
 
     .v .vlist .vcard .vcontent a:hover {
-        color: #d7191a;
-        border-bottom-color: #222;
+        color: #607D8B;
+        border-bottom-color: #607D8B;
     }
 
     .no-post.v .vlist .vcard section {
@@ -253,7 +265,7 @@
     }
 
     .v .vwrap .vheader .vinput:focus {
-      border-bottom: 1px solid #87daff;
+      border-bottom: 1px solid #ffffff6e;
     }
     .v .vlist .vcard .vcontent pre , .vinput.vpreview pre {
         background: #87daff21;
