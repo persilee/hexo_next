@@ -1607,6 +1607,10 @@ pre, .highlight {
         margin: 25px -3.9%;
     }
 
+    .archive .posts-collapse .post-title a span.archive-updated , .archive .posts-collapse .post-title a span.leancloud_visitors {
+      display: none;
+    }
+
     .pagination .prev, .pagination .next, .pagination .page-number {
         border-bottom: none;
     }
@@ -1662,12 +1666,15 @@ pre, .highlight {
     .category-all-page .category-list {
       padding-left: 7%;
     }
+    .archive .posts-collapse .post-title a span.archive-updated , .archive .posts-collapse .post-title a span.leancloud_visitors {
+      display: none;
+    }
 }
 
 // iphone 6/7/8..puls
 @media screen and (min-width: 414px) and (max-width: 767px) {
     body {
-        background-color: #222;
+        background-color: rgba(34, 34, 34, 0.36);
     }
     body::before {
         content: none;
@@ -1758,6 +1765,9 @@ pre, .highlight {
     .post-date .post-day {
         font-size: 26px;
     }
+    .header.light-header .btn-bar {
+        background: #555;
+    }
 }
 
 @media screen and (min-width: 450px) and (max-width: 767px) {
@@ -1839,6 +1849,9 @@ pre, .highlight {
     .post-date .post-day {
         font-size: 26px;
     }
+    .header.light-header .btn-bar {
+        background: #555;
+    }
 }
 
 @media (max-width: 767px){
@@ -1850,12 +1863,15 @@ pre, .highlight {
       background: #333333d4;
       padding-bottom: 2px;
   }
+  .header.light-header .btn-bar {
+      background: #555;
+  }
 }
 
 // iphone 6/7/8
 @media screen and (min-width: 375px) and (max-width: 413px) {
     body {
-        background-color: #222;
+        background-color: rgba(34, 34, 34, 0.36);
     }
     body::before {
         content: none;
@@ -1948,12 +1964,15 @@ pre, .highlight {
     .post-date .post-day {
         font-size: 26px;
     }
+    .header.light-header .btn-bar {
+        background: #555;
+    }
 
 }
 // iphone 5
 @media screen and (max-width: 374px) {
     body {
-        background-color: #222;
+        background-color: rgba(34, 34, 34, 0.36);
     }
     body::before {
         content: none;
@@ -2040,5 +2059,8 @@ pre, .highlight {
     }
     .post-date .post-day {
         font-size: 26px;
+    }
+    .header.light-header .btn-bar {
+        background: #555;
     }
 }
