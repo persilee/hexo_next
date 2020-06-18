@@ -13,11 +13,11 @@ top: 115
 photos:
 ---
 
-{% li https://cdn.lishaoy.net/flutterCtrip/iOS-andorid.png, Flutter, Flutter %}
+{% li https://cdn.lishaoy.net/ctrip/android/android_ctrip_h.png, Flutter, Flutter %}
 
 自上篇 [Flutter 10天高仿大厂App及小技巧积累总结](https://h.lishaoy.net/flutterctrip) 的续篇，这次更是干货满满。
 
-这篇文章将概述 **Android组件化的架构搭建** 及 **Flutter** 和 **Android** 如何混合开发 *(整个App只有首页是用原生Android完成，其他页面都是引入之前的做好的Flutter页面)* ，主宿主程序由 Android 搭建，采用了组件化的架构搭建整个 **App** ，不同业务，对应不同的 module 工程，业务之间采用接口通信 *(ARouter)* ，以 module 的形式混入 Flutter，通过 MethodChannel 和 Flutter 端进行数据通信等，且这些功能实现源码开源，感兴趣的小伙伴可以移步至 [GitHub](https://github.com/persilee/android_ctrip)。
+这篇文章将概述 **Android组件化的架构搭建** 及 **Flutter** 和 **Android** 如何混合开发 *(整个App只有首页是用原生Android完成，其他页面都是引入之前的做好的Flutter页面)* ，主宿主程序由 Android 搭建，采用了组件化的架构搭建整个 **App** ，不同业务，对应不同的 module 工程，业务之间采用接口通信 *(ARouter)* ，以 module 的形式混入 Flutter，通过 **MethodChannel** 和 **Flutter** 端进行数据通信等，且这些功能实现源码开源，感兴趣的小伙伴可以移步至 [GitHub](https://github.com/persilee/android_ctrip)。
 
 <hr />
 
@@ -42,14 +42,14 @@ photos:
 <i class="fa fa-fw fa-bell  faa-horizontal animated faa-slow" style="color: #faab33;"></i> 如视频播放失败， [请移步这里点击观看](https://www.bilibili.com/video/BV1W54y1B72U/)
 {% endnote %}
 
-看完视频后，其实大部被功能和之前的 [纯flutter项目](https://h.lishaoy.net/flutterctrip) 相同，只是首页新增了4个tab推荐页面及携程二楼和布局改变。
+看完视频后，其实大部分功能和之前的 [纯flutter项目](https://h.lishaoy.net/flutterctrip) 功能相同，只是首页新增了4个tab推荐页面及携程二楼和布局改变。
 
 
 ## 项目组件化结构分析
 
 ### 项目结构图预览
 
-其次，分析梳理下项目结构，项目的大概结构如图：
+其次，分析梳理下项目结构，项目的结构大致如图，还有一些细枝末节的没有体现在图里：
 
 ![no-shadow](https://cdn.lishaoy.net/ctrip/android/project.png "project structure")
 
@@ -60,7 +60,7 @@ photos:
 把具体独立的业务都拆分成单独的 module 减小项目的维护压力
 
 - ft_home: 首页模块，这个模块其实还可以继续拆分，可把4个 tab *(精选、附近、景点、美食)* 页都拆成模块，这里我暂时没有拆分，后续会完成
-- ft_destination: 目的地模块，这个其实并没有，因为直接引入了之前做好的 flutter 页面
+- ft_destination: 目的地模块，其实并没有建立这个模块，因为直接引入了之前做好的 flutter 页面
 - ft_travel: 旅拍模块，同样也使用了 flutter 页面
 - flutter: flutter模块，这个模块是从 flutter_module 中自动生成的，后面介绍到
 
@@ -239,7 +239,7 @@ ext {
 
 ## 项目功能详细概述（所用知识点）
 
-这里主要对首页功能及知识点进行概述，由于其他页面是引用了之前的 Flutter页面， 功能在 [Flutter 10天高仿大厂App及小技巧积累总结](https://h.lishaoy.net/flutterctrip) 已经介绍过了，在这就不再阐述。
+这里主要对首页功能及知识点进行概述，由于其他页面是引入了之前的 Flutter 页面， 具体功能在 [Flutter 10天高仿大厂App及小技巧积累总结](https://h.lishaoy.net/flutterctrip) 已经介绍过了，在这就不再阐述。
 
 首页重点概述以下功能的实现：
 
@@ -305,7 +305,7 @@ private void initRefreshMore() {
 }
 ```
 
-`XML` 页面配置文件代码如下：
+`XML` 页面布局文件代码如下：
 
 ```xml
 <com.scwang.smart.refresh.layout.SmartRefreshLayout
@@ -556,6 +556,16 @@ Widget _widgetRoute(String defaultRouteName) {
             );
     }
 }
+```
+
+其实，flutter 端接收这个 route 参数，还有一种方法，就是通过 `onGenerateRoute`，它是 MaterialApp 里的一个方法。
+
+代码如下：
+
+```dart
+onGenerateRoute: (settings){ //通过 settings.name 获取android端传来的参数
+    return _widgetRoute(settings.name);
+},
 ```
 
 ### flutter 和 android 之间相互通信
