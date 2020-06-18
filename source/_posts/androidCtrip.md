@@ -445,3 +445,196 @@ private void initBanner() {
 这个功能实现代码过多不便在这里展示，具体实现详情，可移步 [GitHub](https://github.com/persilee/android_ctrip) 查看源码。
 
 ## Android Flutter 混合开发
+
+这个项目的实现只有首页是用 Android 原生实现，其他的页面均是 Flutter 实现的，之前 [纯Flutter项目](https://h.lishaoy.net/flutterctrip)。
+
+Android 引入 Flutter 进行混合开发，需要以下几个步骤
+
+- 建立一个flutter module
+- 编写flutter代码 *(创建 flutter 路由)*
+- flutter 和 android 之间相互通信
+
+下面依次概述这几部分是如何操作实现的。
+
+### 建立一个flutter module
+
+这个应该不用过多描述，基本操作大家都会 File --> New --> New Module 如图：
+
+![no-shadow](https://cdn.lishaoy.net/ctrip/android/flutter_module.png "flutter module")
+
+新建完成之后，android studio 会自动生成配置代码到 gradle 配置文件里，且生成一个 flutter 的 library 模块。
+
+{% note warning %} 
+<i class="fa fa-fw fa-bell  faa-horizontal animated faa-slow" style="color: #faab33;"></i> **Tips：** <br \>
+新建的时候最好 flutter module 和 android 项目放到同级目录下；<br \>
+新版的 android studio 才会自动生成 gradle 配置代码，老版本貌似需要手动配置
+
+{% endnote %}
+
+如，没有生成 gradle 配置代码，你需要在根项目的 `settings.gradle` 文件里手动加入如下配置：
+
+```java
+setBinding(new Binding([gradle: this]))
+evaluate(new File(
+  settingsDir, //设置根路径，根据具体flutter module路径配置
+  'flutter_module/.android/include_flutter.groovy'
+))
+
+include ':flutter_module'
+```
+
+还需在宿主工程 *(没改名的话都是app)* 的 `build.gradle` 引入 flutter， 如下：
+
+```java
+dependencies {
+    ...
+    //引入flutter模块
+    implementation project(':flutter')
+    ...
+}
+```
+
+### 编写flutter代码
+
+编写flutter代码，在 flutter module 里按照正常 flutter 开发流程编写 flutter 代码即可。 *(我项目里的 flutter 的代码是之前项目都写好的，复制过来，改改包的引入问题，就可以运行了。)*
+
+这里需要注意的是，flutter 有且只有一个入口，就是 `main()` 函数，我们需要在这里处理好 flutter 页面的跳转问题。
+
+在 android 端，创建 flutter 页面，代码如下：
+
+```java
+    Flutter.createView(getActivity(),getLifecycle(),"destination");
+```
+
+`Flutter.createView` 需要3个参数 `activity` 、`lifecycle` 、`route` ，这个 route 就是要传递到 flutter 端的，当然，它是 String 类型的，我们可以自由发挥传递普通字符串或 json 字符串等。
+
+我们也可以通过其他的方式创建 flutter 页面，如： `Flutter.createFragment()` 、 `FlutterActivity.withNewEngine()`、 `FlutterFragment.createDefault()` 等。
+
+具体的使用，可前往 [Flutter官方文档](https://flutter.dev/docs/development/add-to-app/android) 查阅。
+
+那么，flutter 端如何接收这个 route 参数，是通过 `window.defaultRouteName`，此项目里管理 flutter 端路由代码如下：
+
+```dart
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter model',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        fontFamily: 'PingFang',
+      ),
+      home: _widgetRoute(window.defaultRouteName), // 通过 window.defaultRouteName 接收 android 端传来的参数
+    );
+  }
+}
+
+Widget _widgetRoute(String defaultRouteName) {
+    Map<String, dynamic> params = convert.jsonDecode(defaultRouteName); //解析参数
+    defaultRouteName = params['routeName'];
+    placeHolder = params['placeHolder'];
+
+    switch (defaultRouteName) { // 根据参数返回对应的页面
+        ...
+        case 'destination/search':
+            return DestinationSearchPage(
+                hideLeft: false,
+        );
+        ...
+        default:
+            return Center(
+                child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                    Text('not found $defaultRouteName',
+                        textDirection: TextDirection.ltr),
+                ],
+                ),
+            );
+    }
+}
+```
+
+### flutter 和 android 之间相互通信
+
+flutter 端可以调用 android 端的方法及相互传递数据是如何实现的，flutter 官方提供了3个方法可以实现，分别是：
+
+- EventChannel：单向的持续通信，如：网络变化、传感器等。
+- MethodChannel：一次性通信，一般适用如方法的调用。
+- BasicMessageChannel：持续的双向通信。
+
+此项目里采用了 `MethodChannel` 方法进行通信，如：flutter 端调用 android 端的AI智能语音方法以及 flutter 打开 android 端页面就是用 `MethodChannel` 实现的。
+
+flutter 端调用 android 端的AI智能语音方法代码如下：
+
+```dart
+class AsrManager {
+  static const MethodChannel _channel = const MethodChannel('lib_asr');
+  //开始录音
+  static Future<String> start({Map params}) async {
+    return await _channel.invokeMethod('start', params ?? {});
+  }
+  //停止录音
+    ...
+  //取消录音
+    ...
+  //销毁
+    ...
+}
+```
+
+flutter 打开 android 端页面代码如下：
+
+```dart
+class MethodChannelPlugin {
+
+  static const MethodChannel methodChannel = MethodChannel('MethodChannelPlugin');
+
+  static Future<void> gotoDestinationSearchPage() async {
+    try {
+      await methodChannel.invokeMethod('gotoDestinationSearchPage'); //gotoDestinationSearchPage 参数会传到android端
+    } on PlatformException {
+      print('Failed go to gotoDestinationSearchPage');
+    }
+  }
+    ...
+}
+```
+
+android 接收也是通过 `MethodChannel` ，具体实现代码如下：
+
+```java
+public class MethodChannelPlugin implements MethodChannel.MethodCallHandler {
+
+    private static MethodChannel methodChannel;
+    private Activity activity;
+
+    private MethodChannelPlugin(Activity activity) {
+        this.activity = activity;
+    }
+
+    //调用方通过 registerWith 来注册flutter页面
+    public static void registerWith(FlutterView flutterView) {
+        methodChannel = new MethodChannel(flutterView, "MethodChannelPlugin");
+        MethodChannelPlugin instance = new MethodChannelPlugin((Activity) flutterView.getContext());
+        methodChannel.setMethodCallHandler(instance);
+    }
+
+    @Override
+    public void onMethodCall(MethodCall methodCall, MethodChannel.Result result) {
+        if (methodCall.method.equals("gotoDestinationSearchPage")) { // 收到消息进行具体操作
+            EventBus.getDefault().post(new GotoDestinationSearchPageEvent());
+            result.success(200);
+        } 
+        ...
+        else {
+            result.notImplemented();
+        }
+    }
+}
+```
+
+android flutter 混合开发基本就是这3个步骤，其他一些细节及具体的流程请参考 [GitHub](https://github.com/persilee/android_ctrip) 项目源码。
