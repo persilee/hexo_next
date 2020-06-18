@@ -93,6 +93,7 @@ photos:
 - [okhttp](https://github.com/square/okhttp) 网络请求插件
 - [agentweb](https://github.com/Justson/AgentWeb) webview框架，进行简单的二次封装可优雅的进行网页跳转
 - [glide](https://github.com/bumptech/glide) 高性能、可扩展的图片加载插件
+- [banner](https://github.com/youth5201314/banner) 图片轮播控件
 
 基本就是这些了，应该没有漏的，插件的详细使用，请进入各插件的 GitHub 主页。
 
@@ -355,4 +356,92 @@ private void initRefreshMore() {
 
 ### 搜索appBar
 
-搜索栏的滚动的 placeholder
+搜索栏的滚动的 placeholder 文字是使用 [banner](https://github.com/youth5201314/banner) 插件实现的，点击搜索框可跳转到搜索页面 *(flutter写的搜索页面)* ，跳转页面后可以把 placeholder 文字带到 flutter 搜索页面。
+
+效果如图：
+
+![no-shadow](https://cdn.lishaoy.net/ctrip/android/searchBar.gif "search bar" )
+
+滚动的placeholder文字实现代码如下 *(搜索框的实现就不再这里展示都是一些XML布局代码)*：
+
+```java
+        homeSearchBarPlaceholder
+                .setAdapter(new HomeSearchBarPlaceHolderAdapter(homeData.getSearchPlaceHolderList())) // 设置适配器
+                .setOrientation(Banner.VERTICAL) // 设置滚动方向
+                .setDelayTime(3600) // 设置间隔时间
+                .setOnBannerListener(new OnBannerListener() {
+                    @Override
+                    public void OnBannerClick(Object data, int position) {  //点击打开 flutter 搜索页面
+                        ARouter.getInstance()
+                                .build("/home/search")
+                                .withString("placeHolder", ((Home.SearchPlaceHolderListBean) data).getText())
+                                .navigation();
+                    }
+                });
+    }
+```
+
+searchBar的具体功能不过多阐述，和之前的项目一致。
+
+### 渐变色网格导航
+
+渐变色网格导航基本都是一些 `XML` 页面布局代码，只是我把它封装成了单独的组件，效果如图
+
+<img src="https://cdn.lishaoy.net/ctrip/android/gridBar.png" alt="GridNav" width="36%" title="GridNav" align="center">
+
+封装之后的引入就非常简单，代码如下：
+
+```xml
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <!-- 网格导航 -->
+    <net.lishaoy.ft_home.GridNavView
+        android:id="@+id/home_grid_nav_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    ...
+
+</LinearLayout>
+```
+
+具体实现详情，可移步 [GitHub](https://github.com/persilee/android_ctrip) 查看源码。
+
+### banner组件
+
+banner组件也是用 [banner](https://github.com/youth5201314/banner) 插件实现的，如图
+
+![no-shadow](https://cdn.lishaoy.net/ctrip/android/banner.gif "banner")
+
+实现代码如下：
+
+```java
+private void initBanner() {
+    homeBanner.addBannerLifecycleObserver(this)
+            .setAdapter(new HomeBannerAdapter(homeData.getBannerList())) //设置适配器
+            .setIndicator(new EllipseIndicator(getContext()))           //设置指示器，如图的指示器是我自定义的插件里并没有提供
+            .setIndicatorSelectedColorRes(R.color.white)                //设置指示器颜色
+            .setIndicatorSpace((int) BannerUtils.dp2px(10))             //设置间距
+            .setBannerRound(BannerUtils.dp2px(6));                      //设置圆角
+
+}
+```
+
+### 多状态的tab指示器
+
+多状态的tab指示器的实现需要注意很多细节，因为它是在首页的 `fragment` 的 `ScrollView` 里嵌入 `viewPaper`，首先你会发现 viewPaper 不显示的问题，其次是滚动不流畅的问题，这两个问题我的解决方案是：
+
+- viewPaper 不显示的问题：使用自定义的 `ViewPager` 重写 `onMeasure` 方法，重新计算高度
+- 滚动不流畅的问题：使用自定义的 `ScrollView`，重写 `computeScroll` 和 `onScrollChanged` 重新获取滚动距离
+
+实现效果如图：
+
+![no-shadow](https://cdn.lishaoy.net/ctrip/android/tab_bar.gif "tab page")
+
+这个功能实现代码过多不便在这里展示，具体实现详情，可移步 [GitHub](https://github.com/persilee/android_ctrip) 查看源码。
+
+## Android Flutter 混合开发
