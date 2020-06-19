@@ -44,6 +44,10 @@ photos:
 
 看完视频后，其实大部分功能和之前的 [纯flutter项目](https://h.lishaoy.net/flutterctrip) 功能相同，只是首页新增了4个tab推荐页面及携程二楼和布局改变。
 
+大家也可扫描，安装体验：
+
+<div style="width:166px; margin:auto">![no-shadow](https://www.pgyer.com/app/qrcode/AsHK?sign=&amp;auSign=&amp;code= "手机扫描二维码安装")</div>
+
 
 ## 项目组件化结构分析
 
