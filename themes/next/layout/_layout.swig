@@ -41,7 +41,7 @@
   <link href="/css/main.css" rel="stylesheet" type="text/css">
   <link href="/live2dw/css/perTips.css" rel="stylesheet" type="text/css">
   #}
-  <link href="https://cdn.lishaoy.net/css/all-d30e361e8b.css" rel="stylesheet" type="text/css">
+  <link href="https://cdn.lishaoy.net/css/all-dc9e559faa.css" rel="stylesheet" type="text/css">
   <link rel="stylesheet" href="/video/video-js.css">
 </head>
 
@@ -72,8 +72,10 @@
             <div class="status_list_item icon_kyubo">
               <div class="status_user" style="background-image: url(https://cdn.lishaoy.net/image/112131.jpg);">
                 <div class="status_section">
-                  <a href="http://lishaoy.net/" class="status_btn" target="_blank">主题更换通知</a>
-                  <p class="section_p">本站主题已更换，由原来的单调的黑色背景更换为活泼的渐变背景色，渐变色背景每次刷新页面或跳转页面都随机改变颜色，点缀色由天空蓝换为橘子红，也欢迎大家光临我的主站! 😜 <a href="https://lishaoy.net/" target="_blank" style="color: rgba(255, 87, 34, 0.92);">https://lishaoy.net</a></p>
+                  <a href="http://lishaoy.net/" class="status_btn" target="_blank">更新通知</a>
+                  <p class="section_p">本站主题已由原来的单调的黑色换为活泼的渐变背景色，每次刷新或跳转页面都随机改变颜色，点缀色由天空蓝换为橘子红。</p>
+                  <p class="section_p">摄影和设计相关的文章已转移到 <a href="https://lishaoy.net" target="_blank" style="color: rgba(255, 87, 34, 0.92);">主站</a>，本站专注于技术积累和分享</p>
+                  <p class="section_p">也欢迎大家光临我的主站! 😜 <a href="https://lishaoy.net/" target="_blank" style="color: rgba(255, 87, 34, 0.92);">https://lishaoy.net</a></p>
                 </div>
 			        </div>
 		        </div>
