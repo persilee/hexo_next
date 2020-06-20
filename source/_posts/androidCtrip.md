@@ -39,7 +39,7 @@ photos:
 </video>
 
 {% note warning %} 
-<i class="fa fa-fw fa-bell  faa-horizontal animated faa-slow" style="color: #faab33;"></i> 如视频播放失败， [请移步这里点击观看](https://www.bilibili.com/video/BV1W54y1B72U/)
+<i class="fa fa-fw fa-bell  faa-horizontal animated faa-slow" style="color: #faab33;"></i> 如视频播放失败， [请移步这里点击观看](https://www.bilibili.com/video/BV1W54y1B72U/) *(点击齿轮 --> 更多播放设置，可以隐藏黑边)*
 {% endnote %}
 
 看完视频后，其实大部分功能和之前的 [纯flutter项目](https://h.lishaoy.net/flutterctrip) 功能相同，只是首页新增了4个tab推荐页面及携程二楼和布局改变。

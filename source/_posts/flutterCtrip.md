@@ -43,6 +43,10 @@ photos:
 <br />
 大家看完视频，大概了解到，完成度基本可以和线上的 **App** 相差无异了，大家如果对项目感兴趣，想了解具体怎么实现的，可以去我的 [GitHub](https://github.com/persilee) clone 源码查看。
 
+也可扫描，安装体验：
+
+<div style="width:166px; margin:auto">![no-shadow](https://www.pgyer.com/app/qrcode/HqqH "手机扫描二维码安装")</div>
+
 本视频是用真机录屏的，因为，语音搜索功能需要录音，模拟器无法录音，当然, `iOS` 和 `Andorid`都可以运行，效果是一样的，如图：
 
 ![no-shadow](https://cdn.lishaoy.net/flutterCtrip/iOS-andorid.png "iOS Andorid")
