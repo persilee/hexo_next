@@ -42,7 +42,7 @@
   <link href="/live2dw/css/perTips.css" rel="stylesheet" type="text/css">
   #}
   <link href="https://cdn.lishaoy.net/css/all-dc9e559faa.css" rel="stylesheet" type="text/css">
-  <link rel="stylesheet" href="/video/video-js.css">
+  <link rel="stylesheet" href="https://cdn.lishaoy.net/css/video-js.css">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="{{ page.lang || page.language || config.language }}">
@@ -158,7 +158,7 @@
   -->
 
   <script type="text/javascript" src="https://cdn.lishaoy.net/js/all-min-d98fa596b6.js"></script>
-  <script src="/video/video.js"></script>
+  <script src="https://cdn.lishaoy.net/js/video-js.js"></script>
 
 
    <!-- 自己的脚本
