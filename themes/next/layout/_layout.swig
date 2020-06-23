@@ -182,6 +182,11 @@
       color: #fff;
     }
 
+    .video-js {
+      max-width: -webkit-fill-available;
+      max-width: 850px;
+    }
+
     .no-post.v::-webkit-input-placeholder{
       color: #eee;
     }
