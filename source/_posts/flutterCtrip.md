@@ -682,6 +682,67 @@ class TravelTabPage extends StatefulWidget {
 }
 ```
 
+### with SingleTickerProviderStateMixin
+
+混入 `SingleTickerProviderStateMixin` 可以在切换页面时候，使用动画效果，如：
+
+```dart
+bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            _controller.animateToPage( // _controller 是 PageView 的 PageController
+                index,
+                curve: Curves.easeIn, duration: Duration(milliseconds: 260)
+            );
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          ...
+)          
+```
+
+### SystemUiOverlayStyle 
+
+`SystemUiOverlayStyle` 可实现状态栏沉浸式，设置全局配置，如下：
+
+```dart
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    TextStyle textStyle = TextStyle(fontSize: 20);
+    SystemUiOverlayStyle style = SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light
+    );
+    SystemChrome.setSystemUIOverlayStyle(style);
+
+    return MaterialApp(
+      ...
+  }
+}
+```
+
+单页面设置如下：
+
+```dart
+class _HomePageState extends State<HomePage> {
+
+  ...
+
+  @override
+  Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light); //设置状态栏沉浸式
+    return Scaffold(
+      backgroundColor: Color(0xfffafafc),
+      body: LoadingContainer(
+        ...
+      )
+      ...
+```
+
 暂时只能想到这些常用的知识点，以后如有新的会慢慢补充。
 
 **项目GitHub地址:** [https://github.com/persilee/flutter_ctrip](https://github.com/persilee/flutter_ctrip)
