@@ -1,5 +1,5 @@
 ---
-title: 优雅的使用 FutureBuilder and StreamBuilder 构建项目
+title: FutureBuilder and StreamBuilder 优雅的构建高质量项目
 tags:
   - Flutter
   - Dart
@@ -7,7 +7,7 @@ tags:
   - Stream
 copyright: true
 comments: true
-date: 2020-06-29 11:59:16
+date: 2020-06-29 19:59:16
 categories: Dart
 top: 116
 photos:
@@ -15,17 +15,15 @@ photos:
 
 {% li https://cdn.lishaoy.net/fureBuilderStreamBuilder/cover.png, Flutter, Flutter %}
 
-本篇文章将介绍从 `setState` 开始，到 `futureBuilder` 、 `streamBuilder` 来优雅的构建你的项目，而不引发 `setState` 带来的副作用，如对文章感兴趣，请 [点击查看源码](https://github.com/persilee/flutter_pro)。
+本篇文章将介绍从 `setState` 开始，到 `futureBuilder` 、 `streamBuilder` 来优雅的构建你的高质量项目，而不引发 `setState` 带来的副作用，如对文章感兴趣，请 [点击查看源码](https://github.com/persilee/flutter_pro)。
 
 <hr />
 
 <!-- more -->
 
-
-
 ## 基础的setState更新数据
 
-首页，我们使用基础的 `StatefulWidget` 来创建页面，如下：
+首先，我们使用基础的 `StatefulWidget` 来创建页面，如下：
 
 ```dart
 class BaseStatefulDemo extends StatefulWidget {
@@ -128,7 +126,7 @@ class _BaseStatefulDemoState extends State<BaseStatefulDemo> {
   }
 ```
 
-继续，我们来完善它，正常从后端获取数据，后端应该会给我们返回不同的状态，以及数据加载中的状态，如：
+继续，我们来完善它，正常从后端获取数据，后端应该会给我们返回不同信息，根据这些信息需要处理不同的状态，如：
 
 - BusyState(加载中)：我们在界面上显示一个加载指示器
 - DataFetchedState(数据加载完成)：我们延迟2秒，来模拟数据加载完成
@@ -171,7 +169,7 @@ bool get _fetchingData => _pageData == null; // 判断数据是否为空
 
 </div>
 
-接着，我们来处理 **ErrorState** ，我给 `_getListData()` 添加 `hasError` 参数来模拟后端，如下
+接着，我们来处理 **ErrorState** ，我给 `_getListData()` 添加 `hasError` 参数来模拟后端返回的错误，如下
 
 ```dart
   Future<List<String>> _getListData({bool hasError = false}) async {
@@ -209,7 +207,7 @@ bool get _fetchingData => _pageData == null; // 判断数据是否为空
 
 </div>
 
-接着，我们来处理 **NoData** ，我给 `_getListData()` 添加 `hasError` 参数来模拟后端，如下：
+接着，我们来处理 **NoData** ，我给 `_getListData()` 添加 `hasData` 参数来模拟后端返回空数据，如下：
 
 ```dart
   Future<List<String>> _getListData(
@@ -256,9 +254,9 @@ bool get _fetchingData => _pageData == null; // 判断数据是否为空
 </div>
 
 {% note success %}
-这就是通过 `setState()` 来更新数据，是不是很简单，通常情况下我们这么使用是没什么问题，但是，如果我们的页面足够复杂，要处理的状态足够多，我们需要使用更多的 `setState()` ，意味着我们需要更多的代码来更新数据，而且，我们每次 `setState()` 的时候 `build()` 方法就会重新执行一次( *这就是上文提到的副作用* )。
+这就是通过 `setState()` 来更新数据，是不是很简单，通常情况下我们这么使用是没什么问题，但是，如果我们的页面足够复杂，要处理的状态足够多，我们需要使用更多的 `setState()` ，意味着我们要更多的代码来更新数据，而且，我们每次 `setState()` 的时候 `build()` 方法就会重新执行一次( *这就是上文提到的副作用* )。
 
-其实，**Flutter** 已经提供了更优雅的方式来更新我们的数据及处理状态，它就是我们接下来要讲的 `futureBuilder`。
+其实，**Flutter** 已经提供了更优雅的方式来更新我们的数据及处理状态，它就是我们接下来要介绍的 `futureBuilder`。
 {% endnote %}
 
 ## FutureBuilder
@@ -278,11 +276,11 @@ class FutureBuilderDemo extends StatelessWidget {
       body: FutureBuilder(
         future: _getListData(),
         builder: (buildContext, snapshot) {
-          if (snapshot.hasError) {
+          if (snapshot.hasError) {  // FutureBuilder 已经给我们提供好了 error 状态
             return _getInfoMessage(snapshot.error);
           }
 
-          if (!snapshot.hasData) {
+          if (!snapshot.hasData) { // FutureBuilder 已经给我们提供好了空数据状态
             return Center(
               child: CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.yellow),
@@ -315,6 +313,14 @@ class FutureBuilderDemo extends StatelessWidget {
 
   ...
 ```
+
+通过查看源码，我们可以了解的 `FutureBuilder` 已经给我处理好了一些基本状态，如图
+
+<div style="width: 66%; margin:auto">
+
+![snapshot](https://cdn.lishaoy.net/fureBuilderStreamBuilder/snapshot.png "snapshot")
+
+</div>
 
 我们使用 `_getInfoMessage()` 方法来处理状态提示，如下：
 
@@ -455,7 +461,7 @@ void initState() {
   }
 ```
 
-现在，我们的 `listItems` 数据并没真正的更新，点击 `FloatingActionButton` 只是更新的加载状态而已，而且我们的业务逻辑代码和 **UI** 代码还在同一个文件中，但是，他们已经解耦，所以，我们可以继续完善它，将业务逻辑代码和 **UI** 代码分离出来。
+现在，点击 `FloatingActionButton` 加载指示器已经显示，但是，我们的 `listItems` 数据并没真正的更新，点击 `FloatingActionButton` 只是更新的加载状态而已，而且我们的业务逻辑代码和 **UI** 代码还在同一个文件中，很显然，他们已经解耦，所以，我们可以继续完善它，将业务逻辑代码和 **UI** 代码分离出来。
 
 ## 分离业务逻辑代码和 **UI** 代码
 
@@ -597,4 +603,4 @@ class _StreamBuilderDemoState extends State<StreamBuilderDemo> {
 }
 ```
 
-此时，业务逻辑代码和 **UI** 代码已完全分离，且可扩展性和维护增强。
+此时，业务逻辑代码和 **UI** 代码已完全分离，且可扩展性和维护增强，且我们的数据和状态已关联起来，此时，点击 `FloatingActionButton` 效果和上面一样，且数据已更新。
