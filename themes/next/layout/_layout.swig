@@ -187,6 +187,22 @@
       max-width: 850px;
     }
 
+    .video {
+      position: relative;
+      padding-bottom: 69.66%;
+      height: 0;
+      overflow: hidden;
+    }
+    .video iframe,
+    .video object,
+    .video embed {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
     .no-post.v::-webkit-input-placeholder{
       color: #eee;
     }
