@@ -41,7 +41,7 @@
   <link href="/css/main.css" rel="stylesheet" type="text/css">
   <link href="/live2dw/css/perTips.css" rel="stylesheet" type="text/css">
   #}
-  <link href="https://cdn.lishaoy.net/css/all-dc9e559faa.css" rel="stylesheet" type="text/css">
+  <link href="https://cdn.lishaoy.net/css/all-cf77e0952b.css" rel="stylesheet" type="text/css">
   <link rel="stylesheet" href="https://cdn.lishaoy.net/css/video-js.css">
 </head>
 
