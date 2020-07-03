@@ -182,6 +182,10 @@
       color: #fff;
     }
 
+    img {
+      backface-visibility: hidden;
+    }
+
     .video-js {
       max-width: -webkit-fill-available;
       max-width: 850px;
