@@ -5,7 +5,7 @@ tags:
   - Flare
 copyright: true
 comments: true
-date: 2020-07-03 15:09:11
+date: 2020-07-04 07:09:16
 categories: Dart
 top: 117
 photos:
@@ -33,12 +33,12 @@ photos:
 
 登录交互动画，包含如下6种动画：
 
-- idle：无任何操作时的状态（熊的身体很上下浮动和眨眼睛）
-- test：当我们在 email 输入框中输入时的状态（熊会看着你，且随着你输入的长度旋转头部）
+- idle：无任何操作时的状态（熊的身体会上下浮动和眨眼睛）
+- test：当我们在 email 输入框中输入时的状态（熊会看向输入框，且随着你输入的长度旋转头部）
 - hands_up：当我们在 password 输入框中输入时的状态 （熊会用手蒙上眼睛）
 - hands_down：当我们在 password 输入框输入完成时的状态 （熊会放下双手）
-- fail：当我们登录失败时的状态
-- success：当我们登录成功时的状态
+- fail：当我们登录失败时的状态（熊会做出难过的表情）
+- success：当我们登录成功时的状态（熊会做出高兴的表情）
 
 以上6种状态，可以在 **Rive** 网站查看具体动画，[点击进入查看](https://rive.app/a/castor/files/flare/teddy-with-hands/preview)
 
@@ -94,6 +94,13 @@ dependencies:
   ...
   flare_flutter: ^2.0.4  # flare 插件
   smart_flare: any  # 对 flare API进行封装的插件，使用少量的代码即可实现交互动画
+  ...
+
+assets:
+  ...
+  - assets/Teddy.flr
+  - assets/button-animation.flr
+  - assets/slideout-menu.flr
   ...
 ```
 
