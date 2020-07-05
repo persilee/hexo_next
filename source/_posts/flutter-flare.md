@@ -46,35 +46,63 @@ photos:
 
 idle：无任何操作时的状态，如图：
 
+<div style="width: 100%; margin:auto">
+
 ![no-shadow](https://cdn.lishaoy.net/flutterFlare/sign-in.gif "idle")
+
+</div>
 
 test：当我们在 email 输入框中输入时的状态，如图：
 
+<div style="width: 100%; margin:auto">
+
 ![no-shadow](https://cdn.lishaoy.net/flutterFlare/email.gif "test")
+
+</div>
 
 hands_up：当我们在 password 输入框中输入时的状态，hands_down：当我们在 password 输入框输入完成时的状态，如图：
 
+<div style="width: 100%; margin:auto">
+
 ![no-shadow](https://cdn.lishaoy.net/flutterFlare/password.gif "hands_up & hands_down")
+
+</div>
 
 fail：当我们登录失败时的状态，如图：
 
+<div style="width: 100%; margin:auto">
+
 ![no-shadow](https://cdn.lishaoy.net/flutterFlare/failure.gif "fail")
+
+</div>
 
 success：当我们登录成功时的状态，如图：
 
+<div style="width: 100%; margin:auto">
+
 ![no-shadow](https://cdn.lishaoy.net/flutterFlare/successful.gif "success")
+
+</div>
 
 ### Button交互动画
 
 button 交互动画，如图：
 
+<div style="width: 100%; margin:auto">
+
 ![no-shadow](https://cdn.lishaoy.net/flutterFlare/button.gif "button")
+
+</div>
 
 ### Menu交互动画
 
 menu 交互动画，如图：
 
+<div style="width: 100%; margin:auto">
+
 ![no-shadow](https://cdn.lishaoy.net/flutterFlare/menu.gif "menu")
+
+</div>
 
 以上所有动画，也可以 [点击观看视频](https://www.bilibili.com/video/BV14p4y1U7YN/)
 
