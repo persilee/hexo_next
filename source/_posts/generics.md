@@ -662,3 +662,143 @@ public class BoundedGeneric {
     }
 }
 ```
+
+### 多重限定(Multiple Bounds)
+
+限定类型参数，也可以为多个限定，如：
+
+```java
+<T extends B1 & B2 & B3>
+```
+
+多个限定参数，如果其中有类，类必须放在第一个位置，例如：
+
+```java
+interface A { ... }
+interface B { ... }
+class C { ... }
+
+class D <T extends C & A & B>
+```
+
+## 泛型，继承和 子类型(Generics, Inheritance, and Subtypes)
+
+在前面的盘子装水果小故事里我们已经创建好了一些水果类，如下：
+
+```java
+public class Fruit {
+    @Override
+    public String toString() {
+        return "This is Fruit";
+    }
+}
+
+public class Apple extends Fruit {
+    @Override
+    public String toString() {
+        return " Apple 🍎";
+    }
+}
+
+public class Orange extends Fruit {
+    @Override
+    public String toString() {
+        return " Orange 🍊";
+    }
+}
+
+public class QIOrange extends Orange {
+    @Override
+    public String toString() {
+        return "qi Orange 🍊";
+    }
+}
+```
+
+他们的继承关系，如图：
+
+<div style="width: 56%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/generics/fruit.png "")
+
+</div>
+
+众所周知，我们可以把子类赋值给父类，例如：
+
+```java
+Apple apple = new Apple();
+Fruit fruit = new Fruit();
+fruit = apple;
+```
+
+泛型也是如此，我们定义一个水果盘子的泛型类，如下：
+
+```java
+public class FruitPlateGen<Fruit> implements Plate<Fruit> {
+
+    private List<Fruit> fruits = new ArrayList<>(6);
+
+    @Override
+    public void set(Fruit fruit) {
+        fruits.add(fruit);
+    }
+
+    @Override
+    public Fruit get() {
+        int index = fruits.size() - 1;
+        if(index >= 0) return fruits.get(index);
+        return null;
+    }
+}
+```
+
+所以，是 `Fruit` 的子类都可以放入水果盘里，如下：
+
+```java
+FruitPlateGen<Fruit> fruitPlate = new FruitPlateGen<Fruit>();
+fruitPlate.set(new Apple());
+fruitPlate.set(new Orange());
+```
+
+现在，James 可以获取盘子，如下：
+
+```java
+public class James extends Person {
+    public FruitPlateGen getAiFruitPlateGen(FruitPlateGen<Fruit> plate) {
+        return new FruitPlateGen();
+    }
+}
+```
+
+如是，James 想获取放橘子的盘子，如下：
+
+```java
+James james = new James();
+james.getAiFruitPlateGen(new FruitPlateGen<Fruit>()); //获取成功
+james.getAiFruitPlateGen(new FruitPlateGen<Orange>()); //编译器报错
+```
+
+虽然，`Orange` 是 `Fruit` 的子类，但是，`FruitPlateGen<Orange>` 不是 `FruitPlateGen<Fruit>` 的子类，所以，不能传递产生继承关系。
+
+<div style="width: 86%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/generics/object.png "")
+
+</div>
+
+### 泛型类和子类型(Generic Classes and Subtyping)
+
+我们可以通过继承(extends)或实现(implements)泛型类或接口，例如：
+
+```java
+private static class ExtendFruitPlate<Orange> extends FruitPlateGen<Fruit> {
+
+}
+```
+
+此时，`ExtendFruitPlate<Orange>` 就是 `FruitPlateGen<Fruit>` 的子类，James 再去拿盘子，就不会有错误提示：
+
+```java
+james.getAiFruitPlateGen(new ExtendFruitPlate<Orange>());
+```
+
