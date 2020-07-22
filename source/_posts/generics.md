@@ -343,19 +343,110 @@ public class GenericClass<T> {
 
 所以的 `object` 都替换成为 `T`，类型参数可以定义为任何的费基本类型，如：class类型、interface类型、数组类型、甚至是另一个类型参数。
 
-`GenericClass` 泛型类的使用，如下：
+
+### 调用和实例化泛型类型(nvoking and Instantiating a Generic Type)
+
+要想使用泛型类，必须执行泛型类调用，如：
 
 ```java
-public static void main(String[] args) {
-    GenericClass<String> genericClass = new GenericClass();
-    genericClass.setT("OK");
-    System.out.println(genericClass.getT());
+GenericClass<String> genericClass;
+```
+
+泛型类的调用类似于方法的调用(传递了一个参数)，但是，我们没有将参数传递给方法，而是，将类型参数(String)传递给了 `GenericClass` 类本身。
+
+此代码不会创建新的 `GenericClass` 对象，它只是声明了 `genericClass` 将保存对 `String` 的引用
+
+要实例化此类，要使用 `new` 关键字，如：
+
+```java
+GenericClass<String> genericClass = new GenericClass<String>();
+```
+
+或者
+
+```java
+GenericClass<String> genericClass = new GenericClass<>();
+```
+在 Java SE 7 或更高的版本中，编译器可以从上下文推断出类型参数，因此，可以使用 `<>` 替换泛型类的构造函数所需的类型参数
+
+### 类型参数命名规范(Type Parameter Naming Conventions)
+
+我们的类型参数是否一定要写成 `T` 呢，按照规范，类型参数名称是单个大写字母。
+
+常用的类型参数名称有，如：
+
+| 类型参数 |  含义     |
+|:------:| :-------: |
+| E      |  Element |
+| K      |  Key     |
+| N      |  Number  |
+| V      |  Value   |
+| S,U,V...  |  2nd, 3rd, 4th type   |
+
+### 多类型参数(Multiple Type Parameters)
+
+泛型类可以有多个类型参数，如：
+
+```java
+public interface MultipleGeneric<K,V> {
+    public K getKey();
+    public V getValue();
 }
+
+public class ImplMultipleGeneric<K, V> implements MultipleGeneric<K, V> {
+
+    private K key;
+    private V value;
+
+    public ImplMultipleGeneric(K key, V value) {
+        this.key = key;
+        this.value = value;
+    }
+
+    @Override
+    public K getKey() {
+        return key;
+    }
+
+    @Override
+    public V getValue() {
+        return value;
+    }
+
+    public static void main(String[] args) {
+        MultipleGeneric<String, Integer> m1 = new ImplMultipleGeneric<String, Integer>("per",6);
+        System.out.println("key:" + m1.getKey() + ", value:" + m1.getValue());
+
+        MultipleGeneric<String,String> m2 = new ImplMultipleGeneric<String, String>("per","lsy");
+        System.out.println("key:" + m2.getKey() + ", value:" + m2.getValue());
+    }
+}
+```
+
+输出结果：
+
+```bash
+key:per, value:6
+key:per, value:lsy
+
+Process finished with exit code 0
+```
+
+如上代码，`new ImplMultipleGeneric` 将 `K` 实例化为 `String`，将 `V` 实例化为 `Integer` ，因此， `ImplMultipleGeneric` 构造函数参数类型分别为 `String` 和 `Integer`,在编写 `new ImplMultipleGeneric` 代码时，编辑器会自动填写 `<>` 的值
+
+由于，Java 编译器会从声明 `ImplMultipleGeneric` 推断出 `K` 和 `V` 的类型，以此我们可以简写为，如下：
+
+```java
+MultipleGeneric<String, Integer> m1 = new ImplMultipleGeneric<>("per",6);
+System.out.println("key:" + m1.getKey() + ", value:" + m1.getValue());
+
+MultipleGeneric<String,String> m2 = new ImplMultipleGeneric<>("per","lsy");
+System.out.println("key:" + m2.getKey() + ", value:" + m2.getValue());
 ```
 
 ## 泛型接口(Generic Interface)
 
-定义泛型接口和定义泛型类相似，如下：
+定义泛型接口和定义泛型类相似(泛型类的技术可同用于泛型接口)，如下：
 
 ```java
 interface name<T1,T2,...,Tn>{
@@ -407,3 +498,167 @@ public class ImplGenertor2 implements Genertor<String> {
 }
 ```
 
+## 泛型方法(Generic Methods)
+
+泛型方法使用了类型参数的方法，泛型方法比较独立，可以声明在 普通类、泛型类、普通接口、泛型接口中。
+
+泛型方法定义格式，如下：
+
+```java
+public <K, V> boolean compare(Pair<K, V> p1, Pair<K, V> pw)
+```
+
+泛型方法的类型参数列表，在 `<>` 内，该列表必须在方法返回类型之前；对于静态的泛型方法，类型参数必须在 `static` 之后，方法返回类型之前。
+
+### 普通类里定义泛型方法(Generic methods in a Simple Class)
+
+我们在普通类中定义泛型方法，如下：
+
+```java
+package methodgeneric;
+
+public class MethodGeneric {
+
+    //定义一个泛型方法
+    public <T> T genericMethod(T...t) {
+        return t[t.length/2];
+    }
+
+    public static void main(String[] args) {
+        MethodGeneric methodGeneric = new MethodGeneric();
+        System.out.println(methodGeneric.<String>genericMethod("java","dart","kotlin"));
+    }
+}
+```
+
+`methodGeneric.<String>genericMethod("java","dart","kotlin")` 通常可以省略掉 `<>` 的内容，编译器将推断出所需的类型，和调用普通方法一样，如：
+
+```java
+methodGeneric.genericMethod("java","dart","kotlin")
+```
+
+### 泛型类里定义泛型方法(Generic methods in a Generic Class)
+
+我们在泛型类中定义泛型方法，如下：
+
+```java
+package methodgeneric;
+
+public class MethodGeneric2 {
+
+    static class Fruit{
+
+        @Override
+        public String toString() {
+            return "fruit";
+        }
+    }
+
+    static class Apple extends Fruit {
+
+        @Override
+        public String toString() {
+            return "Apple";
+        }
+    }
+
+    static class Person{
+
+        @Override
+        public String toString() {
+            return "person";
+        }
+    }
+
+    static class ShowClass<T> {
+        //定义了普通类
+        public void show1(T t){
+            System.out.println(t.toString());
+        }
+        //定义了泛型类
+        public <E> void show2(E e) {
+            System.out.println(e.toString());
+        }
+        //定义了泛型类
+        public <T> void show3(T t) {
+            System.out.println(t.toString());
+        }
+    }
+
+    public static void main(String[] args) {
+
+        Apple apple = new Apple();
+        Person person = new Person();
+
+        ShowClass<Fruit> showClass = new ShowClass<>();
+        showClass.show1(apple);   //可以放入 apple，因为 apple 是 fruit 的子类
+        showClass.show1(person); //此时，编译器会报错，因为 ShowClass<Fruit> 已经限定类型
+
+        showClass.show2(apple); //可以放入，泛型方法 <E> 可以是任何类型
+        showClass.show2(person);//可以放入，泛型方法 <E> 可以是任何类型
+
+        showClass.show3(apple); //可以放入，泛型方法 <T> 和泛型类中的 <T> 不是同一条 T，可以是任何类型
+        showClass.show3(person); //可以放入，泛型方法 <T> 和泛型类中的 <T> 不是同一条 T，可以是任何类型
+    }
+}
+```
+
+在泛型类中定义泛型方法时，需要注意，泛型类里的泛型参数 `<T>` 和泛型方法里的泛型参数 `<T>` 不是同一个。
+
+## 限定类型参数(Bounded Type Parameters)
+
+我们经常看到类似 `public <U extends Number> void inspect(U u)` 的代码，`<U extends Number>` 就是限制类型参数，只对数字进行操作且只接受 `Number` 或其子类。
+
+要声明一个限定的类型参数，需要在参数类型后加上 `extends` 关键字，然后是其上限类型(类或接口)。
+
+### 限定类型参数的泛型类(Generic Class of Bounded Type Parameters)
+
+泛型类也可以使用限定类型参数，如下：
+
+```java
+package boundedgeneric;
+
+public class BoundedClass<T extends Comparable> {
+
+    private T t;
+
+    public void setT(T t) {
+        this.t = t;
+    }
+
+    public T min(T outter){
+        if(this.t.compareTo(outter) > 0)
+            return outter;
+        else
+            return this.t;
+    }
+
+    public static void main(String[] args) {
+        BoundedClass<String> boundedClass = new BoundedClass<>(); //只能传入实现了 Comparable 接口的类型
+        boundedClass.setT("iOS");
+        System.out.println(boundedClass.min("android"));
+    }
+}
+```
+
+### 限定类型参数的泛型方法(Generic methods of Bounded Type Parameters)
+
+泛型方法也可以使用限定类型参数，如下：
+
+```java
+package boundedgeneric;
+
+public class BoundedGeneric {
+
+    public static <T extends Comparable> T min(T a, T b) {
+        if (a.compareTo(b) < 0)
+            return a;
+        else
+            return b;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(BoundedGeneric.min(66,666));
+    }
+}
+```
