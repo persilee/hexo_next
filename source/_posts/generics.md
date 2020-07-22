@@ -340,3 +340,70 @@ public class GenericClass<T> {
     }
 }
 ```
+
+所以的 `object` 都替换成为 `T`，类型参数可以定义为任何的费基本类型，如：class类型、interface类型、数组类型、甚至是另一个类型参数。
+
+`GenericClass` 泛型类的使用，如下：
+
+```java
+public static void main(String[] args) {
+    GenericClass<String> genericClass = new GenericClass();
+    genericClass.setT("OK");
+    System.out.println(genericClass.getT());
+}
+```
+
+## 泛型接口(Generic Interface)
+
+定义泛型接口和定义泛型类相似，如下：
+
+```java
+interface name<T1,T2,...,Tn>{
+  ...
+}
+```
+
+我们来定义一个泛型接口，如下：
+
+```java
+package definegeneric;
+
+public interface Genertor<T> {
+    public T next();
+}
+```
+
+那么，如何实现一个泛型接口呢，我们使用两种方式来实现泛型接口，如下：
+
+使用泛型类，实现泛型接口，且不指定确切的类型参数，所以，实现的 `next()` 返回值自动变成 `T`
+
+```java
+package definegeneric.impl;
+
+import definegeneric.Genertor;
+
+public class ImplGenertor<T> implements Genertor<T> {
+
+    @Override
+    public T next() {
+        return null;
+    }
+}
+```
+
+使用普通类，实现泛型接口，且指定确切的类型参数为 `String`，所以，实现的 `next()` 返回值自动变成 `String`
+
+```java
+package definegeneric.impl;
+
+import definegeneric.Genertor;
+
+public class ImplGenertor2 implements Genertor<String> {
+
+    @Override
+    public String next() {
+        return null;
+    }
+}
+```
+
