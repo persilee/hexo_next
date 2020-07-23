@@ -903,3 +903,281 @@ List<? super Apple> fruits2 = apples; // OK
 ![no-shadow](https://cdn.lishaoy.net/generics/List%3C%3F%3E1.png "")
 
 </div>
+
+
+## 类型擦除(Type Erasure)
+
+Java 语言使用类型擦除机制实现了泛型，类型擦除机制，如下：
+
+- 编译器会把所有的类型参数替换为其边界(上下限)或 Object，因此，编译出的字节码中只包含普通类、接口和方法。
+- 在必要时插入类型转换，已保持类型安全
+- 生成桥接方法以在扩展泛型类时保持多态性
+
+### 泛型类型的擦除(Erasure of Generic Types)
+
+Java 编译器在擦除过程中，会擦除所有类型参数，如果类型参数是有界的，则替换为第一个边界，如果是无界的，则替换为 Object。
+
+我们定义了一个泛型类，代码如下：
+
+```java
+public class Node<T> {
+  private T data;
+  private Node<T> next;
+  public Node(T data, Node<T> next) { this.data = data;
+  this.next = next;
+}
+  public T getData() { return data; }
+  ...
+}
+```
+
+由于类型参数 `T` 是无界的，因此，Java 编译器将其替换为 Object，如下：
+
+```java
+public class Node {
+  private Object data;
+  private Node next;
+  public Node(Object data, Node next) { this.data = data;
+  this.next = next;
+}
+  public Object getData() { return data; }
+  ...
+}
+```
+
+我们再来定义一个有界的泛型类，代码如下：
+
+```java
+public class Node<T extends Comparable<T>> {
+  private T data;
+  private Node<T> next;
+  public Node(T data, Node<T> next) { this.data = data;
+  this.next = next;
+}
+  public T getData() { return data; }
+  ...
+}
+```
+
+Java 编译器其替换为第一个边界 `Comparable`，如下：
+
+```java
+public class Node {
+  private Comparable data;
+  private Node next;
+  public Node(Comparable data, Node next) { this.data = data;
+  this.next = next;
+}
+  public Comparable getData() { return data; }
+  ...
+}
+```
+
+### 泛型方法的擦除(Erasure of Generic Methods)
+
+Java 编译器同样会擦除泛型方法中的类型参数，例如：
+
+```java
+public static <T> int count(T[] anArray, T elem) {
+  int cnt = 0;
+  for (T e : anArray)
+}
+```
+
+由于 `T` 是无界的，因此，Java 编译器将其替换为 Object，如下：
+
+```java
+public static int count(Object[] anArray, Object elem) {
+  int cnt = 0;
+  for (Object e : anArray) if (e.equals(elem))
+}
+```
+
+如下代码：
+
+```java
+class Shape {  ...  }
+class Circle extends Shape {  ...  } 
+class Rectangle extends Shape {  ...  }
+```
+
+有一个泛型方法，如下：
+
+```java
+public static<T extends Shape> void draw(T shape){
+  ...
+}
+```
+
+Java 编译器将用第一个边界 `Shape` 替换 `T`，如下：
+
+```java
+public static void draw(Shape shape){
+  ...
+}
+```
+
+### 桥接方法(Bridge Methods)
+
+有时类型擦除会导致无法预料的情况，如下：
+
+```java
+public class Node<T> {
+  public T data;
+  public Node(T data) { this.data = data; }
+  public void setData(T data) { 
+    System.out.println("Node.setData"); 
+    this.data = data;
+  } 
+}
+public class MyNode extends Node<Integer> {
+  public MyNode(Integer data) { super(data); }
+  public void setData(Integer data) { 
+    System.out.println("MyNode.setData"); 
+    super.setData(data);
+  } 
+}
+```
+
+类型擦除后，代码如下：
+
+```java
+public class Node {
+  public Object data;
+  public Node(Object data) { this.data = data; }
+  public void setData(Object data) { 
+    System.out.println("Node.setData"); 
+    this.data = data;
+  } 
+}
+public class MyNode extends Node {
+  public MyNode(Integer data) { super(data); }
+  public void setData(Integer data) { 
+    System.out.println("MyNode.setData");
+    super.setData(data);
+  } 
+}
+```
+
+此时，Node 的方法变为 `setData(Object data)` 和 MyNode 的 `setData(Integer data)` 不会覆盖。
+
+为了解决此问题并保留泛型类型的多态性，Java 编译器会生成一个桥接方法，如下：
+
+```java
+class MyNode extends Node {
+  // 生成的桥接方法
+  public void setData(Object data) {
+      setData((Integer) data);
+  }
+  public void setData(Integer data) { 
+    System.out.println("MyNode.setData"); 
+    super.setData(data);
+  }
+  ...
+}
+```
+
+这样 Node 的方法 `setData(Object data)` 和 MyNode 生成的桥接方法 `setData(Object data)` 可以完成方法的覆盖。
+
+
+## 泛型的限制(Restrictions on Generics)
+
+为了有效的使用泛型，需要考虑以下限制：
+
+- 无法实例化具有基本类型的泛型类型
+- 无法创建类型参数的实例
+- 无法声明类型为类型参数的静态字段
+- 无法将Casts或instanceof与参数化类型一起使用
+- 无法创建参数化类型的数组
+- 无法创建，捕获或抛出参数化类型的对象
+- 无法重载每个重载的形式参数类型都擦除为相同原始类型的方法
+
+### 无法实例化具有基本类型的泛型类型
+
+代码如下：
+
+```java
+class Pair<K, V> {
+  private K key;
+  private V value;
+  public Pair(K key, V value) { 
+    this.key = key;
+    this.value = value; 
+  }
+  ...
+}
+```
+
+创建对象时，不能使用基本类型替换参数类型：
+
+```java
+Pair<int, char> p = new Pair<>(8, 'a'); // error
+```
+
+### 无法创建类型参数的实例
+
+代码如下：
+
+```java
+public static <E> void append(List<E> list) {
+   E elem = new E(); // error 
+   list.add(elem);
+}
+```
+
+### 无法声明类型为类型参数的静态字段
+
+代码如下：
+
+```java
+public class MobileDevice<T> {
+  private static T os; // error
+  ...
+}
+```
+
+类的静态字段是所有非静态对象共享的变量，因此，不允许使用类型参数的静态字段。
+
+### 无法将Casts或instanceof与参数化类型一起使用
+
+代码如下：
+
+```java
+public static <E> void rtti(List<E> list) {
+  if (list instanceof ArrayList<Integer>) { // error
+    ...
+  } 
+}
+```
+
+Java 编译器会擦除所有类型参数，所有，无法验证在运行时使用的参数化类型。
+
+### 无法创建参数化类型的数组
+
+代码如下：
+
+```java
+List<Integer>[] arrayOfLists = new List<Integer>[2]; // error
+```
+
+### 无法创建，捕获或抛出参数化类型的对象
+
+代码如下：
+
+```java
+class MathException<T> extends Exception {  ...  } // error
+class QueueFullException<T> extends Throwable{ ... } // error
+```
+
+### 无法重载每个重载的形式参数类型都 擦除为相同原始类型的方法
+
+代码如下：
+
+```java
+public class Example {
+  public void print(Set<String> strSet) { }
+  public void print(Set<Integer> intSet) { }
+}
+```
+
+`print(Set<String> strSet)` 和 `print(Set<Integer> intSet)` 在类型擦除后是完全相同的类型，所以，无法重载。
