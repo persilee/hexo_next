@@ -287,9 +287,9 @@ Process finished with exit code 1
 
 泛型类是通过类型进行参数化的类，这样说可能不是很好理解，之后我们用代码演示。
 
-### 简单类(A Simple Class)
+### 普通类(A Simple Class)
 
-首先，我们来定义一个简单的类，如下：
+首先，我们来定义一个普通的类，如下：
 
 ```java
 package definegeneric;
@@ -801,4 +801,52 @@ private static class ExtendFruitPlate<Orange> extends FruitPlateGen<Fruit> {
 ```java
 james.getAiFruitPlateGen(new ExtendFruitPlate<Orange>());
 ```
+
+## 通配符(Wildcards)
+
+我们经常看到类似 `List<? extends Number>` 的代码，`?` 就是通配符，表示未知类型。
+
+### 上限通配符(Upper Bounded Wildcards)
+
+我们可以使用上限通配符来放宽对变量的限制，例如，上文提到的 `FruitPlateGen<Fruit>` 和 `FruitPlateGen<Orange>()` 就可以使用上限通配符。
+
+我们来改写一下 `getAiFruitPlateGen` 方法，如下：
+
+```java
+public FruitPlateGen getAiFruitPlateGen2(FruitPlateGen<? extends Fruit> plate) {
+    return new FruitPlateGen();
+}
+```
+
+这时候，James 想获取放橘子的盘子，如下：
+
+```java
+James james = new James();
+james.getAiFruitPlateGen2(new FruitPlateGen<Fruit>()); //获取成功
+james.getAiFruitPlateGen2(new FruitPlateGen<Orange>()); //获取成功
+```
+
+上限通配符 `FruitPlateGen<? extends Fruit>` 匹配 `Fruit` 和 `Fruit` 的任何子类型，所以，我们可以传入 `Apple`、`Orange` 都没有问题。
+
+### 下限通配符(Lower Bounded Wildcards)
+
+上限通配符将未知类型限定为该类型或其子类型，使用 `extends` 关键字，而下限通配符将未知类型限定为该类型或其父类型，使用 `super` 关键字。
+
+我们再来宽展一下 `getAiFruitPlateGen` 方法，如下：
+
+```java
+public FruitPlateGen getAiFruitPlateGen3(FruitPlateGen<? super Apple> plate) {
+    return new FruitPlateGen();
+}
+```
+
+这时候，James 只能获取 `FruitPlateGen<Fruit>` 和 `FruitPlateGen<Apple>` 的盘子，如下：
+
+```java
+James james = new James();
+james.getAiFruitPlateGen3(new FruitPlateGen<Apple>());
+james.getAiFruitPlateGen3(new FruitPlateGen<Fruit>());
+```
+
+下限通配符 `FruitPlateGen<? super Apple>` 匹配 `Apple` 和 `Apple` 的任何父类型，所以，我们可以传入 `Apple`、`Fruit`。
 
