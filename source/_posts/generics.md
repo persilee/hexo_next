@@ -681,7 +681,7 @@ class C { ... }
 class D <T extends C & A & B>
 ```
 
-## 泛型，继承和 子类型(Generics, Inheritance, and Subtypes)
+## 泛型，继承和子类型(Generics, Inheritance, and Subtypes)
 
 在前面的盘子装水果小故事里我们已经创建好了一些水果类，如下：
 
@@ -850,3 +850,56 @@ james.getAiFruitPlateGen3(new FruitPlateGen<Fruit>());
 
 下限通配符 `FruitPlateGen<? super Apple>` 匹配 `Apple` 和 `Apple` 的任何父类型，所以，我们可以传入 `Apple`、`Fruit`。
 
+### 通配符和子类型(Wildcards and Subtyping)
+
+在 [泛型，继承和子类型](http://h.lishaoy.net/generics.html#%E6%B3%9B%E5%9E%8B%EF%BC%8C%E7%BB%A7%E6%89%BF%E5%92%8C-%E5%AD%90%E7%B1%BB%E5%9E%8B-Generics-Inheritance-and-Subtypes) 章节有讲到，虽然，`Orange` 是 `Fruit` 的子类，但是，`FruitPlateGen<Orange>` 不是 `FruitPlateGen<Fruit>` 的子类。但是，你可以使用通配符在泛型类或接口之间创建关系。
+
+我们再来回顾下 `Fruit` 的继承关系，如图：
+
+<div style="width: 56%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/generics/fruit.png "")
+
+</div>
+
+代码，如下：
+
+```java
+Apple apple = new Apple();
+Fruit fruit = apple;
+```
+
+这个代码是没有问题的，`Fruit` 是 `Apple` 的父类，所以，可以把子类赋值给父类。
+
+代码如下：
+
+```java
+List<Apple> apples = new ArrayList<>();
+List<Fruit> fruits = apples; // 编辑器报错
+```
+
+因为，`List<Apple>` 不是 `List<Fruit>` 的子类，实际上这两者无关，那么，它们的关系是什么？如图：
+
+<div style="width: 56%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/generics/List%3C%3F%3E.png "")
+
+</div>
+
+`List<Apple>` 和 `List<Fruit>` 的公共父级是 `List<?>`。
+
+我们可以使用上下限通配符，在这些类之间创建关系，如下：
+
+```java
+List<Apple> apples = new ArrayList<>();
+List<? extends Fruit> fruits1 = apples; // OK
+List<? super Apple> fruits2 = apples; // OK
+```
+
+下图展示了上下限通配符声明的几个类的关系，如图：
+
+<div style="width: 56%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/generics/List%3C%3F%3E1.png "")
+
+</div>
