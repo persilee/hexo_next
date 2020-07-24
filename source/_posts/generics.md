@@ -577,17 +577,17 @@ public class MethodGeneric2 {
             return "person";
         }
     }
-
+    //定义了泛型类
     static class ShowClass<T> {
-        //定义了普通类
+        //定义了普通方法
         public void show1(T t){
             System.out.println(t.toString());
         }
-        //定义了泛型类
+        //定义了泛型方法
         public <E> void show2(E e) {
             System.out.println(e.toString());
         }
-        //定义了泛型类
+        //定义了泛型方法
         public <T> void show3(T t) {
             System.out.println(t.toString());
         }
