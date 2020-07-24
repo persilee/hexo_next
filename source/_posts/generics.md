@@ -6,7 +6,7 @@ tags:
   - 泛型
 copyright: true
 comments: true
-date: 2020-07-22 00:05:35
+date: 2020-07-24 15:38:35
 categories: Java
 top: 117
 photos:
@@ -19,6 +19,14 @@ photos:
 <hr />
 
 <!-- more -->
+
+本篇文章的示例代码放在 [Github](https://github.com/persilee/genericsDemo) 上，所有知识点，如图：
+
+<div style="width: 100%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/generics/generic1.xmind.png "")
+
+</div>
 
 ## Lucy 喜欢吃🍊（为什么要使用泛型）
 
@@ -152,7 +160,7 @@ public class Person {
 }
 ```
 
-Lucy：Lucy类，继承 Person 类
+Lucy：Lucy类，继承 Person 类，她拥有吃橘子的能力 `eat`
 
 ```java
 import entity.Orange;
@@ -169,7 +177,7 @@ public class Lucy extends Person {
 }
 ```
 
-James：James类，继承 Person 类
+James：James类，继承 Person 类，他拥有获取水果盘的能力 `getAiFruitPlate`
 
 ```java
 import entity.*;
@@ -212,7 +220,7 @@ public class Scenario {
         Lucy lucy = new Lucy();
         FruitPlate fruitPlate = james.getPlate(); // James 拿出水果盘
         james.addFruit(fruitPlate,new Orange()); // James 往水果盘里装橘子
-        lucy.eat((Orange) fruitPlate.get());
+        lucy.eat((Orange) fruitPlate.get()); // 需要转型为 Orange
     }
     //使用了泛型
     private static void scenario2() {
@@ -220,7 +228,7 @@ public class Scenario {
         Lucy lucy = new Lucy();
         AiFruitPlate<Orange> aiFruitPlate = james.getAiFruitPlate(); // James 拿出智能水果盘（知道你需要装橘子）
         james.add(aiFruitPlate, new Orange()); // James 往水果盘里装橘子（如果，装的不是橘子会提醒）
-        lucy.eat(aiFruitPlate.get());
+        lucy.eat(aiFruitPlate.get()); // 不需要转型
     }
 
 }
@@ -242,7 +250,7 @@ Process finished with exit code 0
         James james = new James();
         Lucy lucy = new Lucy();
         FruitPlate fruitPlate = james.getPlate();
-        james.addFruit(fruitPlate,new Orange()); //new Orange() 改成 new Orange()
+        james.addFruit(fruitPlate,new Apple()); //new Orange() 改成 new Apple()
         lucy.eat((Orange) fruitPlate.get());
     }
 ```
@@ -505,7 +513,7 @@ public class ImplGenertor2 implements Genertor<String> {
 泛型方法定义格式，如下：
 
 ```java
-public <K, V> boolean compare(Pair<K, V> p1, Pair<K, V> pw)
+public <K, V> boolean compare(Pair<K, V> p1, Pair<K, V> p2)
 ```
 
 泛型方法的类型参数列表，在 `<>` 内，该列表必须在方法返回类型之前；对于静态的泛型方法，类型参数必须在 `static` 之后，方法返回类型之前。
@@ -903,6 +911,47 @@ List<? super Apple> fruits2 = apples; // OK
 ![no-shadow](https://cdn.lishaoy.net/generics/List%3C%3F%3E1.png "")
 
 </div>
+
+### PECS原则(Producer extends Consumer super)
+
+在上文中有 `FruitPlateGen` 水果盘子的类，我们尝试使用上下限通配符来实例化水果盘，代码如下：
+
+```java
+Apple apple = new Apple();
+Orange orange = new Orange();
+Fruit fruit = new Fruit();
+
+FruitPlateGen<? extends Fruit> fruitPlateGen = new FruitPlateGen<>();
+fruitPlateGen.set(apple); // error
+fruitPlateGen.set(orange); // error
+fruitPlateGen.set(fruit); // error
+Fruit fruit1 = fruitPlateGen.get(); // OK
+Orange orange1 = fruitPlateGen.get(); // error
+Apple apple1 = fruitPlateGen.get(); // error
+```
+
+上限通配符无法 `set` 数据，但是，可以 `get` 数据且只能 `get` 到其上限 `Fruit`，所以，上限通配符可以安全的访问数据。
+
+在来看一下代码，如下：
+
+```java
+FruitPlateGen<? super Apple> fruitPlateGen1 = new FruitPlateGen<>();
+fruitPlateGen1.set(apple); // OK
+fruitPlateGen1.set(orange); // error
+fruitPlateGen1.set(fruit); // error
+Object object = fruitPlateGen1.get(); // OK
+Fruit fruit2 = fruitPlateGen1.get(); // error
+Apple apple2 = fruitPlateGen1.get(); // error
+Orange orange2 = fruitPlateGen1.get(); // error
+```
+
+下限通配符可以且只能 `set` 其下限 `Apple`，也可以 `get` 数据，但只能用 `Object` 接收(因为Object是所有类型的父类，这是一个特例)，所以，下限通配符可以安全的写入数据。
+
+所以，在使用上下限通配符时，可以遵循以下准则：
+
+- 如果你只需要从集合中获得类型T , 使用<? extends T>通配符
+- 如果你只需要将类型T放到集合中, 使用<? super T>通配符
+- 如果你既要获取又要放置元素，则不使用任何通配符
 
 
 ## 类型擦除(Type Erasure)
