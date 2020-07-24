@@ -349,7 +349,7 @@ public class GenericClass<T> {
 }
 ```
 
-所以的 `object` 都替换成为 `T`，类型参数可以定义为任何的费基本类型，如：class类型、interface类型、数组类型、甚至是另一个类型参数。
+所以的 `object` 都替换成为 `T`，类型参数可以定义为任何的非基本类型，如：class类型、interface类型、数组类型、甚至是另一个类型参数。
 
 
 ### 调用和实例化泛型类型(nvoking and Instantiating a Generic Type)
@@ -442,7 +442,7 @@ Process finished with exit code 0
 
 如上代码，`new ImplMultipleGeneric` 将 `K` 实例化为 `String`，将 `V` 实例化为 `Integer` ，因此， `ImplMultipleGeneric` 构造函数参数类型分别为 `String` 和 `Integer`,在编写 `new ImplMultipleGeneric` 代码时，编辑器会自动填写 `<>` 的值
 
-由于，Java 编译器会从声明 `ImplMultipleGeneric` 推断出 `K` 和 `V` 的类型，以此我们可以简写为，如下：
+由于，Java 编译器会从声明 `ImplMultipleGeneric` 推断出 `K` 和 `V` 的类型，因此我们可以简写为，如下：
 
 ```java
 MultipleGeneric<String, Integer> m1 = new ImplMultipleGeneric<>("per",6);
@@ -602,11 +602,11 @@ public class MethodGeneric2 {
         showClass.show1(apple);   //可以放入 apple，因为 apple 是 fruit 的子类
         showClass.show1(person); //此时，编译器会报错，因为 ShowClass<Fruit> 已经限定类型
 
-        showClass.show2(apple); //可以放入，泛型方法 <E> 可以是任何类型
-        showClass.show2(person);//可以放入，泛型方法 <E> 可以是任何类型
+        showClass.show2(apple); //可以放入，泛型方法 <E> 可以是任何非基本类型
+        showClass.show2(person);//可以放入，泛型方法 <E> 可以是任何非基本类型
 
-        showClass.show3(apple); //可以放入，泛型方法 <T> 和泛型类中的 <T> 不是同一条 T，可以是任何类型
-        showClass.show3(person); //可以放入，泛型方法 <T> 和泛型类中的 <T> 不是同一条 T，可以是任何类型
+        showClass.show3(apple); //可以放入，泛型方法 <T> 和泛型类中的 <T> 不是同一条 T，可以是任何非基本类型
+        showClass.show3(person); //可以放入，泛型方法 <T> 和泛型类中的 <T> 不是同一条 T，可以是任何非基本类型
     }
 }
 ```
