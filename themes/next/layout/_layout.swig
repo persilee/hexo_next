@@ -182,6 +182,10 @@
       color: #fff;
     }
 
+    .posts-expand .post-body>table  {
+        table-layout: auto;
+    }
+
     img {
       backface-visibility: hidden;
     }
