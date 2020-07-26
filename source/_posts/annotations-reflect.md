@@ -525,4 +525,68 @@ the private method!
 BUILD SUCCESSFUL in 412ms
 ```
 
+### 获取成员变量
 
+获取成员变量的方法有，如下：
+
+- Field getField(String name)：获得命名的公共字段
+- Field[] getFields()：获得类的所有公共字段
+- Field getDeclaredField(String name)：获得类声明的命名的字段
+- Field[] getDeclaredFields()：获得类声明的所有字段
+
+我们再来新建一个 `GetField` 的类来演示如何获取成员变量，如下：
+
+```java
+class GetField {
+
+    public static void main(String[] args) throws
+            ClassNotFoundException,
+            NoSuchFieldException,
+            IllegalAccessException,
+            InstantiationException {
+
+        Class<?> aClass = Class.forName("net.lishaoy.reflectdemo.entity.Person");
+
+        // 获取所有字段(不包含父类字段)
+        Field[] fields = aClass.getDeclaredFields();
+        for (Field field: fields) {
+            System.out.println("获取所有字段: " + field.getName());
+        }
+
+        System.out.println("================");
+
+        // 获取指定字段
+        Field name = aClass.getDeclaredField("name");
+        System.out.println("获取指定字段: " + name.getName());
+
+        // 设置指定字段的值
+        Object instance = aClass.newInstance();
+        name.set(instance, "per");
+
+        // 获取指定字段的值
+        Object o = name.get(instance);
+        System.out.println("获取指定字段的值: " + o);
+
+        // 设置和获取私有字段的值
+        Field age = aClass.getDeclaredField("age");
+        age.setAccessible(true); // 需要调用此方法且设置为 true
+        age.set(instance, 66);
+        System.out.println("获取私有字段的值: " + age.get(instance));
+
+    }
+
+}
+```
+
+运行结果，如下：
+
+```bash
+获取所有字段: name
+获取所有字段: age
+================
+获取指定字段: name
+获取指定字段的值: per
+获取私有字段的值: 66
+
+BUILD SUCCESSFUL in 395ms
+```
