@@ -860,7 +860,7 @@ james.getAiFruitPlateGen3(new FruitPlateGen<Fruit>());
 
 ### 通配符和子类型(Wildcards and Subtyping)
 
-在 [泛型，继承和子类型](http://h.lishaoy.net/generics.html#%E6%B3%9B%E5%9E%8B%EF%BC%8C%E7%BB%A7%E6%89%BF%E5%92%8C-%E5%AD%90%E7%B1%BB%E5%9E%8B-Generics-Inheritance-and-Subtypes) 章节有讲到，虽然，`Orange` 是 `Fruit` 的子类，但是，`FruitPlateGen<Orange>` 不是 `FruitPlateGen<Fruit>` 的子类。但是，你可以使用通配符在泛型类或接口之间创建关系。
+在 [泛型，继承和子类型](https://h.lishaoy.net/generics.html#泛型，继承和子类型-Generics-Inheritance-and-Subtypes) 章节有讲到，虽然，`Orange` 是 `Fruit` 的子类，但是，`FruitPlateGen<Orange>` 不是 `FruitPlateGen<Fruit>` 的子类。但是，你可以使用通配符在泛型类或接口之间创建关系。
 
 我们再来回顾下 `Fruit` 的继承关系，如图：
 

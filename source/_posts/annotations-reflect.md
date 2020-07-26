@@ -15,7 +15,7 @@ photos:
 
 {% li https://cdn.lishaoy.net/generics/generics.png, Generics, Generics %}
 
-注解我们经常使用它，很多框架也提供了很多注解给我们使用，如 `ARouter` 的 `@Route(path = "/test/activity")` 、`butterknife` 的 `@BindView(R.id.user) EditText username;` 等，但是，你有没有自定义过注解，写过自己的注解处理器呢？反射听起来很高大上，但是实际上你真的了解他之后，只是一些API的调用而已；动态代理其实只是在静态代理(代理模式)基础上使用了反射技术；本篇文章将带大家深入了理解注解、反射及动态代理。
+注解我们经常使用它，很多框架也提供了很多注解给我们使用，如 `ARouter` 的 `@Route(path = "/test/activity")` 、`butterknife` 的 `@BindView(R.id.user) EditText username;` 等，但是，你有没有自定义过注解，写过自己的注解处理器呢？反射听起来很高大上，但是实际上你真的了解他之后，只是一些API的调用而已；动态代理其实只是在静态代理(代理模式)基础上使用了反射技术；本篇文章将带领大家对注解、反射及动态代理有更清晰的认知。
 
 <hr />
 
@@ -334,3 +334,5 @@ Class cookClass = Cook.class;
 Class cookClass1 = cook.getClass();
 Class cookClass2 = Class.forName("net.lishaoy.reflectdemo.Cook");
 ```
+
+
