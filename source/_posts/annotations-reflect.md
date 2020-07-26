@@ -60,8 +60,8 @@ class MyClass { ... }
 如果，注解有相同的类型，则是重复注解，如
 
 ```java
-@Persilee("lsy") 
-@Persilee("zimu") 
+@Persilee("lsy")
+@Persilee("zimu")
 class MyClass { ... }
 ```
 
@@ -142,7 +142,7 @@ public enum ElementType {
 public class TypeParameterClass<@Persilee T> {
     public <@Persilee T> T foo(T t) {
         return null;
-    }   
+    }
 }
 ```
 
@@ -312,6 +312,7 @@ cook.cookService("🍅");
 反射是一开始并不知道初始化的类对象是什么，也不能使用 `new` 关键字来创建对象，反射是在运行的时才知道要操作的类是什么，并且可以在运行时获取类的完整构造，调用对应的方法。
 
 Java 反射机制主要提供了以下功能:
+
 - 在运行时构造任意一个类的对象
 - 在运行时获取或修改任意一个类所具有的成员变量和方法
 - 在运行时调用任意一个对象的方法(属性)
@@ -333,6 +334,107 @@ Cook cook = new Cook();
 Class cookClass = Cook.class;
 Class cookClass1 = cook.getClass();
 Class cookClass2 = Class.forName("net.lishaoy.reflectdemo.Cook");
+```
+
+### 创建实例
+
+我们可以通过反射来生成对象的实例，如：
+
+```java
+Class cookClass = Cook.class;
+Cook cook1 = (Cook) cookClass.newInstance();
+```
+
+### 获取构造器
+
+获取构造器的方法有，如下：
+
+- Constructor getConstructor(Class[] params)：获得使用特殊的参数类型的public构造函数(包括父类)
+- Constructor[] getConstructors()：获得类的所有公共构造函数
+- Constructor getDeclaredConstructor(Class[] params)：获得使用特定参数类型的构造函数(包括私有)
+- Constructor[] getDeclaredConstructors()：获得类的所有构造函数(与接入级别无关)
+
+我们来新建一个 `Person` ，以便我们的演示，如：
+
+```java
+public class Person {
+
+    String name;
+    private int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public Person() {
+        super();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    private void privateMethod(){
+        System.out.println("the private method!");
+    }
+}
+```
+
+很常规的一个类，里面有私有的属性和方法。
+
+下面，我们新建一个 `GetConstructor` 的类来演示，获取构造器方法如何使用，如：
+
+```java
+class GetConstructor {
+
+    public static void main(String[] args) throws
+            ClassNotFoundException,
+            NoSuchMethodException,
+            IllegalAccessException,
+            InvocationTargetException,
+            InstantiationException {
+
+        String className = "net.lishaoy.reflectdemo.entity.Person";
+        Class<Person> personClass = (Class<Person>) Class.forName(className);
+
+        //获取全部的constructor对象
+        Constructor<?>[] constructors = personClass.getConstructors();
+        for (Constructor<?> constructor: constructors) {
+            System.out.println("获取全部的constructor对象: " + constructor);
+        }
+
+        //获取某一个constructor对象
+        Constructor<Person> constructor = personClass.getConstructor(String.class, int.class);
+        System.out.println("获取某一个constructor对象: " + constructor);
+
+        //调用构造器的 newInstance() 方法创建对象
+        Person person = constructor.newInstance("lsy", 66);
+        System.out.println(person.getName() + ", " + person.getAge() );
+    }
+
+}
+```
+
+输出结果，如下：
+
+```bash
+获取全部的constructor对象: public net.lishaoy.reflectdemo.entity.Person(java.lang.String,int)
+获取全部的constructor对象: public net.lishaoy.reflectdemo.entity.Person()
+获取某一个constructor对象: public net.lishaoy.reflectdemo.entity.Person(java.lang.String,int)
+lsy, 66
 ```
 
 
