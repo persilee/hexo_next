@@ -359,7 +359,7 @@ Cook cook1 = (Cook) cookClass.newInstance();
 ```java
 public class Person {
 
-    String name;
+    public String name;
     private int age;
 
     public Person(String name, int age) {
@@ -372,19 +372,23 @@ public class Person {
     }
 
     public String getName() {
+        System.out.println("get name: " + name);
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+        System.out.println("set name: " + this.name);
     }
 
     public int getAge() {
+        System.out.println("get age: " + age);
         return age;
     }
 
     public void setAge(int age) {
         this.age = age;
+        System.out.println("set age: " + this.age);
     }
 
     private void privateMethod(){
@@ -451,11 +455,11 @@ lsy, 66
 ```java
 class GetMethod {
 
-    public static void main(String[] args) throws 
-            ClassNotFoundException, 
-            NoSuchMethodException, 
-            IllegalAccessException, 
-            InstantiationException, 
+    public static void main(String[] args) throws
+            ClassNotFoundException,
+            NoSuchMethodException,
+            IllegalAccessException,
+            InstantiationException,
             InvocationTargetException {
 
         Class<?> aClass = Class.forName("net.lishaoy.reflectdemo.entity.Person");
@@ -481,14 +485,13 @@ class GetMethod {
         System.out.println("获取指定的方法:" + method);
 
         //调用方法
-        Person person = (Person) aClass.newInstance();
-        method.invoke(person, 66);
-        System.out.println(person.getAge());
+        Object instance = aClass.newInstance();
+        method.invoke(instance, 66);
 
         //调用私有方法
         method = aClass.getDeclaredMethod("privateMethod");
-        method.setAccessible(true); // 需要调用此方法并设置成 true
-        method.invoke(person);
+        method.setAccessible(true); // 需要调用此方法且设置为 true
+        method.invoke(instance);
 
     }
 
@@ -500,8 +503,8 @@ class GetMethod {
 ```bash
 获取所有public方法： getName()
 获取所有public方法： setName()
-获取所有public方法： getAge()
 获取所有public方法： setAge()
+获取所有public方法： getAge()
 获取所有public方法： wait()
 获取所有public方法： wait()
 获取所有public方法： wait()
@@ -514,15 +517,15 @@ class GetMethod {
 ===========================
 获取所有方法: getName()
 获取所有方法: setName()
-获取所有方法: getAge()
 获取所有方法: setAge()
 获取所有方法: privateMethod()
+获取所有方法: getAge()
 ===========================
 获取指定的方法:public void net.lishaoy.reflectdemo.entity.Person.setAge(int)
-66
+set age: 66
 the private method!
 
-BUILD SUCCESSFUL in 412ms
+BUILD SUCCESSFUL in 395ms
 ```
 
 ### 获取成员变量
@@ -590,3 +593,79 @@ class GetField {
 
 BUILD SUCCESSFUL in 395ms
 ```
+
+## 使用注解和反射实现自动findViewById(案例)
+
+我们已经对注解和反射有了更清晰的认知，下面我们通过一个小案例来巩固我们的学习：使用注解和反射完成类似 `butterknife` 的自动 `findViewById` 的功能。
+
+新建一个空的 Android 工程，在工程目录下新建 **inject** 目录，在此目录下新建一个 `InjectView` 的类和 `BindView` 的自定义注解，如：
+
+```java
+public class InjectView {
+
+    public static void init(Activity activity) {
+        // 获取 activity 的 class 对象
+        Class<? extends Activity> aClass = activity.getClass();
+        // 获取 activity 的所以成员变量
+        Field[] declaredFields = aClass.getDeclaredFields();
+        // 变量所以成员变量
+        for (Field field: declaredFields) {
+            // 判断属性是否加上了 @BindView 注解
+            if(field.isAnnotationPresent(BindView.class)){
+                // 获取注解 BindView 对象
+                BindView bindView = field.getAnnotation(BindView.class);
+                // 获取注解类型元素 id
+                int id = bindView.value();
+                // 通过资源 id 找到对应的 view
+                View view = activity.findViewById(id);
+                // 设置可以访问私有字段
+                field.setAccessible(true);
+                try {
+                    // 给字段赋值
+                    field.set(activity,view);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+}
+```
+
+```java
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface BindView {
+    @IdRes int value(); // @IdRes 只能传 id 资源
+}
+```
+
+`MainActivity` 里使用 `@BindView` 注解，如：
+
+```java
+public class MainActivity extends AppCompatActivity {
+
+    @BindView(R.id.text_view)
+    private TextView textView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_main);
+
+        // 初始化 InjectView，完成自动 findViewById 功能
+        InjectView.init(this);
+        // 测试 R.id.text_view 是否自动赋值给 textView
+        textView.setText("通过 @BindView 注解自动完成 findViewById");
+    }
+}
+```
+
+运行结果，如图：
+
+<div style="width: 36%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/annotations-reflect/annotations2.png "small case")
+
+</div>
