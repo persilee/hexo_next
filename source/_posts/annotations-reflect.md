@@ -437,4 +437,92 @@ class GetConstructor {
 lsy, 66
 ```
 
+### 获取方法
+
+获取方法的方法有，如下：
+
+- Method getMethod(String name, Class[] params)：使用特定的参数类型，获得命名的公共方法
+- Method[] getMethods()：获得类的所有公共方法
+- Method getDeclaredMethod(String name, Class[] params)：使用特写的参数类型，获得类声明的命名的方法
+- Method[] getDeclaredMethods()：获得类声明的所有方法
+
+我们新创建一个 `GetMethod` 来演示如何来获取和调用方法，如：
+
+```java
+class GetMethod {
+
+    public static void main(String[] args) throws 
+            ClassNotFoundException, 
+            NoSuchMethodException, 
+            IllegalAccessException, 
+            InstantiationException, 
+            InvocationTargetException {
+
+        Class<?> aClass = Class.forName("net.lishaoy.reflectdemo.entity.Person");
+
+        //获取所有的public方法(包含从父类继承的方法)
+        Method[] methods = aClass.getMethods();
+        for (Method method: methods) {
+            System.out.println("获取所有public方法： " + method.getName() + "()");
+        }
+
+        System.out.println("===========================");
+
+        //获取所有方法(不包含父类方法)
+        methods = aClass.getDeclaredMethods();
+        for (Method method: methods) {
+            System.out.println("获取所有方法: " + method.getName() + "()");
+        }
+
+        System.out.println("===========================");
+
+        //获取指定的方法
+        Method method = aClass.getDeclaredMethod("setAge", int.class);
+        System.out.println("获取指定的方法:" + method);
+
+        //调用方法
+        Person person = (Person) aClass.newInstance();
+        method.invoke(person, 66);
+        System.out.println(person.getAge());
+
+        //调用私有方法
+        method = aClass.getDeclaredMethod("privateMethod");
+        method.setAccessible(true); // 需要调用此方法并设置成 true
+        method.invoke(person);
+
+    }
+
+}
+```
+
+运行结果，如下：
+
+```bash
+获取所有public方法： getName()
+获取所有public方法： setName()
+获取所有public方法： getAge()
+获取所有public方法： setAge()
+获取所有public方法： wait()
+获取所有public方法： wait()
+获取所有public方法： wait()
+获取所有public方法： equals()
+获取所有public方法： toString()
+获取所有public方法： hashCode()
+获取所有public方法： getClass()
+获取所有public方法： notify()
+获取所有public方法： notifyAll()
+===========================
+获取所有方法: getName()
+获取所有方法: setName()
+获取所有方法: getAge()
+获取所有方法: setAge()
+获取所有方法: privateMethod()
+===========================
+获取指定的方法:public void net.lishaoy.reflectdemo.entity.Person.setAge(int)
+66
+the private method!
+
+BUILD SUCCESSFUL in 412ms
+```
+
 
