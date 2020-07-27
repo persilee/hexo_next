@@ -1133,3 +1133,7 @@ public final class $Proxy0 extends Proxy implements ImplKoreaOrderService {
     }
 }
 ```
+
+## 使用注解、反射、动态代理完成简单的Retrofit
+
+由于文章篇幅已经很长，且使用注解、反射、动态代理完成简单的 Retrofit 的案例代码过多，所有就不再这里展示，感兴趣的小伙伴可以去 [GitHub]() 查看源码。
