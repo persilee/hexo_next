@@ -20,7 +20,7 @@ photos:
 
 <!-- more -->
 
-本篇文章的示例代码放在 [Github](https://github.com/persilee/genericsDemo) 上，所有知识点，如图：
+本篇文章的示例代码放在 [Github](https://github.com/persilee/android_practice) 上，所有知识点，如图：
 
 <div style="width: 100%; margin:auto">
 
