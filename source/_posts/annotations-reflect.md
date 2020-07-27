@@ -600,6 +600,10 @@ BUILD SUCCESSFUL in 395ms
 
 新建一个空的 Android 工程，在工程目录下新建 **inject** 目录，在此目录下新建一个 `InjectView` 的类和 `BindView` 的自定义注解，如：
 
+### 创建InjectView
+
+`InjectView` 类通过反射完成 `findViewById` 功能：
+
 ```java
 public class InjectView {
 
@@ -632,6 +636,8 @@ public class InjectView {
 }
 ```
 
+### 创建@BindView注解
+
 ```java
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
@@ -640,11 +646,14 @@ public @interface BindView {
 }
 ```
 
+### 使用@BindView注解
+
 `MainActivity` 里使用 `@BindView` 注解，如：
 
 ```java
 public class MainActivity extends AppCompatActivity {
 
+    // 使用注解
     @BindView(R.id.text_view)
     private TextView textView;
 
@@ -669,3 +678,111 @@ public class MainActivity extends AppCompatActivity {
 ![no-shadow](https://cdn.lishaoy.net/annotations-reflect/annotations2.png "small case")
 
 </div>
+
+是不是很简单，一个类就完成了自动 `findViewById` 的功能。
+
+## 动态代理原理
+
+在了解动态代理之前，我们先来回顾下静态代理。
+
+### 静态代理
+
+代理模式给某一个对象提供一个代理对象，并由代理对象控制对原对象的引用，如，我们生活中常见的中介。
+
+代理模式一般会有3个角色，如图：
+
+<br />
+<div style="width: 86%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/annotations-reflect/annotations3.png "")
+
+</div>
+<br />
+
+- 抽象角色：指代理角色和真实角色对外提供的公共方法，一般为一个接口
+- 真实角色：需要实现抽象角色接口，定义了真实角色所要实现的业务逻辑，以便供代理角色调用
+- 代理角色：需要实现抽象角色接口，是真实角色的代理，通过真实角色的业务逻辑方法来实现抽象方法，并可以附加自己的操作
+
+### 为什么要使用代理模式
+
+- 可以间接访问对象，防止直接访问对象来的不必要复杂性
+- 通过代理对象对访问进行控制
+
+### 静态代理案例
+
+场景如下：
+
+{% note info %} 小明可以在某网站上购买国内的东西，但是，不能买海外的东西，于是，他找了海外代购帮他买东西。 {% endnote %}
+
+如何用代码描述呢？根据代理模式的3个角色，我们分别定义1个接口2个类，如：`OrderService` 接口(抽象角色)、`ImplJapanOrderService` 类(真实角色)、`ProxyJapanOrder` 类(代理角色)
+
+`OrderService` 接口(抽象角色)，代码如下：
+
+```java
+public interface OrderService {
+    int saveOrder();
+}
+```
+
+`ImplJapanOrderService` 类(真实角色)，代码如下：
+
+```java
+// 实现抽象角色接口
+public class ImplJapanOrderService implements OrderService {
+    @Override
+    public int saveOrder() {
+        System.out.println("下单成功，订单号为：888888");
+        return 888888;
+    }
+}
+```
+
+`ProxyJapanOrder` 类(代理角色)，代码如下：
+
+```java
+// 实现抽象角色接口
+public class ProxyJapanOrder implements OrderService {
+
+    private OrderService orderService; // 持有真实角色
+
+    public OrderService getOrderService() {
+        return orderService;
+    }
+
+    public void setOrderService(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    @Override
+    public int saveOrder() {
+        System.out.print("日本代购订单，");
+        return orderService.saveOrder(); // 调用真实角色的行为方法
+    }
+}
+```
+
+在创建一个 `Client` 类来测试我们的代码，如下：
+
+```java
+public class Client {
+
+    public static void main(String[] args) {
+        // 日本代购订单
+        OrderService orderJapan = new ImplJapanOrderService();
+        ProxyJapanOrder proxyJapanOrder = new ProxyJapanOrder();
+        proxyJapanOrder.setOrderService(orderJapan);
+        proxyJapanOrder.saveOrder();
+    }
+}
+```
+
+运行结果，如下：
+
+```bash
+日本代购订单，下单成功，订单号为：888888
+
+BUILD SUCCESSFUL in 1s
+```
+
+如果，需要购买韩国的东西，需要新增一个 `ImplKoreaOrderService` 类(韩国服务商) 和 `ProxyKoreaOrder` 类(韩国代理)，如还需要购买其他国家的东西，需要新增不同的类，则会出现静态代理对象量多、代码量大，从而导致代码复杂，可维护性差的问题，如是，我们需要使用动态代理。
+
