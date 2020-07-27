@@ -681,7 +681,7 @@ public class MainActivity extends AppCompatActivity {
 
 是不是很简单，一个类就完成了自动 `findViewById` 的功能。
 
-## 动态代理原理
+## 动态代理
 
 在了解动态代理之前，我们先来回顾下静态代理。
 
@@ -691,13 +691,11 @@ public class MainActivity extends AppCompatActivity {
 
 代理模式一般会有3个角色，如图：
 
-<br />
-<div style="width: 86%; margin:auto">
+<div style="width: 86%; margin:26px auto;">
 
 ![no-shadow](https://cdn.lishaoy.net/annotations-reflect/annotations3.png "")
 
 </div>
-<br />
 
 - 抽象角色：指代理角色和真实角色对外提供的公共方法，一般为一个接口
 - 真实角色：需要实现抽象角色接口，定义了真实角色所要实现的业务逻辑，以便供代理角色调用
@@ -786,3 +784,352 @@ BUILD SUCCESSFUL in 1s
 
 如果，需要购买韩国的东西，需要新增一个 `ImplKoreaOrderService` 类(韩国服务商) 和 `ProxyKoreaOrder` 类(韩国代理)，如还需要购买其他国家的东西，需要新增不同的类，则会出现静态代理对象量多、代码量大，从而导致代码复杂，可维护性差的问题，如是，我们需要使用动态代理。
 
+### 动态代理
+
+动态代理是在运行时才创建代理类和其实例，因此，我们可以传不同的真实角色，实现一个代理类完成多个真实角色的行为方法，当然，其效率比静态代理低。那么如何实现动态代理呢，JDK已为我们提供了 `Proxy` 类 和 `InvocationHandler` 接口来完成这件事情。
+
+我们来创建一个 `ProxyDynamicOrder` 类(动态代理类)，代码如下：
+
+```java
+public class ProxyDynamicOrder implements InvocationHandler {
+
+    private Object orderService; // 持有真实角色
+
+    public Object getOrderService() {
+        return orderService;
+    }
+
+    public void setOrderService(Object orderService) {
+        this.orderService = orderService;
+    }
+    // 通过 Proxy 动态创建真实角色
+    public Object getProxyInstance(){
+        return Proxy.newProxyInstance(
+                orderService.getClass().getClassLoader(),
+                orderService.getClass().getInterfaces(),
+                this
+                );
+    }
+
+    @Override
+    public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
+        return method.invoke(orderService, objects); // 通过反射执行真实角色的行为方法
+    }
+}
+```
+
+在来看看，`Client` 类里如何调用，代码如下：
+
+```java
+public class Client {
+
+    public static void main(String[] args) {
+
+        // 静态代理模式
+        // 国内订单
+        OrderService order = new ImplOrderService();
+        order.saveOrder();
+        // 日本代购订单
+        OrderService orderJapan = new ImplJapanOrderService();
+        ProxyJapanOrder proxyJapanOrder = new ProxyJapanOrder();
+        proxyJapanOrder.setOrderService(orderJapan);
+        proxyJapanOrder.saveOrder();
+        // 韩国代购订单
+        OrderService orderKorea = new ImplKoreaOrderService();
+        ProxyKoreaOrder proxyKoreaOrder = new ProxyKoreaOrder();
+        proxyKoreaOrder.setOrderService(orderKorea);
+        proxyKoreaOrder.saveOrder();
+
+        // 动态代理模式
+        // 国内订单
+        ProxyDynamicOrder proxyDynamicOrder = new ProxyDynamicOrder();
+        OrderService orderService = new ImplOrderService();
+        proxyDynamicOrder.setOrderService(orderService);
+        OrderService orderService1 = (OrderService) proxyDynamicOrder.getProxyInstance();
+        orderService1.saveOrder();
+
+        // 日本代购订单
+        OrderService japanOrderService = new ImplJapanOrderService();
+        proxyDynamicOrder.setOrderService(japanOrderService);
+        OrderService japanOrderService1 = (OrderService) proxyDynamicOrder.getProxyInstance();
+        japanOrderService1.saveOrder();
+
+        // 韩国代购订单
+        OrderService koreaOrderService = new ImplKoreaOrderService();
+        proxyDynamicOrder.setOrderService(koreaOrderService);
+        OrderService koreaOrderService1 = (OrderService) proxyDynamicOrder.getProxyInstance();
+        koreaOrderService1.saveOrder();
+
+        // 生成动态代理生成的class文件
+        //ProxyUtil.generateClassFile(koreaOrderService.getClass(), koreaOrderService1.getClass().getSimpleName());
+
+    }
+}
+```
+
+运行结果，如下：
+
+```bash
+下单成功，订单号为：666666
+日本代购订单，下单成功，订单号为：888888
+韩国代购订单，下单成功，订单号为：666888
+下单成功，订单号为：666666
+下单成功，订单号为：888888
+下单成功，订单号为：666888
+
+BUILD SUCCESSFUL in 1s
+```
+
+只需要一个 `ProxyDynamicOrder` 代理类即可完成 `ImplOrderService` 、 `ImplJapanOrderService` 、`ImplKoreaOrderService` 真实角色提供的服务。
+
+
+### 动态代理原理
+
+我们在 `proxyDynamicOrder.getProxyInstance()` 代码上打个断点，通过调试模式发现，如图：
+
+<div style="width: 100%; margin:auto">
+
+![](https://cdn.lishaoy.net/annotations-reflect/annotations4.png "proxy")
+
+</div>
+
+代理类的名字是 `$Proxy0@507`，为什么是这个名字，我们在编译后的目录里也找不到 `$Proxy0@507` 类文件，如图：
+
+<div style="width: 56%; margin:auto">
+
+![](https://cdn.lishaoy.net/annotations-reflect/annotations5.png "proxy")
+
+</div>
+
+我们通过查看 `Proxy.newProxyInstance` 方法源码，可知，如：
+
+```java
+@CallerSensitive
+public static Object newProxyInstance(ClassLoader var0, Class<?>[] var1, InvocationHandler var2) throws IllegalArgumentException {
+    Objects.requireNonNull(var2);
+    Class[] var3 = (Class[])var1.clone();
+    SecurityManager var4 = System.getSecurityManager();
+    if (var4 != null) {
+        checkProxyAccess(Reflection.getCallerClass(), var0, var3);
+    }
+    // 获取代理类的 class 对象
+    Class var5 = getProxyClass0(var0, var3);
+
+    try {
+        if (var4 != null) {
+            checkNewProxyPermission(Reflection.getCallerClass(), var5);
+        }
+        // 获取代理类的构造器
+        final Constructor var6 = var5.getConstructor(constructorParams);
+        if (!Modifier.isPublic(var5.getModifiers())) {
+            AccessController.doPrivileged(new PrivilegedAction<Void>() {
+                public Void run() {
+                    var6.setAccessible(true);
+                    return null;
+                }
+            });
+        }
+        // 创建代理类的示例
+        return var6.newInstance(var2);
+    } catch (InstantiationException | IllegalAccessException var8) {
+        throw new InternalError(var8.toString(), var8);
+    } catch (InvocationTargetException var9) {
+        Throwable var7 = var9.getCause();
+        if (var7 instanceof RuntimeException) {
+            throw (RuntimeException)var7;
+        } else {
+            throw new InternalError(var7.toString(), var7);
+        }
+    } catch (NoSuchMethodException var10) {
+        throw new InternalError(var10.toString(), var10);
+    }
+}
+```
+
+然后，跟进 `getProxyClass0(var0, var3)` 看看是如何获取代理类的 class 对象的，点击进入，如下：
+
+```java
+private static Class<?> getProxyClass0(ClassLoader var0, Class<?>... var1) {
+    if (var1.length > 65535) {
+        throw new IllegalArgumentException("interface limit exceeded");
+    } else {
+        // 缓存了代理类的 class 对象
+        return (Class)proxyClassCache.get(var0, var1);
+    }
+}
+```
+
+然后，我们来看看这个 `var1` 是个什么东西，我们往上找了找，果然发现，如下：
+
+```java
+// var1 就是我们实现的 InvocationHandler 接口
+protected Proxy(InvocationHandler var1) {
+    Objects.requireNonNull(var1);
+    this.h = var1;
+}
+```
+
+然后，我们点进 `proxyClassCache.get(var0, var1)` 方法，如图：
+
+<div style="width: 100%; margin:auto">
+
+![](https://cdn.lishaoy.net/annotations-reflect/annotations6.png "proxy")
+
+</div>
+
+使用关键代码 `this.subKeyFactory.apply(var1, var2)` 去获取我们的代理类的 class 对象，我们进入 `apply` 实现类 `ProxyClassFactory`，如：
+
+```java
+public Class<?> apply(ClassLoader var1, Class<?>[] var2) {
+    IdentityHashMap var3 = new IdentityHashMap(var2.length);
+    Class[] var4 = var2;
+    int var5 = var2.length;
+
+    ...
+
+    if (var16 == null) {
+        var16 = "com.sun.proxy.";
+    }
+
+    long var19 = nextUniqueNumber.getAndIncrement();
+    // 生成代理类的类名
+    String var23 = var16 + "$Proxy" + var19;
+    // 生成代理类的字节码
+    byte[] var22 = ProxyGenerator.generateProxyClass(var23, var2, var17);
+
+    try {
+        // 生成代理类的 class 对象
+        return Proxy.defineClass0(var1, var23, var22, 0, var22.length);
+    } catch (ClassFormatError var14) {
+        throw new IllegalArgumentException(var14.toString());
+    }
+}
+```
+
+然后，我们点进 `Proxy.defineClass0` 方法，如下：
+
+```java
+private static native Class<?> defineClass0(ClassLoader var0, String var1, byte[] var2, int var3, int var4);
+```
+
+是一个 `native` 方法，所以涉及到 C 或 C++ ，我们就不往后追踪。
+
+
+那么，代理的 Class 文件到底存在哪儿呢，由一个类的生命周期，如图：
+
+
+<div style="width: 100%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/annotations-reflect/annotations7.png "proxy")
+
+</div>
+
+代理的 Class 文件通过反射存在内存中，所以我们可以通过 `byte[]` 写入文件，我们新建一个工具类来把内存中的 class 字节码写入文件，如：
+
+```java
+public class ProxyUtil {
+
+    public static void generateClassFile(Class aClass, String proxyName) {
+
+        byte[] proxyClassFile = ProxyGenerator.generateProxyClass(
+                proxyName,
+                new Class[]{aClass}
+        );
+        String path = aClass.getResource(".").getPath();
+        System.out.println(path);
+        FileOutputStream outputStream = null;
+
+        try {
+            outputStream = new FileOutputStream(path + proxyName + ".class");
+            outputStream.write(proxyClassFile);
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                outputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+```
+
+通过输出的 `path` 路径，找到文件，如：
+
+```bash
+/Users/lishaoying/Documents/APP/Android/practice/annotation_reflect/anRePrDemo/proxyDemo/build/classes/java/main/net/lishaoy/proxydemo/service/impl/
+```
+
+文件代码，如下：
+
+```java
+// 继承了 Proxy 实现了 ImplKoreaOrderService 接口
+public final class $Proxy0 extends Proxy implements ImplKoreaOrderService {
+
+    // 生成了各种方法
+    private static Method m1;
+    private static Method m8;
+    private static Method m3;
+    private static Method m2;
+    private static Method m5;
+    private static Method m4;
+    private static Method m7;
+    private static Method m9;
+    private static Method m0;
+    private static Method m6;
+
+    public $Proxy0(InvocationHandler var1) throws  {
+        super(var1);
+    }
+
+    ...
+
+    // 生成了 真实角色的 saveOrder 方法
+    public final int saveOrder() throws  {
+        try {
+            // h 是什？，点进去发现就是我们 传入的 InvocationHandler 接口
+            // m3 是什么？ 下面 static 代码块，就是我们的 saveOrder 方法
+            return (Integer)super.h.invoke(this, m3, (Object[])null);
+        } catch (RuntimeException | Error var2) {
+            throw var2;
+        } catch (Throwable var3) {
+            throw new UndeclaredThrowableException(var3);
+        }
+    }
+
+    ...
+
+    public final Class getClass() throws  {
+        try {
+            return (Class)super.h.invoke(this, m7, (Object[])null);
+        } catch (RuntimeException | Error var2) {
+            throw var2;
+        } catch (Throwable var3) {
+            throw new UndeclaredThrowableException(var3);
+        }
+    }
+
+    ...
+
+    static {
+        try {
+            m1 = Class.forName("java.lang.Object").getMethod("equals", Class.forName("java.lang.Object"));
+            m8 = Class.forName("net.lishaoy.proxydemo.service.impl.ImplKoreaOrderService").getMethod("notify");
+            m3 = Class.forName("net.lishaoy.proxydemo.service.impl.ImplKoreaOrderService").getMethod("saveOrder");
+            m2 = Class.forName("java.lang.Object").getMethod("toString");
+            m5 = Class.forName("net.lishaoy.proxydemo.service.impl.ImplKoreaOrderService").getMethod("wait", Long.TYPE);
+            m4 = Class.forName("net.lishaoy.proxydemo.service.impl.ImplKoreaOrderService").getMethod("wait", Long.TYPE, Integer.TYPE);
+            m7 = Class.forName("net.lishaoy.proxydemo.service.impl.ImplKoreaOrderService").getMethod("getClass");
+            m9 = Class.forName("net.lishaoy.proxydemo.service.impl.ImplKoreaOrderService").getMethod("notifyAll");
+            m0 = Class.forName("java.lang.Object").getMethod("hashCode");
+            m6 = Class.forName("net.lishaoy.proxydemo.service.impl.ImplKoreaOrderService").getMethod("wait");
+        } catch (NoSuchMethodException var2) {
+            throw new NoSuchMethodError(var2.getMessage());
+        } catch (ClassNotFoundException var3) {
+            throw new NoClassDefFoundError(var3.getMessage());
+        }
+    }
+}
+```
