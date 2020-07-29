@@ -182,6 +182,10 @@
       color: #fff;
     }
 
+    table {
+      table-layout: auto;
+    }
+
     .posts-expand .post-body>table  {
         table-layout: auto;
     }

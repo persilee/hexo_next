@@ -13,7 +13,7 @@ top: 118
 photos:
 ---
 
-{% li https://cdn.lishaoy.net/annotations-reflect/annotations-reflect-proxy1.png, annotations reflect proxy, annotations reflect proxy %}
+{% li https://cdn.lishaoy.net/annotations-reflect/annotations-reflect-proxy2.png, annotations reflect proxy, annotations reflect proxy %}
 
 注解我们经常使用它，很多框架也提供了很多注解给我们使用，如 `ARouter` 的 `@Route(path = "/test/activity")` 、`butterknife` 的 `@BindView(R.id.user) EditText username;` 等，但是，你有没有自定义过注解，写过自己的注解处理器呢？反射听起来很高大上，但是实际上你真的了解他之后，只是一些API的调用而已；动态代理其实只是在静态代理(代理模式)基础上使用了反射技术；本篇文章将带领大家对注解、反射及动态代理有更清晰的认知。
 
@@ -1144,4 +1144,4 @@ public final class $Proxy0 extends Proxy implements ImplKoreaOrderService {
 
 ## 使用注解、反射、动态代理完成简单的Retrofit
 
-由于文章篇幅已经很长，且使用注解、反射、动态代理完成简单的 Retrofit 的案例代码过多，所有就不再这里展示，感兴趣的小伙伴可以去 [GitHub](https://github.com/persilee/android_practice) 查看源码。
+由于文章篇幅已经很长，且使用注解、反射、动态代理完成简单的 Retrofit 的案例代码过多，所以就不再这里展示，感兴趣的小伙伴可以去 [GitHub](https://github.com/persilee/android_practice) 查看源码。
