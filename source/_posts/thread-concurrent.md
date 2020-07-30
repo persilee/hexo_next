@@ -336,6 +336,8 @@ Java 支持多个线程同时访问一个对象或者访问一个对象里的成
 
 独享的资源有：栈和寄存器
 
+### 线程的同步(Synchronization)
+
 但是，线程间的共享存在一些问题，例如(让两个线程操作一个 count 变量进行累加)：
 
 ```java
@@ -393,4 +395,432 @@ class SharedThread {
 BUILD SUCCESSFUL in 247ms
 ```
 
-运行了几次，都是小于 13332(6666 * 2)。
+运行了几次，都是小于 13332(6666 * 2)，这就是线程间共享的同步问题，解决此问题我们需要使用 `synchronized`。
+
+所以，我们把以上代码稍作修改，如：
+
+```java
+class SharedThread {
+
+    ...
+
+    public synchronized void addCount(){
+        count++;
+    }
+
+    ...
+}
+```
+
+运行结果，如下：
+
+```bash
+13332
+13332
+
+BUILD SUCCESSFUL in 324ms
+```
+
+我们也可以使用，这种方式，如下：
+
+```java
+class SharedThread {
+
+    private int count = 0;
+    private Object object = new Object(); // 使用 Object 作为锁
+
+    ...
+
+    public void addCount(){
+        synchronized (object) {
+            count++;
+        }
+    }
+
+    ...
+}
+```
+
+这两种方式并没有任何的差别，都是对象锁。
+
+### 类锁和对象锁
+
+我们来创建一个类 `ClassObjectLock` 来演示类锁和对象锁，如下：
+
+```java
+class ClassObjectLock {
+
+    private static class ClassLock extends Thread {
+        @Override
+        public void run() {
+            System.out.println("Class Lock is running ...");
+            lockClass();
+        }
+    }
+
+    private static class ObjectLock extends Thread {
+        private ClassObjectLock classObjectLock;
+
+        public ObjectLock(ClassObjectLock classObjectLock) {
+            this.classObjectLock = classObjectLock;
+        }
+
+        @Override
+        public void run() {
+            System.out.println("Object Lock is running ...");
+            classObjectLock.lockObject();
+        }
+    }
+
+    private static class ObjectLock1 extends Thread {
+        private ClassObjectLock classObjectLock;
+
+        public ObjectLock1(ClassObjectLock classObjectLock) {
+            this.classObjectLock = classObjectLock;
+        }
+
+        @Override
+        public void run() {
+            System.out.println("Object Lock1 is running ...");
+            classObjectLock.lockObject1();
+        }
+    }
+
+    // 对象锁
+    private synchronized void lockObject() {
+        SleepTool.second(2);
+        System.out.println("Object Lock use");
+        SleepTool.second(2);
+        System.out.println("Object Lock end");
+    }
+
+    // 对象锁
+    private synchronized void lockObject1() {
+        SleepTool.second(2);
+        System.out.println("Object Lock1 use");
+        SleepTool.second(2);
+        System.out.println("Object Lock1 end");
+    }
+
+    // 类锁，实际是锁类的class对象
+    private static synchronized void lockClass() {
+        SleepTool.second(2);
+        System.out.println("Class Lock use");
+        SleepTool.second(2);
+        System.out.println("Class Lock end");
+    }
+
+    public static void main(String[] args) {
+        ClassObjectLock classObjectLock = new ClassObjectLock();
+        ObjectLock objectLock = new ObjectLock(classObjectLock);
+
+        ClassObjectLock classObjectLock1 = new ClassObjectLock();
+        ObjectLock1 objectLock1 = new ObjectLock1(classObjectLock1);
+        objectLock.start();
+        objectLock1.start();
+
+        ClassLock classLock = new ClassLock();
+        classLock.start();
+    }
+}
+```
+
+运行结果如下：
+
+```bash
+Object Lock is running ...
+Object Lock1 is running ...
+Class Lock is running ...
+Object Lock use
+Object Lock1 use
+Class Lock use
+Class Lock end
+Object Lock end
+Object Lock1 end
+
+BUILD SUCCESSFUL in 4s
+```
+
+由运行结果可知，对象锁和对象锁之前是互不影响的，对象锁和类锁之前也是互不影响的。
+
+### ThreadLocal的使用
+
+由于线程间的共享，多个线程可以操作通一个成员变量，那么我们是否可以让每个线程单独操作自己的变量呢？
+
+`ThreadLocal` 就提供了线程的局部变量，每个线程都可以通过 `set()` 和 `get()` 来操作这个局部变量，不会和其他线程的局部变量产生冲突，实现了线程的数据隔离。
+
+我们来看下不使用 `ThreadLocal` 的一个案例，如下：
+
+```java
+class UseThreadLocal {
+
+    static Integer count = new Integer(1);
+
+    // 启动 3 个线程
+    public void StartThread() {
+        Thread[] threads = new Thread[3];
+        for (int i = 0; i < threads.length; i++) {
+            threads[i] = new Thread(new RunnableThread(i));
+        }
+        for (int i = 0; i < threads.length; i++) {
+            threads[i].start();
+        }
+    }
+
+    // 希望每个线程单独操作自己 count 变量
+    public static class RunnableThread implements Runnable {
+        int id;
+
+        public RunnableThread(int id) {
+            this.id = id;
+        }
+
+        @Override
+        public void run() {
+            System.out.println(Thread.currentThread().getName() + " start");
+            count = count + id;
+            System.out.println(Thread.currentThread().getName() + " count " + count);
+        }
+    }
+
+    public static void main(String[] args) {
+        UseThreadLocal threadLocal = new UseThreadLocal();
+        threadLocal.StartThread();
+    }
+
+}
+```
+
+运行结果，如下：
+
+```bash
+Thread-0 start
+Thread-0 count 1
+Thread-2 start
+Thread-1 start
+Thread-1 count 4
+Thread-2 count 3
+
+BUILD SUCCESSFUL in 169ms
+```
+
+并不是我们设想的那样，这是因为，count 变量是3个线程所共享的数据导致，我们再来使用 `ThreadLocal`，如下：
+
+```java
+class UseThreadLocal {
+    // 使用 ThreadLocal
+    static ThreadLocal<Integer> count = new ThreadLocal<Integer>(){
+        @Override
+        protected Integer initialValue() {
+            return 0;
+        }
+    };
+
+    // 启动 3 个线程
+    public void StartThread() {
+        Thread[] threads = new Thread[3];
+        for (int i = 0; i < threads.length; i++) {
+            threads[i] = new Thread(new RunnableThread(i));
+        }
+        for (int i = 0; i < threads.length; i++) {
+            threads[i].start();
+        }
+    }
+
+    // 希望每个线程单独操作自己 count 变量
+    public static class RunnableThread implements Runnable {
+        int id;
+
+        public RunnableThread(int id) {
+            this.id = id;
+        }
+
+        @Override
+        public void run() {
+            System.out.println(Thread.currentThread().getName() + " start");
+            Integer integer = count.get(); // 获取 ThreadLocal 里的值
+            integer = integer + id;
+            count.set(integer); // 如果下次还有使用，需要 set 值
+            System.out.println(Thread.currentThread().getName() + " count " + integer);
+        }
+    }
+
+    public static void main(String[] args) {
+        UseThreadLocal threadLocal = new UseThreadLocal();
+        threadLocal.StartThread();
+    }
+
+}
+```
+
+运行结果，如下：
+
+```bash
+Thread-0 start
+Thread-2 start
+Thread-1 start
+Thread-0 count 0
+Thread-2 count 2
+Thread-1 count 1
+
+BUILD SUCCESSFUL in 530ms
+```
+
+这样就保证了每个线程操作自己的局部变量，实现了线程的数据隔离。
+
+### 等待和通知(wait、notify)
+
+等待和通知就是属于线程间的协作，一般有等待方获取锁之后进行条件检查，条件满足，则执行逻辑代码，否则不执行；而通知方获取锁之后进行修改条件，之后通知等待方，实例代码，如下：
+
+```java
+public class WaitNotify {
+
+    public final static String CITY = "beijing";
+    private int km;
+    private String site;
+
+    public WaitNotify(int km, String site) {
+        this.km = km;
+        this.site = site;
+    }
+
+    // 改变公里数，并通知
+    public synchronized void changeKm() {
+        this.km = 66;
+        notifyAll();
+    }
+
+    // 改变公站点，并通知
+    public synchronized void changeSite() {
+        this.site = "guangzhou";
+        notifyAll();
+    }
+
+    // 如果公里数小于 66，就等待
+    public synchronized void waitKm() throws InterruptedException {
+        while (this.km < 66) {
+            wait();
+            System.out.println("check km thread: " + Thread.currentThread().getName());
+        }
+        System.out.println("km is " + this.km);
+    }
+
+    // 如果站点是beijing，就等待
+    public synchronized void waitSite() throws InterruptedException {
+        while (CITY.equals(this.site)) {
+            wait();
+            System.out.println("check site thread: " + Thread.currentThread().getName());
+        }
+        System.out.println("site is " + this.site);
+    }
+}
+```
+
+再新建一个测试类，如下：
+
+```java
+class Client {
+
+    private static WaitNotify waitNotify = new WaitNotify(0, WaitNotify.CITY);
+
+    private static class CheckKm extends Thread {
+
+        @Override
+        public void run() {
+            try {
+                waitNotify.waitKm();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static class CheckSite extends Thread {
+        @Override
+        public void run() {
+            try {
+                waitNotify.waitSite();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        for (int i = 0; i < 2; i++) {
+            new CheckKm().start();
+        }
+        for (int i = 0; i < 2; i++) {
+            new CheckSite().start();
+        }
+
+        Thread.sleep(1000);
+        waitNotify.changeKm();
+    }
+}
+```
+
+运行结果如下：
+
+```bash
+check site thread: Thread-3
+check site thread: Thread-2
+check km thread: Thread-1
+km is 66
+check km thread: Thread-0
+km is 66
+```
+
+可知 `notifyAll()` 方法会唤醒所有的线程，而 `notify()` 只会唤醒一个线程，且这个线程不一定是我们想唤醒的线程，所有，我们在使用时最好使用 `notifyAll()` 方法。
+
+如上代码 `changeKm()`、`waitKm()`、`changeSite()`、`waitSite()` 方法都是对象锁，且锁的是同一个对象，如果有多个线程执行方法，那么他们之间不是有冲突吗？他们之间不会有冲突，因为，调用 `wait()` 方法之后，会释放锁，其他方法就可以获取锁。
+
+## 显示锁(Lock)
+
+`synchronized` 也被称作内置锁，因为 `synchronized` 的使用有些局限性，如：无法中断、无法实现尝试获取锁等，所以，Java 给我们提供了 **Lock** 也称为显示锁。
+
+`Lock` 是一个接口，需要我们手动获取或释放锁，`Lock` 拥有 `synchronized` 所没有的功能，可以被中断 `lockInterruptibly()`，可以尝试获取锁 `tryLock()`等。
+
+`Lock` 既然是一个接口，必然有实现，`Lock` 的使用有6个，如图：
+
+<div style="width: 100%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/thread-concurrent/lock.png "")
+
+</div>
+
+常用的有 `ReadLock`、`WriteLock`、`ReentrantLock` 读写锁和可重入锁。
+
+一般我们会这样使用它，如下：
+
+```java
+class LockDemo {
+
+    private int count = 0;
+    private Lock lock = new ReentrantLock();
+
+    public void add() {
+        lock.lock();
+        try {
+            count ++;
+        } finally {
+            lock.unlock(); // 在 finally 里释放锁，确保一定可以执行
+        }
+    }
+}
+```
+
+### 可重入锁(ReentrantLock)
+
+可重入锁就是可以重复获取锁，`synchronized` 本身就实现了可重入的功能，所以它也是可重入锁，可重入锁可以防止我们在递归调用时避免自己把自己锁死，如：
+
+```java
+public synchronized void add() {
+    count ++;
+    add();
+}
+```
+
+### 公平锁和非公平锁
+
+公平锁就是在多个线程申请获取锁时，先申请的一定先拿到，非公平锁就是当多个线程去申请获取锁时，后申请的反而先获取到锁。`synchronized` 在内部实现上是一个非公平锁，`ReentrantLock` 在默认也是非公平锁，一般非公平锁要比公平锁性能好，因为公平锁需要频繁的挂起和唤醒线程，存在大量的上下文切换。
