@@ -11,13 +11,21 @@ top: 119
 photos:
 ---
 
-{% li https://cdn.lishaoy.net/annotations-reflect/annotations-reflect-proxy2.png, annotations reflect proxy, annotations reflect proxy %}
+{% li https://cdn.lishaoy.net/thread-concurrent/concurrent1.png, concurrent,concurrent %}
 
 对于 **Android** 开发人员来说，并发编程知识的使用并不是那么频繁(相对于 **Java** 开发者而言)，但是，我们想写一些框架或者阅读开源框架源码都需要掌握并发编程的相关知识，而且，并发编程相关知识也是面试高频问题之一，所以，我们也要全面的掌握并发编程知识，本篇文章将从浅入深概述并发编程知识。
 
 <hr />
 
 <!-- more -->
+
+本篇文章的示例代码放在 [Github](https://github.com/persilee/android_practice) 上，所有知识点，如图：
+
+<div style="width: 100%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/thread-concurrent/concurrent.xmind.png "")
+
+</div>
 
 ## 基础概念
 
@@ -29,7 +37,7 @@ photos:
 
 **多线程:** 是逻辑上的，简单的说就是模拟出的 CPU 核心数；
 
-**核心数、线程数:** 目前主流 CUP 有双核、三核和四核，增加核心数目就是为了增加线程数,因为操作系统是通过线程来执行任务的，一般情况下它们是1:1对应关系，也就是说四核CPU一般拥有四个线程。但 Intel 引入超线程技术后,使核心数与线程数形成1:2的关系。
+**核心数和线程数的关系:** 目前主流 CUP 有双核、三核和四核，增加核心数目就是为了增加线程数,因为操作系统是通过线程来执行任务的，一般情况下它们是1:1对应关系，也就是说四核CPU一般拥有四个线程。但 Intel 引入超线程技术后,使核心数与线程数形成1:2的关系。
 
 ### CPU时间片轮转机制
 
@@ -543,131 +551,6 @@ BUILD SUCCESSFUL in 4s
 
 由运行结果可知，对象锁和对象锁之前是互不影响的，对象锁和类锁之前也是互不影响的。
 
-### ThreadLocal的使用
-
-由于线程间的共享，多个线程可以操作通一个成员变量，那么我们是否可以让每个线程单独操作自己的变量呢？
-
-`ThreadLocal` 就提供了线程的局部变量，每个线程都可以通过 `set()` 和 `get()` 来操作这个局部变量，不会和其他线程的局部变量产生冲突，实现了线程的数据隔离。
-
-我们来看下不使用 `ThreadLocal` 的一个案例，如下：
-
-```java
-class UseThreadLocal {
-
-    static Integer count = new Integer(1);
-
-    // 启动 3 个线程
-    public void StartThread() {
-        Thread[] threads = new Thread[3];
-        for (int i = 0; i < threads.length; i++) {
-            threads[i] = new Thread(new RunnableThread(i));
-        }
-        for (int i = 0; i < threads.length; i++) {
-            threads[i].start();
-        }
-    }
-
-    // 希望每个线程单独操作自己 count 变量
-    public static class RunnableThread implements Runnable {
-        int id;
-
-        public RunnableThread(int id) {
-            this.id = id;
-        }
-
-        @Override
-        public void run() {
-            System.out.println(Thread.currentThread().getName() + " start");
-            count = count + id;
-            System.out.println(Thread.currentThread().getName() + " count " + count);
-        }
-    }
-
-    public static void main(String[] args) {
-        UseThreadLocal threadLocal = new UseThreadLocal();
-        threadLocal.StartThread();
-    }
-
-}
-```
-
-运行结果，如下：
-
-```bash
-Thread-0 start
-Thread-0 count 1
-Thread-2 start
-Thread-1 start
-Thread-1 count 4
-Thread-2 count 3
-
-BUILD SUCCESSFUL in 169ms
-```
-
-并不是我们设想的那样，这是因为，count 变量是3个线程所共享的数据导致，我们再来使用 `ThreadLocal`，如下：
-
-```java
-class UseThreadLocal {
-    // 使用 ThreadLocal
-    static ThreadLocal<Integer> count = new ThreadLocal<Integer>(){
-        @Override
-        protected Integer initialValue() {
-            return 0;
-        }
-    };
-
-    // 启动 3 个线程
-    public void StartThread() {
-        Thread[] threads = new Thread[3];
-        for (int i = 0; i < threads.length; i++) {
-            threads[i] = new Thread(new RunnableThread(i));
-        }
-        for (int i = 0; i < threads.length; i++) {
-            threads[i].start();
-        }
-    }
-
-    // 希望每个线程单独操作自己 count 变量
-    public static class RunnableThread implements Runnable {
-        int id;
-
-        public RunnableThread(int id) {
-            this.id = id;
-        }
-
-        @Override
-        public void run() {
-            System.out.println(Thread.currentThread().getName() + " start");
-            Integer integer = count.get(); // 获取 ThreadLocal 里的值
-            integer = integer + id;
-            count.set(integer); // 如果下次还有使用，需要 set 值
-            System.out.println(Thread.currentThread().getName() + " count " + integer);
-        }
-    }
-
-    public static void main(String[] args) {
-        UseThreadLocal threadLocal = new UseThreadLocal();
-        threadLocal.StartThread();
-    }
-
-}
-```
-
-运行结果，如下：
-
-```bash
-Thread-0 start
-Thread-2 start
-Thread-1 start
-Thread-0 count 0
-Thread-2 count 2
-Thread-1 count 1
-
-BUILD SUCCESSFUL in 530ms
-```
-
-这样就保证了每个线程操作自己的局部变量，实现了线程的数据隔离。
-
 ### 等待和通知(wait、notify)
 
 等待和通知就是属于线程间的协作，一般有等待方获取锁之后进行条件检查，条件满足，则执行逻辑代码，否则不执行；而通知方获取锁之后进行修改条件，之后通知等待方，实例代码，如下：
@@ -824,3 +707,457 @@ public synchronized void add() {
 ### 公平锁和非公平锁
 
 公平锁就是在多个线程申请获取锁时，先申请的一定先拿到，非公平锁就是当多个线程去申请获取锁时，后申请的反而先获取到锁。`synchronized` 在内部实现上是一个非公平锁，`ReentrantLock` 在默认也是非公平锁，一般非公平锁要比公平锁性能好，因为公平锁需要频繁的挂起和唤醒线程，存在大量的上下文切换。
+
+## ThreadLocal的原理
+
+### ThreadLocal和synchronized区别
+
+`ThreadLocal` 和 `synchronized` 都用于解决多线程并发访问，它们的区别在于 `synchronized` 是利用锁机制，使变量在某一时刻仅被一个线程访问，而 `ThreadLocal` 是为每个线程都提供了变量的副本，使每个线程在某一时刻访问到的并非同一对象，隔离了多个线程对数据的共享。
+
+### ThreadLocal的使用
+
+`ThreadLocal` 就提供了线程的局部变量，每个线程都可以通过 `set()` 和 `get()` 来操作这个局部变量，不会和其他线程的局部变量产生冲突，实现了线程的数据隔离。
+
+我们来看下不使用 `ThreadLocal` 的一个案例，如下：
+
+```java
+class UseThreadLocal {
+
+    static Integer count = new Integer(1);
+
+    // 启动 3 个线程
+    public void StartThread() {
+        Thread[] threads = new Thread[3];
+        for (int i = 0; i < threads.length; i++) {
+            threads[i] = new Thread(new RunnableThread(i));
+        }
+        for (int i = 0; i < threads.length; i++) {
+            threads[i].start();
+        }
+    }
+
+    // 希望每个线程单独操作自己 count 变量
+    public static class RunnableThread implements Runnable {
+        int id;
+
+        public RunnableThread(int id) {
+            this.id = id;
+        }
+
+        @Override
+        public void run() {
+            System.out.println(Thread.currentThread().getName() + " start");
+            count = count + id;
+            System.out.println(Thread.currentThread().getName() + " count " + count);
+        }
+    }
+
+    public static void main(String[] args) {
+        UseThreadLocal threadLocal = new UseThreadLocal();
+        threadLocal.StartThread();
+    }
+
+}
+```
+
+运行结果，如下：
+
+```bash
+Thread-0 start
+Thread-0 count 1
+Thread-2 start
+Thread-1 start
+Thread-1 count 4
+Thread-2 count 3
+
+BUILD SUCCESSFUL in 169ms
+```
+
+并不是我们设想的那样，这是因为，count 变量是3个线程所共享的数据导致，我们再来使用 `ThreadLocal`，如下：
+
+```java
+class UseThreadLocal {
+    // 使用 ThreadLocal
+    static ThreadLocal<Integer> count = new ThreadLocal<Integer>(){
+        @Override
+        protected Integer initialValue() {
+            return 0;
+        }
+    };
+
+    // 启动 3 个线程
+    public void StartThread() {
+        Thread[] threads = new Thread[3];
+        for (int i = 0; i < threads.length; i++) {
+            threads[i] = new Thread(new RunnableThread(i));
+        }
+        for (int i = 0; i < threads.length; i++) {
+            threads[i].start();
+        }
+    }
+
+    // 希望每个线程单独操作自己 count 变量
+    public static class RunnableThread implements Runnable {
+        int id;
+
+        public RunnableThread(int id) {
+            this.id = id;
+        }
+
+        @Override
+        public void run() {
+            System.out.println(Thread.currentThread().getName() + " start");
+            Integer integer = count.get(); // 获取 ThreadLocal 里的值
+            integer = integer + id;
+            count.set(integer); // 如果下次还有使用，需要 set 值
+            System.out.println(Thread.currentThread().getName() + " count " + integer);
+        }
+    }
+
+    public static void main(String[] args) {
+        UseThreadLocal threadLocal = new UseThreadLocal();
+        threadLocal.StartThread();
+    }
+
+}
+```
+
+运行结果，如下：
+
+```bash
+Thread-0 start
+Thread-2 start
+Thread-1 start
+Thread-0 count 0
+Thread-2 count 2
+Thread-1 count 1
+
+BUILD SUCCESSFUL in 530ms
+```
+
+这样就保证了每个线程操作自己的变量的副本，实现了线程的数据隔离。
+
+### ThreadLocal原理解析
+
+我们先可以进入 `ThreadLocal` 的 `set()` 方法查看源码，如下
+
+```java
+public void set(T var1) {
+    Thread var2 = Thread.currentThread(); // 获取当前线程
+    ThreadLocal.ThreadLocalMap var3 = this.getMap(var2); // 调用了 getMap() 方法，返回的是 ThreadLocal.ThreadLocalMap
+    if (var3 != null) {
+        var3.set(this, var1);
+    } else {
+        this.createMap(var2, var1);
+    }
+
+}
+```
+
+我们再进入 `ThreadLocal.ThreadLocalMap` 里，如下：
+
+```java
+static class ThreadLocalMap {
+  private static final int INITIAL_CAPACITY = 16;
+  private ThreadLocal.ThreadLocalMap.Entry[] table;  // 持有 Entry[] 数组
+  private int size;
+  private int threshold;
+
+  ...
+}
+```
+
+我们再来看看这个数组的定义，如下：
+
+```java
+static class Entry extends WeakReference<ThreadLocal<?>> {
+    Object value;
+    // Entry 又持有 ThreadLocal 和 Object 成员变量
+    Entry(ThreadLocal<?> var1, Object var2) {
+        super(var1);
+        this.value = var2;
+    }
+}
+```
+
+也就是当我们去 `new ThreadLocal` 它就在当前线程里创建了一个 `ThreadLocalMap`且这个 Map 里持有多个 `Entry[]` 型的数组，而每个 `Entry` 持有成员 `ThreadLocal` 和 `Object`，结构如图：
+
+<div style="width: 66%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/thread-concurrent/threadlocal1.png "threadlocal")
+
+</div>
+
+那么，为什么用数组保存 `Entry` 呢，因为可能有多个变量需要线程隔离。
+
+其实，上面我们使用 `ThreadLocal` 时，用其实例 `count.get()` 就是获取到每个线程独有的 `ThreadLocalMap`，然后通过其实例获取到对应的 `Entry`，就可以获取返回值。
+
+## CAS(Compare And Swap)
+
+### 什么是原子操作
+
+在编程中，atomic(原子) 动作是一次性完全发生的动作，原子动作不能在中间停止：它要么完全发生，要么根本不发生。
+
+假设有两个操作 A 和 B (A 和 B 可能都很复杂)，如果从执行 A 的线程来看，当另一个线程执行 B 时，要么将 B 全部执行完成，要么全部执行不完成，那么 A 和 B 对彼此来说是原子的。
+
+### 如何实现原子操作
+
+实现原子操作可以使用锁，锁机制可以满足基本需求，比如：`synchronized` 所包围的代码就是一个原子操作，Java 也我我们提供了很多原子变量类，如：`Atomic` 开头的一些类
+
+<div style="width: 66%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/thread-concurrent/atomic.png "atomic")
+
+</div>
+
+在现代 CUP 里基本都提供了一个 Compare And Swap (CAS)的指令，每个 CAS 操作都包含3个运算符：内存地址、期望值、新值，操作时如果这个地址存放的值等于期望值，则将地址的上的值赋为新增，否则不做任何操作，重新获取值，再来一次，直到成功，如图：
+
+<div style="width: 56%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/thread-concurrent/cas.png "CAS")
+
+</div>
+
+### CAS原子操作的三大问题
+
+#### ABA问题
+
+因为CAS需要在操作值的时候，检查值有没有发生变化，如果没有发生变化则更新，但是如果一个值原来是 A，变成了 B，又变成了 A，那么使用 CAS 进行检查时会发现它的值没有发生变化，但是实际上却变化了。
+
+ABA 问题的解决思路就是使用版本号。在变量前面追加上版本号，每次变量更新的时候把版本号加1，那么A→B→A 就会变成 1A→2B→3A。举个通俗点的例子，你倒了一杯水放桌子上，干了点别的事，然后同事把你水喝了又给你重新倒了一杯水，你回来看水还在，拿起来就喝，如果你不管水中间被人喝过，只关心水还在，这就是ABA问题。
+
+#### 开销问题
+
+因为，Java 实现 CAS 操作是使用自旋机制，如果 Compare 长时间不相等，会重复执行，给 CPU 带来非常大的开销。
+
+#### 只能保证一个共享变量的原子操作
+
+因为，CAS 是对地址上的值进行操作，因此它只能操作一个变量，如果我们需要同时操作多个变量 CAS 就无法保证操作的原子性。
+
+### 原子操作类的使用
+
+`AtomicInteger` 的使用，如下:
+
+```java
+class AtomicInt {
+
+    static AtomicInteger atomicInteger = new AtomicInteger(6);
+
+    public static void main(String[] args) {
+        atomicInteger.getAndDecrement(); // 自增1，返回之前的值
+        System.out.println(atomicInteger);
+        atomicInteger.incrementAndGet(); // 自增1，返回新增
+        System.out.println(atomicInteger);
+        System.out.println(atomicInteger.addAndGet(6));
+        System.out.println(atomicInteger.getAndAdd(6));
+    }
+
+}
+```
+
+`AtomicReference` 的使用，如下：
+
+```java
+class UseAtomicReference {
+
+    static AtomicReference<UserInfo> reference; // 原子更新引用类型
+
+    public static void main(String[] args) {
+        UserInfo user = new UserInfo("lsy", 66);
+        reference = new AtomicReference(user);
+        UserInfo updateUser = new UserInfo("per",36);
+        reference.compareAndSet(user,updateUser);
+
+        System.out.println(reference.get());
+        System.out.println(user);
+    }
+
+    //定义一个实体类
+    static class UserInfo {
+        private volatile String name;
+        private int age;
+        public UserInfo(String name, int age) {
+            this.name = name;
+            this.age = age;
+        }
+        public String getName() {
+            return name;
+        }
+        public int getAge() {
+            return age;
+        }
+
+        @Override
+        public String toString() {
+            return "UserInfo{" +
+                    "name='" + name + '\'' +
+                    ", age=" + age +
+                    '}';
+        }
+    }
+
+}
+```
+
+运行结果，如下：
+
+```java
+UserInfo{name='per', age=36}
+UserInfo{name='lsy', age=66}
+
+BUILD SUCCESSFUL in 552ms
+```
+
+Jdk中相关原子操作类有如下：
+
+更新基本类型类：AtomicBoolean，AtomicInteger，AtomicLong
+更新数组类：AtomicIntegerArray，AtomicLongArray，AtomicReferenceArray
+更新引用类型：AtomicReference，AtomicMarkableReference，AtomicStampedReference
+
+大部分用法都是类似的，在此，就不一一演示，感兴趣的小伙伴可以自行尝试。
+
+## 阻塞队列
+
+### 队列
+
+队列(queue)是一种采用先进先出(FIFO)策略的抽象数据结构，即最先进队列的数据元素，同样要最先出队列。
+
+在队列中插入一个队列元素称为入队，从队列中删除一个队列元素称为出队，因为队列只允许在一端插入，在另一端删除，所以只有最早进入队列的元素才能最先从队列中删除，故队列又称为先进先出(FIFO—first in first out)线性表。
+
+### 什么是阻塞队列
+
+- 支持阻塞的插入方法：当队列满时，队列会阻塞插入元素的线程，直到队列空余。
+- 支持阻塞的移除方法：当队列为空时，获取元素的线程会等待队列为非空。
+
+在并发编程中使用生产者和消费者模式可以解决大多数并发问题，该模式通过平衡生产线程和消费线程的工作能力来提高程序处理数据的速度。
+
+在线程世界里，生产者就是生产数据的线程，消费者就是消费数据的线程。在多线程开发中，如果生产者处理速度很快，而消费者处理速度很慢，那么生产者就必须等待消费者处理完，才能继续生产数据。同样的道理，如果消费者的处理能力大于生产者，那么消费者就必须等待生产者。
+
+为了解决这种生产消费能力不均衡的问题，便有了生产者和消费者模式。生产者和消费者模式是通过一个容器来解决生产者和消费者的强耦合问题。生产者和消费者彼此之间不直接通信，而是通过阻塞队列来进行通信，所以生产者生产完数据之后不用等待消费者处理，直接扔给阻塞队列，消费者不找生产者要数据，而是直接从阻塞队列里取，阻塞队列就相当于一个缓冲区，平衡了生产者和消费者的处理能力。
+
+在 Java 中阻塞队列有一个专门的接口 `BlockingQueue`，如图
+
+<div style="width: 66%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/thread-concurrent/BlockingQueue.png "BlockingQueue")
+
+</div>
+
+它定义了一些方法，但是这些方法不是所有的都是阻塞的，如：`add()`、`remove()` 方法都是非阻塞的，`put()`、`take()` 方法是阻塞的。
+
+### 常用的阻塞队列
+
+以下的阻塞队列都实现了 `BlockingQueue` 接口，也都是线程安全的，如：
+
+- ArrayBlockingQueue：一个由数组结构组成的有界阻塞队列。
+- LinkedBlockingQueue：一个由链表结构组成的有界阻塞队列。
+- PriorityBlockingQueue：一个支持优先级排序的无界阻塞队列。
+- DelayQueue：一个使用优先级队列实现的无界阻塞队列。
+- SynchronousQueue：一个不存储元素的阻塞队列。
+- LinkedTransferQueue：一个由链表结构组成的无界阻塞队列。
+- LinkedBlockingDeque：一个由链表结构组成的双向阻塞队列。
+
+### 有界无界阻塞队列
+
+有界队列就是长度有限，满了以后生产者会阻塞，无界队列就是里面能放无数的东西而不会因为队列长度限制被阻塞，当然空间限制来源于系统资源的限制，如果处理不及时，导致队列越来越大。所以，在我们实际开发中尽量使用有界阻塞队列。
+
+无界也会阻塞，因为阻塞不仅仅体现在生产者放入元素时会阻塞，消费者拿取元素时，如果没有元素，同样也会阻塞。
+
+## AQS(AbstractQueuedSynchronizer)
+
+队列同步器 AbstractQueuedSynchronizer(简称同步器或AQS)，是用来构建锁或者其他同步组件的基础框架，它使用了一个 `int` 成员变量表示同步状态，通过内置的 FIFO 队列来完成资源获取线程的排队工作。
+
+### AQS使用方式
+
+AQS 的主要使用方式是继承，子类通过继承 AQS 并实现它的抽象方法来管理同步状态，在 AQS 里由一个`int` 型的 `state` 来代表这个状态，在抽象方法的实现过程中对同步状态进行更改，这时就需要使用同步器提供的3个方法 `getState()`、`setState(int newState)` 和 `compareAndSetState(int expect,int update)` 来进行操作，因为它们能够保证状态的改变是安全的。
+
+AQS 是实现锁的关键，锁是面向使用者，它定义了使用者与锁交互的接口，隐藏了实现细节；AQS 面向的是锁的实现者，它简化了锁的实现方式，屏蔽了同步状态管理、线程的排队、等待、唤醒等底层操作。
+
+实现者需要继承 AQS 并重写指定方法，然后将 AQS 组合在自定义同步组件的实现中，并调用 AQS 提供的模板方法，而这些模板方法将会调用使用者重写的方法。
+
+### 模板方法设计模式
+
+AQS 的设计师基于模板方法设计模式，模板方法设计模式是定义一个操作的算法的架子，而将一些步骤的实现延迟到子类中。模板方法使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤。
+
+例如，我们想要做蛋糕，我们需要一个模型，每个人想做什么蛋糕，由他自己实现，代码，如下：
+
+```java
+// 蛋糕的模型，定义好了做蛋糕的步骤方法
+public abstract class AbstractCake {
+
+    protected abstract void mould(); // 制作形状
+    protected abstract void butter(); // 涂抹奶油
+    protected abstract void toast(); // 烤面包
+
+    public final void making() {
+        this.mould();
+        this.butter();
+        this.toast();
+    }
+}
+```
+
+子类去继承它，重写这些方法，如下：
+
+```java
+public class CheeseCake extends AbstractCake {
+
+    @Override
+    protected void mould() {
+        System.out.println("芝士蛋糕制作形状 ...");
+    }
+
+    @Override
+    protected void butter() {
+        System.out.println("芝士蛋糕涂抹奶油 ...");
+    }
+
+    @Override
+    protected void toast() {
+        System.out.println("芝士蛋糕烤面包 ...");
+    }
+}
+```
+
+### CLH队列锁
+
+CLH 队列锁也是一种基于链表的可扩展、高性能、公平的自旋锁，线程仅仅在本地变量上自旋，不断轮询前驱的状态，发现前驱释放了锁就结束自旋。
+
+当一个线程需要获取锁时：
+
+- 创建一个 QNode，将其中的 locked 设为 true 表示获取锁，如图：
+
+<div style="width: 30%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/thread-concurrent/qnode.png "")
+
+</div>
+
+myPred 表示前驱节点的引用。
+
+- 线程 A 对 tail 域调用 `getAndSet` 方法，使自己成为队列的尾部，同时获取一个指向前驱节点的引用 myPred，如图：
+
+<div style="width: 46%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/thread-concurrent/qnode1.png "")
+
+</div>
+
+线程 B 需要获得锁，于是，也需要按照相同的流程，如图：
+
+<div style="width: 56%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/thread-concurrent/qnode2.png "")
+
+</div>
+
+- 线程就在前驱的节点的 locked 字段上自旋，直到前驱节点释放锁
+- 当一个线程需要释放锁时，会将当前节点的 locked 域设置为 false，同时回收前驱节点，如图
+
+<div style="width: 56%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/thread-concurrent/qnode3.png "")
+
+</div>
+
+前驱节点释放锁后，线程 A 的 myPred 所指向的前驱节点的 locked 字段变为 false，线程 A 就可以获取锁。AQS 就是 CLH 队列锁的一种变体实现。
