@@ -14,7 +14,7 @@ photos:
 {% li https://cdn.lishaoy.net/thread-concurrent/concurrent1.png, concurrent,concurrent %}
 
 <section id="nice" data-tool="mdnice编辑器" data-website="https://www.mdnice.com" style="font-size: 16px; color: black; padding: 0 10px; line-height: 1.6; word-spacing: 0px; letter-spacing: 0px; word-break: break-word; word-wrap: break-word; text-align: left; font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, 'PingFang SC', Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;"><p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; margin: 0; color: black; box-sizing: border-box; margin-bottom: 16px; font-family: 'Helvetica Neue', Helvetica, 'Segoe UI', Arial, freesans, sans-serif; font-size: 15px; text-align: start; white-space: normal; text-size-adjust: auto; line-height: 1.75em;">对于 <strong style="font-weight: bold; color: black;">Android</strong> 开发人员来说，并发编程知识的使用并不是那么频繁(相对于 <strong style="font-weight: bold; color: black;">Java</strong> 开发者而言)，但是，我们想写一些框架或者阅读开源框架源码都需要掌握并发编程的相关知识，而且，并发编程相关知识也是面试高频问题之一，所以，我们也要全面的掌握并发编程知识，本篇文章将从浅入深概述并发编程知识。</p>
-<hr data-tool="mdnice编辑器" style="height: 1px; margin: 0; margin-top: 10px; margin-bottom: 10px; border: none; border-top: 1px solid black;"></section>
+<hr data-tool="mdnice编辑器" style="height: 1px; margin: 0; margin-top: 10px; margin-bottom: 10px; border: none; border-top: 1px solid black;background: white;"></section>
 
 <!-- more -->
 
