@@ -6,938 +6,146 @@ tags:
   - Serbalizable
 copyright: true
 comments: true
-date: 2020-08-02 02:16:13
+date: 2020-08-04 02:16:13
 categories: Java
 top: 120
 photos:
 ---
 
-{% li https://cdn.lishaoy.net/thread-concurrent/concurrent1.png, concurrent,concurrent %}
+{% li https://cdn.lishaoy.net/serializable/serializable.png, Serializable,Serializable %}
 
-我们在日常工作中，网络数据传输最主流的的格式就是 `json`，我们常使用 **Gson** 开源框架来处理它，那么它们是如何工作的呢？本篇文章将解读 **Android** 中的序列化与 `json` 解析，如：Java 语言提供的 `Serializable`、Android 提供的 `Parceable`。
-
-<hr />
+<section id="nice" data-tool="mdnice编辑器" data-website="https://www.mdnice.com" style="font-size: 16px; padding: 0 10px; word-spacing: 0px; word-break: break-word; word-wrap: break-word; text-align: left; line-height: 1.75; color: #595959; font-family: Optima-Regular, Optima, PingFangTC-Light, PingFangSC-light, PingFangTC-light; letter-spacing: 2px; background-image: linear-gradient(90deg, rgba(50, 0, 0, 0.05) 3%, rgba(0, 0, 0, 0) 3%), linear-gradient(360deg, rgba(50, 0, 0, 0.05) 3%, rgba(0, 0, 0, 0) 3%); background-size: 20px 20px; background-position: center center;"><p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">我们在日常工作中，网络数据传输最主流的的格式就是 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">json</code>，我们常使用 <strong style="color: #595959; font-weight: bold;"><span>「</span>Gson<span>」</span></strong> 开源框架来处理它，那么它们是如何工作的呢？本篇文章将解读 <strong style="color: #595959; font-weight: bold;"><span>「</span>Android<span>」</span></strong> 中的序列化与 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">json</code> 解析，如：Java 语言提供的 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Serializable</code>、Android 提供的 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Parceable</code>。</p>
+<hr data-tool="mdnice编辑器" style="margin: 0; margin-top: 10px; margin-bottom: 10px; height: 1px; padding: 0; border: none; border-top: 2px solid #d9b8fa;background: none;"></section>
 
 <!-- more -->
 
-## 序列化的定义及相关概念
-
-在系统的底层，数据传输形式是字节序列形式传输，系统并不认识对象，只认识字节序列，那么我们如何进行进程间的通讯，我们需要先将数据序列化，就是将对象传化为字节序列；反序列化，当底层的字节序列传输到相应的进程时，就需要反序列化，就是字节序列转化为对象。
-
-在进程间通讯、本地数据存储、网络数据传输都离不开序列化，对于不同的场景选择合适的序列化方案对应用的性能有着极大的影响。
-
-### 序列化
-
-数据结构或对象转换成二进制的过程，就是将数据结构或对象转换成可以存储或者传输的数据格式的过程。
-
-### 反序列化
-
-二进制串转换成数据结构或对象的过程，就是序列化生成的二进制串数据被还原成数据结构或对象的过程。
-
-### 序列化和反序列化的目的
-
-- 序列化：主要用于网络传输，数据持久化，一般序列化也称为编码(Encode)
-- 反序列化：主要用于从网络，磁盘上读取字节数组还原成原始对象，一般反序列化也称为解码 (Decode)
-
-## Serializable接口
-
-`Serializable` 是 Java 提供的序列化接口，它非常简单，如下
-
-```java
-public interface Serializable {
-}
-```
-
-`Serializable` 只是一个标记，用来被 `ObjectOutputStream` 序列化，被 `ObjectInputStream` 反序列化。
-
-### Serializable的使用
-
-我们先来新建一个 `Student` 类，代码如下：
-
-```java
-public class Student implements Serializable {
-
-    private static final long serialVersionUID = 7911650650846382143L;
-    private String name;
-    private Integer age;
-    private List<Course> courses;
-
-    // 获取课程
-    public List<Course> getCourses() {
-        return courses;
-    }
-    // 新增课程
-    public void addCourse(Course course) {
-        this.courses.add(course);
-    }
-
-    // 用 transient 关键字标记的成员变量不参与序列化
-    private transient Date createTime;
-    // 静态成员变量属于类而不属于对象，也不参与序列化
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat();
-
-    public Student(String name, Integer age) {
-        this.name = name;
-        this.age = age;
-        courses = new ArrayList<>();
-        createTime = new Date();
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    @Override
-    public String toString() {
-        return "Student{" +
-                "name='" + name + '\'' +
-                ", age=" + age +
-                ", courses=" + courses +
-                ", createTime=" + createTime +
-                '}';
-    }
-}
-```
-
-`Student` 类依赖于 `Course` 类，所以，我们再新建一个 `Course` 类，如下：
-
-```java
-public class Course implements Serializable {
-
-    private static final long serialVersionUID = 7980496416494451794L;
-    private String name;
-    private float score;
-
-    public Course(String name, float score) {
-        this.name = name;
-        this.score = score;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public float getScore() {
-        return score;
-    }
-
-    public void setScore(float score) {
-        this.score = score;
-    }
-
-    @Override
-    public String toString() {
-        return "Course{" +
-                "name='" + name + '\'' +
-                ", score=" + score +
-                '}';
-    }
-}
-```
-
-我们再新建一个序列化的工具类，如下：
-
-```java
-public class SerializableUtil {
-
-    private static String path = System.getProperty("user.dir") + "/serializable/src/main/java/net/lishaoy/serializable/serializable/out/student.out";
-
-    public static synchronized boolean serializable(Object o) {
-        if (o == null) {
-            return false;
-        }
-        ObjectOutputStream outputStream = null;
-        try {
-            outputStream = new ObjectOutputStream(new FileOutputStream(path));
-            outputStream.writeObject(o);
-            outputStream.close();
-            System.out.println("序列化成功！");
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } finally {
-            if (outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public static synchronized <T> T reverseSerializable() {
-        ObjectInputStream inputStream = null;
-
-        try {
-            inputStream = new ObjectInputStream(new FileInputStream(path));
-            Object object = inputStream.readObject();
-            System.out.println("反序列化成功！\n"  + object);
-            return (T) object;
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return null;
-    }
-}
-```
-
-我们使用 `SerializableUtil` 工具类，来序列化和反序列化我们的 `Student`，如下：
-
-```java
-public class UseSerializable {
-
-    public static void main(String[] args) {
-        Student student = new Student("lsy", 66);
-        student.addCourse(new Course("英语",66));
-        // 序列化
-        SerializableUtil.serializable(student);
-        // 反序列化
-        SerializableUtil.reverseSerializable();
-    }
-
-}
-```
-
-运行结果，如下：
-
-```bash
-序列化成功！
-反序列化成功！
-Student{name='lsy', age=66, courses=[Course{name='英语', score=66.0}], createTime=null}
-```
-
-在使用 `Serializable` 时，可以发现以下几个特点：
-
-- 需要现象 `Serializable` 的类，才可以序列化和反序列化
-- 用 `transient` 关键字标记的成员变量不参与序列化
-- 静态成员变量不参与序列化
-- 一个实现序列化的类，它的子类也是可序列化的
-
-### serialVersionUID与兼容性
-
-**serialVersionUID的作用：** 用来表明类的不同版本间的兼容性。Java 序列化机制会通过判断类的 `serialVersionUID` 来验证版本一致性；在反序列化时，JVM 会把传来的字节流中的 `serialVersionUID` 与本地相应实体类的 `serialVersionUID` 进行比较。
-**兼容性问题：** 为了在反序列化时，确保类版本的兼容性，最好在每个要序列化的类中加入 `private static final long serialVersionUID = XXX` 属性。如果不显式定义该属性，这个属 性值将由JVM根据类的相关信息计算，而修改后的类的计算 结果与修改前的类的计算结果往往不 同，从而造成对象的反序列化因为类版本不兼容而失败。
-
-`serialVersionUID` 可以用 Android Studio 自动生成，如图：
-
-<div style="width: 100%; margin:auto">
-
-![no-shadow](https://cdn.lishaoy.net/serializable/UID1.png "UID")
-
+<section id="nice" data-tool="mdnice编辑器" data-website="https://www.mdnice.com" style="font-size: 16px; padding: 0 10px; word-spacing: 0px; word-break: break-word; word-wrap: break-word; text-align: left; line-height: 1.75; color: #595959; font-family: Optima-Regular, Optima, PingFangTC-Light, PingFangSC-light, PingFangTC-light; letter-spacing: 2px; background-image: linear-gradient(90deg, rgba(50, 0, 0, 0.05) 3%, rgba(0, 0, 0, 0) 3%), linear-gradient(360deg, rgba(50, 0, 0, 0.05) 3%, rgba(0, 0, 0, 0) 3%); background-size: 20px 20px; background-position: center center;"><p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">本篇文章的示例代码放在 <a href="https://github.com/persilee/android_practice" style="text-decoration: none; word-wrap: break-word; color: #664D9D; font-weight: normal; border-bottom: 1px solid #664D9D;">Github</a> 上，所有知识点，如图：</p>
+<div style="width: 100%; margin:auto" data-tool="mdnice编辑器">
+<figure style="margin: 0; margin-top: 10px; margin-bottom: 10px; flex-direction: column; justify-content: center; align-items: center; display: block;"><img src="https://cdn.lishaoy.net/serializable/serializable.xmind1.png" alt="no-shadow" style="max-width: 100%; border-radius: 6px; display: block; margin: 20px auto; object-fit: contain;"></figure>
 </div>
-
-使用时按 <kbd>option</kbd> + <kbd>enter</kbd>，如图：
-
-<div style="width: 66%; margin:auto">
-
-![no-shadow](https://cdn.lishaoy.net/serializable/UID.png "UID")
-
+<h2 data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; font-weight: bold; color: black; font-size: 22px; text-align: left; margin: 20px 10px 0px 0px;"><span class="prefix" style="display: none;"></span><span class="content" style="font-size: 18px; font-weight: bold; display: inline-block; padding-left: 10px; border-left: 5px solid #DEC6FB; color: #595959;">序列化的定义及相关概念</span><span class="suffix"></span></h2>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">在系统的底层，数据传输形式是字节序列形式传输，系统并不认识对象，只认识字节序列，那么我们如何进行进程间的通讯，我们需要先将数据序列化，就是将对象传化为字节序列；反序列化，当底层的字节序列传输到相应的进程时，就需要反序列化，就是字节序列转化为对象。</p>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">在进程间通讯、本地数据存储、网络数据传输都离不开序列化，对于不同的场景选择合适的序列化方案对应用的性能有着极大的影响。</p>
+<h3 id="序列化" data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; color: black; font-size: 16px; font-weight: bold; text-align: center;"><span class="prefix" style="display: none;"></span><span class="content" style="border-bottom: 2px solid #DEC6FB; color: #595959;">序列化</span><span class="suffix" style="display: none;"></span></h3>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">数据结构或对象转换成二进制的过程，就是将数据结构或对象转换成可以存储或者传输的数据格式的过程。</p>
+<h3 id="反序列化" data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; color: black; font-size: 16px; font-weight: bold; text-align: center;"><span class="prefix" style="display: none;"></span><span class="content" style="border-bottom: 2px solid #DEC6FB; color: #595959;">反序列化</span><span class="suffix" style="display: none;"></span></h3>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">二进制串转换成数据结构或对象的过程，就是序列化生成的二进制串数据被还原成数据结构或对象的过程。</p>
+<h3 id="序列化和反序列化的目的" data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; color: black; font-size: 16px; font-weight: bold; text-align: center;"><span class="prefix" style="display: none;"></span><span class="content" style="border-bottom: 2px solid #DEC6FB; color: #595959;">序列化和反序列化的目的</span><span class="suffix" style="display: none;"></span></h3>
+<ul data-tool="mdnice编辑器" style="margin-top: 8px; margin-bottom: 8px; padding-left: 25px; font-size: 15px; color: #595959; list-style-type: circle;">
+<li><section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; text-align: left; font-size: 14px; font-weight: normal; color: #595959;">序列化：主要用于网络传输，数据持久化，一般序列化也称为编码(Encode)</section></li><li><section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; text-align: left; font-size: 14px; font-weight: normal; color: #595959;">反序列化：主要用于从网络，磁盘上读取字节数组还原成原始对象，一般反序列化也称为解码 (Decode)</section></li></ul>
+<h2 data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; font-weight: bold; color: black; font-size: 22px; text-align: left; margin: 20px 10px 0px 0px;"><span class="prefix" style="display: none;"></span><span class="content" style="font-size: 18px; font-weight: bold; display: inline-block; padding-left: 10px; border-left: 5px solid #DEC6FB; color: #595959;">Serializable接口</span><span class="suffix"></span></h2>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;"><code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Serializable</code> 是 Java 提供的序列化接口，它非常简单，如下</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-class" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">interface</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">Serializable</span>&nbsp;</span>{<br>}<br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;"><code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Serializable</code> 只是一个标记，用来被 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">ObjectOutputStream</code> 序列化，被 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">ObjectInputStream</code> 反序列化。</p>
+<h3 id="Serializable的使用" data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; color: black; font-size: 16px; font-weight: bold; text-align: center;"><span class="prefix" style="display: none;"></span><span class="content" style="border-bottom: 2px solid #DEC6FB; color: #595959;">Serializable的使用</span><span class="suffix" style="display: none;"></span></h3>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">我们先来新建一个 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Student</code> 类，代码如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-class" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">class</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">Student</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">implements</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">Serializable</span>&nbsp;</span>{<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">static</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">final</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">long</span>&nbsp;serialVersionUID&nbsp;=&nbsp;<span class="hljs-number" style="color: #986801; line-height: 26px;">7911650650846382143L</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;String&nbsp;name;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;Integer&nbsp;age;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;List&lt;Course&gt;&nbsp;courses;<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//&nbsp;获取课程</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;List&lt;Course&gt;&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">getCourses</span><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;courses;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//&nbsp;新增课程</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">addCourse</span><span class="hljs-params" style="line-height: 26px;">(Course&nbsp;course)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.courses.add(course);<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//&nbsp;用&nbsp;transient&nbsp;关键字标记的成员变量不参与序列化</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">transient</span>&nbsp;Date&nbsp;createTime;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//&nbsp;静态成员变量属于类而不属于对象，也不参与序列化</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">static</span>&nbsp;SimpleDateFormat&nbsp;dateFormat&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;SimpleDateFormat();<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">Student</span><span class="hljs-params" style="line-height: 26px;">(String&nbsp;name,&nbsp;Integer&nbsp;age)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.name&nbsp;=&nbsp;name;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.age&nbsp;=&nbsp;age;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;courses&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;ArrayList&lt;&gt;();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;createTime&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;Date();<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;String&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">getName</span><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;name;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">setName</span><span class="hljs-params" style="line-height: 26px;">(String&nbsp;name)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.name&nbsp;=&nbsp;name;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;Integer&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">getAge</span><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;age;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">setAge</span><span class="hljs-params" style="line-height: 26px;">(Integer&nbsp;age)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.age&nbsp;=&nbsp;age;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-meta" style="color: #4078f2; line-height: 26px;">@Override</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;String&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">toString</span><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"Student{"</span>&nbsp;+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"name='"</span>&nbsp;+&nbsp;name&nbsp;+&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'\''</span>&nbsp;+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">",&nbsp;age="</span>&nbsp;+&nbsp;age&nbsp;+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">",&nbsp;courses="</span>&nbsp;+&nbsp;courses&nbsp;+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">",&nbsp;createTime="</span>&nbsp;+&nbsp;createTime&nbsp;+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'}'</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>}<br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;"><code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Student</code> 类依赖于 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Course</code> 类，所以，我们再新建一个 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Course</code> 类，如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-class" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">class</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">Course</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">implements</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">Serializable</span>&nbsp;</span>{<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">static</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">final</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">long</span>&nbsp;serialVersionUID&nbsp;=&nbsp;<span class="hljs-number" style="color: #986801; line-height: 26px;">7980496416494451794L</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;String&nbsp;name;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">float</span>&nbsp;score;<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">Course</span><span class="hljs-params" style="line-height: 26px;">(String&nbsp;name,&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">float</span>&nbsp;score)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.name&nbsp;=&nbsp;name;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.score&nbsp;=&nbsp;score;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;String&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">getName</span><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;name;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">setName</span><span class="hljs-params" style="line-height: 26px;">(String&nbsp;name)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.name&nbsp;=&nbsp;name;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">float</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">getScore</span><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;score;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">setScore</span><span class="hljs-params" style="line-height: 26px;">(<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">float</span>&nbsp;score)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.score&nbsp;=&nbsp;score;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-meta" style="color: #4078f2; line-height: 26px;">@Override</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;String&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">toString</span><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"Course{"</span>&nbsp;+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"name='"</span>&nbsp;+&nbsp;name&nbsp;+&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'\''</span>&nbsp;+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">",&nbsp;score="</span>&nbsp;+&nbsp;score&nbsp;+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'}'</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>}<br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">我们再新建一个序列化的工具类，如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-class" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">class</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">SerializableUtil</span>&nbsp;</span>{<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">static</span>&nbsp;String&nbsp;path&nbsp;=&nbsp;System.getProperty(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"user.dir"</span>)&nbsp;+&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"/serializable/src/main/java/net/lishaoy/serializable/serializable/out/student.out"</span>;<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">static</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">synchronized</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">boolean</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">serializable</span><span class="hljs-params" style="line-height: 26px;">(Object&nbsp;o)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">if</span>&nbsp;(o&nbsp;==&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">null</span>)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">false</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ObjectOutputStream&nbsp;outputStream&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">null</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">try</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outputStream&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;ObjectOutputStream(<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;FileOutputStream(path));<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outputStream.writeObject(o);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outputStream.close();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"序列化成功！"</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">catch</span>&nbsp;(IOException&nbsp;e)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">catch</span>&nbsp;(SecurityException&nbsp;e)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">finally</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">if</span>&nbsp;(outputStream&nbsp;!=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">null</span>)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">try</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outputStream.close();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">catch</span>&nbsp;(IOException&nbsp;e)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">false</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">static</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">synchronized</span>&nbsp;&lt;T&gt;&nbsp;<span class="hljs-function" style="line-height: 26px;">T&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">reverseSerializable</span><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ObjectInputStream&nbsp;inputStream&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">null</span>;<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">try</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inputStream&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;ObjectInputStream(<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;FileInputStream(path));<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Object&nbsp;object&nbsp;=&nbsp;inputStream.readObject();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"反序列化成功！\n"</span>&nbsp;&nbsp;+&nbsp;object);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;(T)&nbsp;object;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">catch</span>&nbsp;(Exception&nbsp;e)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">finally</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">if</span>&nbsp;(inputStream&nbsp;!=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">null</span>)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">try</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inputStream.close();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">catch</span>&nbsp;(IOException&nbsp;e)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">null</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>}<br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">我们使用 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">SerializableUtil</code> 工具类，来序列化和反序列化我们的 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Student</code>，如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-class" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">class</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">UseSerializable</span>&nbsp;</span>{<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">static</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">main</span><span class="hljs-params" style="line-height: 26px;">(String[]&nbsp;args)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Student&nbsp;student&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;Student(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"lsy"</span>,&nbsp;<span class="hljs-number" style="color: #986801; line-height: 26px;">66</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;student.addCourse(<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;Course(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"英语"</span>,<span class="hljs-number" style="color: #986801; line-height: 26px;">66</span>));<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//&nbsp;序列化</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SerializableUtil.serializable(student);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//&nbsp;反序列化</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SerializableUtil.reverseSerializable();<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>}<br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">运行结果，如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;">序列化成功！<br>反序列化成功！<br>Student{name=<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'lsy'</span>,&nbsp;age=66,&nbsp;courses=[Course{name=<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'英语'</span>,&nbsp;score=66.0}],&nbsp;createTime=null}<br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">在使用 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Serializable</code> 时，可以发现以下几个特点：</p>
+<ul data-tool="mdnice编辑器" style="margin-top: 8px; margin-bottom: 8px; padding-left: 25px; font-size: 15px; color: #595959; list-style-type: circle;">
+<li><section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; text-align: left; font-size: 14px; font-weight: normal; color: #595959;">需要现象 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Serializable</code> 的类，才可以序列化和反序列化</section></li><li><section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; text-align: left; font-size: 14px; font-weight: normal; color: #595959;">用 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">transient</code> 关键字标记的成员变量不参与序列化</section></li><li><section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; text-align: left; font-size: 14px; font-weight: normal; color: #595959;">静态成员变量不参与序列化</section></li><li><section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; text-align: left; font-size: 14px; font-weight: normal; color: #595959;">一个实现序列化的类，它的子类也是可序列化的</section></li></ul>
+<h3 id="serialVersionUID与兼容性" data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; color: black; font-size: 16px; font-weight: bold; text-align: center;"><span class="prefix" style="display: none;"></span><span class="content" style="border-bottom: 2px solid #DEC6FB; color: #595959;">serialVersionUID与兼容性</span><span class="suffix" style="display: none;"></span></h3>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;"><strong style="color: #595959; font-weight: bold;"><span>「</span>serialVersionUID的作用：<span>」</span></strong> 用来表明类的不同版本间的兼容性。Java 序列化机制会通过判断类的 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">serialVersionUID</code> 来验证版本一致性；在反序列化时，JVM 会把传来的字节流中的 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">serialVersionUID</code> 与本地相应实体类的 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">serialVersionUID</code> 进行比较。</p>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;"><strong style="color: #595959; font-weight: bold;"><span>「</span>兼容性问题：<span>」</span></strong> 为了在反序列化时，确保类版本的兼容性，最好在每个要序列化的类中加入 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">private static final long serialVersionUID = XXX</code> 属性。如果不显式定义该属性，这个属 性值将由JVM根据类的相关信息计算，而修改后的类的计算 结果与修改前的类的计算结果往往不 同，从而造成对象的反序列化因为类版本不兼容而失败。</p>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;"><code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">serialVersionUID</code> 可以用 Android Studio 自动生成，如图：</p>
+<div style="width: 100%; margin:auto" data-tool="mdnice编辑器">
+<figure style="margin: 0; margin-top: 10px; margin-bottom: 10px; flex-direction: column; justify-content: center; align-items: center; display: block;"><img src="https://cdn.lishaoy.net/serializable/UID1.png" alt="no-shadow" title="UID" style="max-width: 100%; border-radius: 6px; display: block; margin: 20px auto; object-fit: contain;"></figure>
 </div>
-
-### Externalizable接口
-
-JDK 提供了 `Serializable` 接口外还提供了 `Externalizable` 接口，它继承了 `Serializable`，优先级高于 `Serializable`，源码如下：
-
-```java
-public interface Externalizable extends Serializable {
-    void writeExternal(ObjectOutput var1) throws IOException;
-
-    void readExternal(ObjectInput var1) throws IOException, ClassNotFoundException;
-}
-```
-
-### Externalizable接口的使用
-
-我们来看下简单的使用，代码如下：
-
-```java
-public class Course implements Externalizable {
-
-    private static final long serialVersionUID = -342346458732794596L;
-    private String name;
-    private float score;
-
-    public Course(){}
-
-    public Course(String name, float score) {
-        this.name = name;
-        this.score = score;
-        System.out.println("Course: " + "name " + name + " score " + score);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public float getScore() {
-        return score;
-    }
-
-    public void setScore(float score) {
-        this.score = score;
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput objectOutput) throws IOException {
-        System.out.println("writeExternal ...");
-        objectOutput.writeObject(name);
-    }
-
-    @Override
-    public void readExternal(ObjectInput objectInput) throws IOException, ClassNotFoundException {
-        System.out.println("readExternal ...");
-        name = (String) objectInput.readObject();
-    }
-
-    @Override
-    public String toString() {
-        return "Course{" +
-                "name='" + name + '\'' +
-                ", score=" + score +
-                '}';
-    }
-
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
-        Course course = new Course("数学",66);
-        // 序列化
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream);
-        outputStream.writeObject(course);
-        byte[] bytes = byteArrayOutputStream.toByteArray();
-        outputStream.close();
-
-        // 反序列化
-        ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(bytes));
-        System.out.println((Course)inputStream.readObject());
-
-    }
-}
-```
-
-运行结果如下：
-
-```bash
-Course: name 数学 score 66.0
-writeExternal ...
-readExternal ...
-Course{name='数学', score=0.0}
-
-BUILD SUCCESSFUL in 576ms
-```
-
-可以看到，在序列化时会调用 `writeExternal` 方法，反序列化时会调用 `readExternal` 方法，也就是说我们可以灵活的控制想序列化的字段。
-
-`Externalizable` 接口，在反序列化时，需要写默认的空构造函数，否则报错：`InvalidClassException`。
-
-### 使用Serializable的注意点
-
-#### readObject和writeObject
-
-`readObject` 和 `writeObject` 并没有在 `Serializable` 接口里定义，但是通过查看源码，可知，如：`ObjectOutputStream` 点击进入源码，如下：
-
-```java
-
-...
-
-private void writeSerialData(Object var1, ObjectStreamClass var2) throws IOException {
-    ClassDataSlot[] var3 = var2.getClassDataLayout();
-
-    for(int var4 = 0; var4 < var3.length; ++var4) {
-        ObjectStreamClass var5 = var3[var4].desc;
-        // hasWriteObjectMethod 会判断我们是否重写了 writeObject() 方法
-        if (var5.hasWriteObjectMethod()) {
-            ObjectOutputStream.PutFieldImpl var6 = this.curPut;
-            this.curPut = null;
-            SerialCallbackContext var7 = this.curContext;
-            if (extendedDebugInfo) {
-                this.debugInfoStack.push("custom writeObject data (class \"" + var5.getName() + "\")");
-            }
-
-            try {
-                this.curContext = new SerialCallbackContext(var1, var5);
-                this.bout.setBlockDataMode(true);
-                // 通过反射执行 writeObject() 方法
-                var5.invokeWriteObject(var1, this);
-                this.bout.setBlockDataMode(false);
-                this.bout.writeByte(120);
-            } finally {
-                this.curContext.setUsed();
-                this.curContext = var7;
-                if (extendedDebugInfo) {
-                    this.debugInfoStack.pop();
-                }
-
-            }
-
-            this.curPut = var6;
-        } else {
-            this.defaultWriteFields(var1, var5);
-        }
-    }
-}
-
-...
-
-```
-
-所以，我们也可以像 `Externalizable` 接口提供的 `writeExternal`、`readExternal` 方法一样使用 `readObject` 和 `writeObject` 来灵活的序列化和反序列化。例如：
-
-```java
-public class ReadWriteObjectCourse implements Serializable {
-
-    private static final long serialVersionUID = -6828110073372979297L;
-    private String name;
-    private float score;
-
-    public ReadWriteObjectCourse(){}
-
-    public ReadWriteObjectCourse(String name, float score) {
-        this.name = name;
-        this.score = score;
-        System.out.println("Course: " + "name " + name + " score " + score);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public float getScore() {
-        return score;
-    }
-
-    public void setScore(float score) {
-        this.score = score;
-    }
-    // 重写 writeObject() 方法，只序列化 name 字段
-    private void writeObject(ObjectOutputStream outputStream) throws IOException {
-        System.out.println("writeObject ...");
-        outputStream.writeObject(name);
-    }
-    // 重写 readObject() 方法，只反序列化 name 字段
-    private void readObject(ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
-        System.out.println("readObject ...");
-        name = (String) inputStream.readObject();
-    }
-
-    @Override
-    public String toString() {
-        return "Course{" +
-                "name='" + name + '\'' +
-                ", score=" + score +
-                '}';
-    }
-
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
-        ReadWriteObjectCourse course = new ReadWriteObjectCourse("数学",66);
-        // 序列化
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream);
-        outputStream.writeObject(course);
-        byte[] bytes = byteArrayOutputStream.toByteArray();
-        outputStream.close();
-
-        // 反序列化
-        ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(bytes));
-        ReadWriteObjectCourse course1 = (ReadWriteObjectCourse) inputStream.readObject();
-        System.out.println(course1);
-    }
-}
-```
-
-运行结果，如下：
-
-```bash
-Course: name 数学 score 66.0
-writeObject ...
-readObject ...
-Course{name='数学', score=0.0}
-
-BUILD SUCCESSFUL in 722ms
-```
-
-`readObject` 和 `writeObject` 方法都被执行，自定义序列化 `name` 字段。`Serializable` 接口除了这2个方法可以重写外，还有2个方法，分别是 `readResolve` 和 `writeReplace`。
-
-#### 多引用写入
-
-**多引用写入** 问题，我们来看如下代码：
-
-```java
-public static void main(String[] args) throws IOException, ClassNotFoundException {
-    Course course = new Course("数学",66);
-    // 序列化
-    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream);
-    outputStream.writeObject(course);
-    course.setName("英语");
-    outputStream.writeObject(course);
-    byte[] bytes = byteArrayOutputStream.toByteArray();
-    outputStream.close();
-
-    // 反序列化
-    ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(bytes));
-    Course course1 = (Course) inputStream.readObject();
-    Course course2 = (Course) inputStream.readObject();
-    System.out.println(course1);
-    System.out.println(course2);
-}
-```
-
-运行结果如下：
-
-```bash
-Course: name 数学 score 66.0
-writeExternal ...
-readExternal ...
-Course{name='数学', score=0.0}
-Course{name='数学', score=0.0}
-
-BUILD SUCCESSFUL in 557ms
-```
-
-我们 `course.setName("英语");` 把 `name` 修改后，重新 `outputStream.writeObject(course);` 但是结果并没有改变。这个就是多引用问题：对于一个实例的多个引用，为了节省空间，只会写入一次。
-
-我们可以使用 `outputStream.reset();` 来解决问题。
-
-#### 子类实现 Serializable，而父类没有实现 Serializable
-
-**子类实现 Serializable，而父类没有实现 Serializable** 问题，我们新建一个 `Person` 类，代码如下：
-
-```java
-public class Person {
-    private String name;
-
-    public Person(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return "Person{" +
-                "name='" + name + '\'' +
-                '}';
-    }
-}
-```
-
-让 `Student` 类继承它，代码如下：
-
-```java
-public class Student extends Person implements Serializable {
-
-    ...
-
-    public Student(String name, Integer age) {
-        super(name);
-        this.name = name;
-        this.age = age;
-        courses = new ArrayList<>();
-        createTime = new Date();
-        System.out.println("Student: name:" + name + " age:" + age + " createTime:" + createTime);
-    }
-
-    ...
-
-}
-```
-
-运行结果如下：
-
-```bash
-java.io.InvalidClassException: net.lishaoy.serializable.serializable.Student; no valid constructor
-...
-```
-
-提示我们没有构造函数，我们需要在父类 `Person` 加入无参的构造函数，如下：
-
-```java
-public class Person {
-    private String name;
-    // 加入无参构造函数
-    public Person(){}
-
-    public Person(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return "Person{" +
-                "name='" + name + '\'' +
-                '}';
-    }
-}
-```
-
-#### 单例模式的序列化
-
-序列化会导致单例失效，就是序列化前后会产生多个对象，代码如下：
-
-```java
-public class Single {
-
-    public static class SingleClass implements Serializable {
-
-        private static final long serialVersionUID = 9153534024695280942L;
-        private static boolean flag = false;
-
-        private static SingleClass singleClass;
-
-        public static SingleClass getInstance() {
-
-            if(singleClass == null) {
-                synchronized (SingleClass.class) {
-                    if (singleClass == null) {
-                        singleClass = new SingleClass();
-                    }
-                }
-            }
-
-            return singleClass;
-        }
-
-        private SingleClass() {
-            if (!flag) flag = true; else throw new RuntimeException("单例模式被侵犯！");
-        }
-    }
-
-    public static void main(String[] args) {
-        SingleClass singleClass = SingleClass.getInstance();
-        // 序列化
-        SerializableUtil.serializable(singleClass);
-        // 反序列化
-        SingleClass singleClass1 = SerializableUtil.reverseSerializable();
-        System.out.println("序列化之前：" + singleClass.hashCode());
-        System.out.println("序列化之后："+ singleClass1.hashCode());
-    }
-
-}
-```
-
-运行结果，如下：
-
-```bash
-序列化成功！
-反序列化成功！
-net.lishaoy.serializable.serializable.Single$SingleClass@41629346
-序列化之前：1442407170
-序列化之后：1096979270
-
-BUILD SUCCESSFUL in 621ms
-```
-
-单例模式序列化前后会产生多个对象的问题，可以重写 `readResolve()` 方法解决。
-
-## Parcelable接口
-
-`Parcelable` 是 Android SDK 为我们提供的序列化接口，它是基于内存的，由于内存读写速度高于硬盘，因此 Android 中的跨进程对象的传输一般使用 `Parcelable`；`Parcelable` 相对于 `Serializable` 的使用复杂一些，但是 `Parcelable` 的效率比 `Serializable` 也高很多
-
-### Parcelable的使用
-
-由于 `Parcelable` 是 Android SDK 提供的，所以，需要在 Android 工程下使用，如下：
-
-```java
-public class Course implements Parcelable {
-
-    private static final String TAG = "Course";
-    private String name;
-    private float score;
-
-    @Override
-    public String toString() {
-        return "Course{" +
-                "name='" + name + '\'' +
-                ", score=" + score +
-                '}';
-    }
-
-    public Course(Parcel in) {
-        this.name = in.readString();
-        this.score = in.readFloat();
-    }
-    // 反序列化，将 Parcel 对象转换为 Parcelable
-    public static final Creator<Course> CREATOR = new Creator<Course>() {
-        //反序列化的方法，将Parcel还原成Java对象
-        @Override
-        public Course createFromParcel(Parcel in) {
-            return new Course(in);
-        }
-        //提供给外部类反序列化这个数组使用。
-        @Override
-        public Course[] newArray(int size) {
-            return new Course[size];
-        }
-    };
-
-    public Course(String name, float score) {
-        this.name = name;
-        this.score = score;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-    // 序列化，将对象转换成一个 Parcel 对象
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.name);
-        dest.writeFloat(this.score);
-    }
-}
-```
-
-在 `MainActivity` 里通过 `Intent` 来传递数据，如：
-
-```java
-public class MainActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        Course.runParcel();
-
-        Button button = findViewById(R.id.button);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ParcelActivity.class);
-                intent.putExtra("course", new Course("数学", 66f));
-                startActivity(intent);
-            }
-        });
-    }
-}
-```
-
-在 `ParcelActivity` 接受数据并打印，如下：
-
-```java
-public class ParcelActivity extends AppCompatActivity {
-
-    private static final String TAG = "ParcelActivity";
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_parcel);
-
-        Intent intent = getIntent();
-        Parcelable course = intent.getParcelableExtra("course");
-        Log.i(TAG, "onCreate: " + course.toString());
-    }
-}
-```
-
-运行结果，如下：
-
-```bash
-I/ParcelActivity: onCreate: Course{name='数学', score=66.0}
-```
-
-## Parcelable与Serializable的性能比较
-
-### Serializable性能分析
-
-`Serializable` 是 Java 中的序列化接口，其使用起来简单但开销较大(因为 Serializable 在序列化过程中使用了反射机制，故而会产生大量的临时变量，从而导致频繁的GC)，并且在读写数据过程中，它是通 过IO流的形式将数据写入到硬盘或者传输到网络上。
-
-### Parcelable性能分析
-
-`Parcelable` 则是以 IBinder 作为信息载体，在内存上开销比较小，因此在内存之间进行数据传递时，推荐使用 `Parcelable`，而 `Parcelable` 对数据进行持久化或者网络传输时操作复杂，一般这个时候推荐使用 `Serializable`。
-
-## JSON解析方式
-
-JSON(JavaScript Object Notation) 是一种轻量级的数据交换格式，通常用于：数据标记，存储，传输。
-
-### Android Studio自带org.json解析
-
-org.json 解析是基于文档驱动，需要把全部文件读入到内存中，然后遍历所有数据，根据需要检索想要 的数据，具体使用，如下：
-
-```java
-public class OrgJsonActivity extends AppCompatActivity {
-
-    private static final String TAG = "OrgJsonActivity";
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_org_json);
-        try {
-            createJson();
-            parseJson();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void createJson() throws JSONException, IOException {
-        File file = new File(getFilesDir(), "orgJson.json");
-        JSONObject student = new JSONObject();
-        student.put("name","lsy");
-        student.put("age", 66);
-        JSONObject course = new JSONObject();
-        course.put("name","数学");
-        course.put("score",66);
-        student.put("course", course);
-        JSONArray courses = new JSONArray();
-        courses.put(0, course);
-        student.put("courses",courses);
-        FileOutputStream outputStream = new FileOutputStream(file);
-        outputStream.write(student.toString().getBytes());
-        outputStream.close();
-        Log.i(TAG, "createJson: " + student.toString());
-    }
-
-    private void parseJson() throws IOException, JSONException {
-        File file = new File(getFilesDir(), "orgJson.json");
-        FileInputStream inputStream = new FileInputStream(file);
-        InputStreamReader streamReader = new InputStreamReader(inputStream);
-        BufferedReader reader = new BufferedReader(streamReader);
-        String line;
-        StringBuffer stringBuffer = new StringBuffer();
-        while ((line = reader.readLine()) != null) {
-            stringBuffer.append(line);
-        }
-        inputStream.close();
-        streamReader.close();
-        reader.close();
-
-        Student student = new Student();
-        JSONObject jsonObject = new JSONObject(stringBuffer.toString());
-        String name = jsonObject.optString("name", "lsy");
-        int age = jsonObject.optInt("age", 66);
-        student.setName(name);
-        student.setAge(age);
-
-        JSONArray courses = jsonObject.optJSONArray("courses");
-        for (int i = 0; i < courses.length(); i++) {
-            JSONObject course = courses.getJSONObject(i);
-            Course course1 = new Course();
-            course1.setName(course.optString("name",""));
-            course1.setScore((float) course.optDouble("score", 0));
-            student.addCourse(course1);
-        }
-
-        Log.i(TAG, "parseJson: " + student);
-
-    }
-}
-```
-
-运行结果，如下：
-
-```java
-I/OrgJsonActivity: createJson: {"name":"lsy","age":66,"course":{"name":"数学","score":66},"courses":[{"name":"数学","score":66}]}
-I/OrgJsonActivity: parseJson: Student{id=0, name='lsy', age=66, courses=[Course{name='数学', score=66.0}]}
-```
-
-### Gson解析
-
-Gson 解析也是基于事件驱动，它根据所需取的数据 建立1个对应于JSON数据的JavaBean类，即可通过简单操作解析出 所需数据，具体使用如下：
-
-```java
-public class GsonActivity extends AppCompatActivity {
-
-    private static final String TAG = "GsonActivity";
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gson);
-        createGson();
-    }
-
-    public void createGson() {
-        Student student = new Student(1,"lsy", 66);
-        student.addCourse(new Course("英语",66));
-        // 序列化
-        Gson gson = new Gson();
-        String json = gson.toJson(student);
-        Log.i(TAG, "createGson: json " + json);
-        // 反序列化
-        Log.i(TAG, "createGson: json1" + gson.fromJson(json, Student.class));
-    }
-}
-```
-
-运行结果如下：
-
-```bash
-I/GsonActivity: createGson: json {"age":66,"courses":[{"name":"英语","score":66.0}],"id":1,"name":"lsy"}
-I/GsonActivity: createGson: json1Student{id=1, name='lsy', age=66, courses=[Course{name='英语', score=66.0}]}
-```
-
-Json 解析方式还有 Jackson 解析、Fastjson解析等，在此就不具体介绍。
-
-## Gson原理解析
-
-在序列化和反序列化的过程中，`Gson` 充当了一个解析器的角色，如图
-
-<div style="width: 100%; margin:auto">
-
-![no-shadow](https://cdn.lishaoy.net/serializable/gson3.png "")
-
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">使用时按 <kbd>option</kbd> + <kbd>enter</kbd>，如图：</p>
+<div style="width: 66%; margin:auto" data-tool="mdnice编辑器">
+<figure style="margin: 0; margin-top: 10px; margin-bottom: 10px; flex-direction: column; justify-content: center; align-items: center; display: block;"><img src="https://cdn.lishaoy.net/serializable/UID.png" alt="no-shadow" title="UID" style="max-width: 100%; border-radius: 6px; display: block; margin: 20px auto; object-fit: contain;"></figure>
 </div>
-
-### JsonElement
-
-该类是一个抽象类，代表着 `json` 串的某一个元素。这个元素可以是一个 Json(JsonObject)、可以是一个数组(JsonArray)、可以是一个Java的基本类型( JsonPrimitive)、当然也可以为
-null( JsonNull)；JsonObject、JsonArray、JsonPrimitive、JsonNull 都是 JsonElement 这个抽象类的子类。JsonElement 提供了一系列的方法来判断当前的JsonElement。
-
-JsonObject 对象可以看成 name/values 的集合，而这写 values 就是一个个 JsonElement，他们的结构可以 用如下图表示:
-
-<div style="width: 100%; margin:auto">
-
-![no-shadow](https://cdn.lishaoy.net/serializable/gson1.png "")
-
+<h3 id="Externalizable接口" data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; color: black; font-size: 16px; font-weight: bold; text-align: center;"><span class="prefix" style="display: none;"></span><span class="content" style="border-bottom: 2px solid #DEC6FB; color: #595959;">Externalizable接口</span><span class="suffix" style="display: none;"></span></h3>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">JDK 提供了 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Serializable</code> 接口外还提供了 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Externalizable</code> 接口，它继承了 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Serializable</code>，优先级高于 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Serializable</code>，源码如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-class" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">interface</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">Externalizable</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">extends</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">Serializable</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">writeExternal</span><span class="hljs-params" style="line-height: 26px;">(ObjectOutput&nbsp;var1)</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">throws</span>&nbsp;IOException</span>;<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">readExternal</span><span class="hljs-params" style="line-height: 26px;">(ObjectInput&nbsp;var1)</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">throws</span>&nbsp;IOException,&nbsp;ClassNotFoundException</span>;<br>}<br></code></pre>
+<h3 id="Externalizable接口的使用" data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; color: black; font-size: 16px; font-weight: bold; text-align: center;"><span class="prefix" style="display: none;"></span><span class="content" style="border-bottom: 2px solid #DEC6FB; color: #595959;">Externalizable接口的使用</span><span class="suffix" style="display: none;"></span></h3>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">我们来看下简单的使用，代码如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-class" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">class</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">Course</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">implements</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">Externalizable</span>&nbsp;</span>{<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">static</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">final</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">long</span>&nbsp;serialVersionUID&nbsp;=&nbsp;-<span class="hljs-number" style="color: #986801; line-height: 26px;">342346458732794596L</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;String&nbsp;name;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">float</span>&nbsp;score;<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">Course</span><span class="hljs-params" style="line-height: 26px;">()</span></span>{}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">Course</span><span class="hljs-params" style="line-height: 26px;">(String&nbsp;name,&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">float</span>&nbsp;score)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.name&nbsp;=&nbsp;name;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.score&nbsp;=&nbsp;score;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"Course:&nbsp;"</span>&nbsp;+&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"name&nbsp;"</span>&nbsp;+&nbsp;name&nbsp;+&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"&nbsp;score&nbsp;"</span>&nbsp;+&nbsp;score);<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;String&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">getName</span><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;name;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">setName</span><span class="hljs-params" style="line-height: 26px;">(String&nbsp;name)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.name&nbsp;=&nbsp;name;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">float</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">getScore</span><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;score;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">setScore</span><span class="hljs-params" style="line-height: 26px;">(<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">float</span>&nbsp;score)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.score&nbsp;=&nbsp;score;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-meta" style="color: #4078f2; line-height: 26px;">@Override</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">writeExternal</span><span class="hljs-params" style="line-height: 26px;">(ObjectOutput&nbsp;objectOutput)</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">throws</span>&nbsp;IOException&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"writeExternal&nbsp;..."</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;objectOutput.writeObject(name);<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-meta" style="color: #4078f2; line-height: 26px;">@Override</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">readExternal</span><span class="hljs-params" style="line-height: 26px;">(ObjectInput&nbsp;objectInput)</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">throws</span>&nbsp;IOException,&nbsp;ClassNotFoundException&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"readExternal&nbsp;..."</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;=&nbsp;(String)&nbsp;objectInput.readObject();<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-meta" style="color: #4078f2; line-height: 26px;">@Override</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;String&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">toString</span><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"Course{"</span>&nbsp;+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"name='"</span>&nbsp;+&nbsp;name&nbsp;+&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'\''</span>&nbsp;+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">",&nbsp;score="</span>&nbsp;+&nbsp;score&nbsp;+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'}'</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">static</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">main</span><span class="hljs-params" style="line-height: 26px;">(String[]&nbsp;args)</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">throws</span>&nbsp;IOException,&nbsp;ClassNotFoundException&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Course&nbsp;course&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;Course(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"数学"</span>,<span class="hljs-number" style="color: #986801; line-height: 26px;">66</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//&nbsp;序列化</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ByteArrayOutputStream&nbsp;byteArrayOutputStream&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;ByteArrayOutputStream();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ObjectOutputStream&nbsp;outputStream&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;ObjectOutputStream(byteArrayOutputStream);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outputStream.writeObject(course);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">byte</span>[]&nbsp;bytes&nbsp;=&nbsp;byteArrayOutputStream.toByteArray();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outputStream.close();<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//&nbsp;反序列化</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ObjectInputStream&nbsp;inputStream&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;ObjectInputStream(<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;ByteArrayInputStream(bytes));<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println((Course)inputStream.readObject());<br><br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>}<br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">运行结果如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;">Course:&nbsp;name&nbsp;数学&nbsp;score&nbsp;66.0<br>writeExternal&nbsp;...<br>readExternal&nbsp;...<br>Course{name=<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'数学'</span>,&nbsp;score=0.0}<br><br>BUILD&nbsp;SUCCESSFUL&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">in</span>&nbsp;576ms<br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">可以看到，在序列化时会调用 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">writeExternal</code> 方法，反序列化时会调用 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">readExternal</code> 方法，也就是说我们可以灵活的控制想序列化的字段。</p>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;"><code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Externalizable</code> 接口，在反序列化时，需要写默认的空构造函数，否则报错：<code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">InvalidClassException</code>。</p>
+<h3 id="使用Serializable的注意点" data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; color: black; font-size: 16px; font-weight: bold; text-align: center;"><span class="prefix" style="display: none;"></span><span class="content" style="border-bottom: 2px solid #DEC6FB; color: #595959;">使用Serializable的注意点</span><span class="suffix" style="display: none;"></span></h3>
+<h4 id="readObject和writeObject" data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; font-weight: bold; color: black; font-size: 18px;"><span class="prefix" style="display: none;"></span><span class="content">readObject和writeObject</span><span class="suffix" style="display: none;"></span></h4>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;"><code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">readObject</code> 和 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">writeObject</code> 并没有在 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Serializable</code> 接口里定义，但是通过查看源码，可知，如：<code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">ObjectOutputStream</code> 点击进入源码，如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;"><br>...<br><br><span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">writeSerialData</span><span class="hljs-params" style="line-height: 26px;">(Object&nbsp;var1,&nbsp;ObjectStreamClass&nbsp;var2)</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">throws</span>&nbsp;IOException&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;ClassDataSlot[]&nbsp;var3&nbsp;=&nbsp;var2.getClassDataLayout();<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">for</span>(<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">int</span>&nbsp;var4&nbsp;=&nbsp;<span class="hljs-number" style="color: #986801; line-height: 26px;">0</span>;&nbsp;var4&nbsp;&lt;&nbsp;var3.length;&nbsp;++var4)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ObjectStreamClass&nbsp;var5&nbsp;=&nbsp;var3[var4].desc;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//&nbsp;hasWriteObjectMethod&nbsp;会判断我们是否重写了&nbsp;writeObject()&nbsp;方法</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">if</span>&nbsp;(var5.hasWriteObjectMethod())&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ObjectOutputStream.PutFieldImpl&nbsp;var6&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.curPut;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.curPut&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">null</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SerialCallbackContext&nbsp;var7&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.curContext;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">if</span>&nbsp;(extendedDebugInfo)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.debugInfoStack.push(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"custom&nbsp;writeObject&nbsp;data&nbsp;(class&nbsp;\""</span>&nbsp;+&nbsp;var5.getName()&nbsp;+&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"\")"</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">try</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.curContext&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;SerialCallbackContext(var1,&nbsp;var5);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.bout.setBlockDataMode(<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">true</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//&nbsp;通过反射执行&nbsp;writeObject()&nbsp;方法</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var5.invokeWriteObject(var1,&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.bout.setBlockDataMode(<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">false</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.bout.writeByte(<span class="hljs-number" style="color: #986801; line-height: 26px;">120</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">finally</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.curContext.setUsed();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.curContext&nbsp;=&nbsp;var7;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">if</span>&nbsp;(extendedDebugInfo)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.debugInfoStack.pop();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.curPut&nbsp;=&nbsp;var6;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">else</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.defaultWriteFields(var1,&nbsp;var5);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>}<br><br>...<br><br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">所以，我们也可以像 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Externalizable</code> 接口提供的 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">writeExternal</code>、<code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">readExternal</code> 方法一样使用 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">readObject</code> 和 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">writeObject</code> 来灵活的序列化和反序列化。例如：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-class" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">class</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">ReadWriteObjectCourse</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">implements</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">Serializable</span>&nbsp;</span>{<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">static</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">final</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">long</span>&nbsp;serialVersionUID&nbsp;=&nbsp;-<span class="hljs-number" style="color: #986801; line-height: 26px;">6828110073372979297L</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;String&nbsp;name;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">float</span>&nbsp;score;<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">ReadWriteObjectCourse</span><span class="hljs-params" style="line-height: 26px;">()</span></span>{}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">ReadWriteObjectCourse</span><span class="hljs-params" style="line-height: 26px;">(String&nbsp;name,&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">float</span>&nbsp;score)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.name&nbsp;=&nbsp;name;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.score&nbsp;=&nbsp;score;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"Course:&nbsp;"</span>&nbsp;+&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"name&nbsp;"</span>&nbsp;+&nbsp;name&nbsp;+&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"&nbsp;score&nbsp;"</span>&nbsp;+&nbsp;score);<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;String&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">getName</span><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;name;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">setName</span><span class="hljs-params" style="line-height: 26px;">(String&nbsp;name)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.name&nbsp;=&nbsp;name;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">float</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">getScore</span><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;score;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">setScore</span><span class="hljs-params" style="line-height: 26px;">(<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">float</span>&nbsp;score)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.score&nbsp;=&nbsp;score;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//&nbsp;重写&nbsp;writeObject()&nbsp;方法，只序列化&nbsp;name&nbsp;字段</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">writeObject</span><span class="hljs-params" style="line-height: 26px;">(ObjectOutputStream&nbsp;outputStream)</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">throws</span>&nbsp;IOException&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"writeObject&nbsp;..."</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outputStream.writeObject(name);<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//&nbsp;重写&nbsp;readObject()&nbsp;方法，只反序列化&nbsp;name&nbsp;字段</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">readObject</span><span class="hljs-params" style="line-height: 26px;">(ObjectInputStream&nbsp;inputStream)</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">throws</span>&nbsp;IOException,&nbsp;ClassNotFoundException&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"readObject&nbsp;..."</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;=&nbsp;(String)&nbsp;inputStream.readObject();<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-meta" style="color: #4078f2; line-height: 26px;">@Override</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;String&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">toString</span><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"Course{"</span>&nbsp;+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"name='"</span>&nbsp;+&nbsp;name&nbsp;+&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'\''</span>&nbsp;+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">",&nbsp;score="</span>&nbsp;+&nbsp;score&nbsp;+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'}'</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">static</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">main</span><span class="hljs-params" style="line-height: 26px;">(String[]&nbsp;args)</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">throws</span>&nbsp;IOException,&nbsp;ClassNotFoundException&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ReadWriteObjectCourse&nbsp;course&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;ReadWriteObjectCourse(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"数学"</span>,<span class="hljs-number" style="color: #986801; line-height: 26px;">66</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//&nbsp;序列化</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ByteArrayOutputStream&nbsp;byteArrayOutputStream&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;ByteArrayOutputStream();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ObjectOutputStream&nbsp;outputStream&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;ObjectOutputStream(byteArrayOutputStream);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outputStream.writeObject(course);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">byte</span>[]&nbsp;bytes&nbsp;=&nbsp;byteArrayOutputStream.toByteArray();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outputStream.close();<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//&nbsp;反序列化</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ObjectInputStream&nbsp;inputStream&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;ObjectInputStream(<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;ByteArrayInputStream(bytes));<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ReadWriteObjectCourse&nbsp;course1&nbsp;=&nbsp;(ReadWriteObjectCourse)&nbsp;inputStream.readObject();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(course1);<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>}<br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">运行结果，如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;">Course:&nbsp;name&nbsp;数学&nbsp;score&nbsp;66.0<br>writeObject&nbsp;...<br>readObject&nbsp;...<br>Course{name=<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'数学'</span>,&nbsp;score=0.0}<br><br>BUILD&nbsp;SUCCESSFUL&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">in</span>&nbsp;722ms<br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;"><code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">readObject</code> 和 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">writeObject</code> 方法都被执行，自定义序列化 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">name</code> 字段。<code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Serializable</code> 接口除了这2个方法可以重写外，还有2个方法，分别是 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">readResolve</code> 和 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">writeReplace</code>。</p>
+<h4 id="多引用写入" data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; font-weight: bold; color: black; font-size: 18px;"><span class="prefix" style="display: none;"></span><span class="content">多引用写入</span><span class="suffix" style="display: none;"></span></h4>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;"><strong style="color: #595959; font-weight: bold;"><span>「</span>多引用写入<span>」</span></strong> 问题，我们来看如下代码：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;"><span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">static</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">main</span><span class="hljs-params" style="line-height: 26px;">(String[]&nbsp;args)</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">throws</span>&nbsp;IOException,&nbsp;ClassNotFoundException&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;Course&nbsp;course&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;Course(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"数学"</span>,<span class="hljs-number" style="color: #986801; line-height: 26px;">66</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//&nbsp;序列化</span><br>&nbsp;&nbsp;&nbsp;&nbsp;ByteArrayOutputStream&nbsp;byteArrayOutputStream&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;ByteArrayOutputStream();<br>&nbsp;&nbsp;&nbsp;&nbsp;ObjectOutputStream&nbsp;outputStream&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;ObjectOutputStream(byteArrayOutputStream);<br>&nbsp;&nbsp;&nbsp;&nbsp;outputStream.writeObject(course);<br>&nbsp;&nbsp;&nbsp;&nbsp;course.setName(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"英语"</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;outputStream.writeObject(course);<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">byte</span>[]&nbsp;bytes&nbsp;=&nbsp;byteArrayOutputStream.toByteArray();<br>&nbsp;&nbsp;&nbsp;&nbsp;outputStream.close();<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//&nbsp;反序列化</span><br>&nbsp;&nbsp;&nbsp;&nbsp;ObjectInputStream&nbsp;inputStream&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;ObjectInputStream(<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;ByteArrayInputStream(bytes));<br>&nbsp;&nbsp;&nbsp;&nbsp;Course&nbsp;course1&nbsp;=&nbsp;(Course)&nbsp;inputStream.readObject();<br>&nbsp;&nbsp;&nbsp;&nbsp;Course&nbsp;course2&nbsp;=&nbsp;(Course)&nbsp;inputStream.readObject();<br>&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(course1);<br>&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(course2);<br>}<br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">运行结果如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;">Course:&nbsp;name&nbsp;数学&nbsp;score&nbsp;66.0<br>writeExternal&nbsp;...<br>readExternal&nbsp;...<br>Course{name=<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'数学'</span>,&nbsp;score=0.0}<br>Course{name=<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'数学'</span>,&nbsp;score=0.0}<br><br>BUILD&nbsp;SUCCESSFUL&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">in</span>&nbsp;557ms<br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">我们 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">course.setName("英语");</code> 把 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">name</code> 修改后，重新 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">outputStream.writeObject(course);</code> 但是结果并没有改变。这个就是多引用问题：对于一个实例的多个引用，为了节省空间，只会写入一次。</p>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">我们可以使用 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">outputStream.reset();</code> 来解决问题。</p>
+<h4 id="子类实现 Serializable，而父类没有实现 Serializable" data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; font-weight: bold; color: black; font-size: 18px;"><span class="prefix" style="display: none;"></span><span class="content">子类实现 Serializable，而父类没有实现 Serializable</span><span class="suffix" style="display: none;"></span></h4>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;"><strong style="color: #595959; font-weight: bold;"><span>「</span>子类实现 Serializable，而父类没有实现 Serializable<span>」</span></strong> 问题，我们新建一个 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Person</code> 类，代码如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-class" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">class</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">Person</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;String&nbsp;name;<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">Person</span><span class="hljs-params" style="line-height: 26px;">(String&nbsp;name)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.name&nbsp;=&nbsp;name;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-meta" style="color: #4078f2; line-height: 26px;">@Override</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;String&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">toString</span><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"Person{"</span>&nbsp;+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"name='"</span>&nbsp;+&nbsp;name&nbsp;+&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'\''</span>&nbsp;+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'}'</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>}<br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">让 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Student</code> 类继承它，代码如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-class" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">class</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">Student</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">extends</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">Person</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">implements</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">Serializable</span>&nbsp;</span>{<br><br>&nbsp;&nbsp;&nbsp;&nbsp;...<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">Student</span><span class="hljs-params" style="line-height: 26px;">(String&nbsp;name,&nbsp;Integer&nbsp;age)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">super</span>(name);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.name&nbsp;=&nbsp;name;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.age&nbsp;=&nbsp;age;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;courses&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;ArrayList&lt;&gt;();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;createTime&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;Date();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"Student:&nbsp;name:"</span>&nbsp;+&nbsp;name&nbsp;+&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"&nbsp;age:"</span>&nbsp;+&nbsp;age&nbsp;+&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"&nbsp;createTime:"</span>&nbsp;+&nbsp;createTime);<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;...<br><br>}<br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">运行结果如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;">java.io.InvalidClassException:&nbsp;net.lishaoy.serializable.serializable.Student;&nbsp;no&nbsp;valid&nbsp;constructor<br>...<br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">提示我们没有构造函数，我们需要在父类 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Person</code> 加入无参的构造函数，如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-class" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">class</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">Person</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;String&nbsp;name;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//&nbsp;加入无参构造函数</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">Person</span><span class="hljs-params" style="line-height: 26px;">()</span></span>{}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">Person</span><span class="hljs-params" style="line-height: 26px;">(String&nbsp;name)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.name&nbsp;=&nbsp;name;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-meta" style="color: #4078f2; line-height: 26px;">@Override</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;String&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">toString</span><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"Person{"</span>&nbsp;+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"name='"</span>&nbsp;+&nbsp;name&nbsp;+&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'\''</span>&nbsp;+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'}'</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>}<br></code></pre>
+<h4 id="单例模式的序列化" data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; font-weight: bold; color: black; font-size: 18px;"><span class="prefix" style="display: none;"></span><span class="content">单例模式的序列化</span><span class="suffix" style="display: none;"></span></h4>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">序列化会导致单例失效，就是序列化前后会产生多个对象，代码如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-class" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">class</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">Single</span>&nbsp;</span>{<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">static</span>&nbsp;<span class="hljs-class" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">class</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">SingleClass</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">implements</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">Serializable</span>&nbsp;</span>{<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">static</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">final</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">long</span>&nbsp;serialVersionUID&nbsp;=&nbsp;<span class="hljs-number" style="color: #986801; line-height: 26px;">9153534024695280942L</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">static</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">boolean</span>&nbsp;flag&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">false</span>;<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">static</span>&nbsp;SingleClass&nbsp;singleClass;<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">static</span>&nbsp;SingleClass&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">getInstance</span><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;</span>{<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">if</span>(singleClass&nbsp;==&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">null</span>)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">synchronized</span>&nbsp;(SingleClass.class)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">if</span>&nbsp;(singleClass&nbsp;==&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">null</span>)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;singleClass&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;SingleClass();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;singleClass;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">SingleClass</span><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">if</span>&nbsp;(!flag)&nbsp;flag&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">true</span>;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">else</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">throw</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;RuntimeException(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"单例模式被侵犯！"</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">static</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">main</span><span class="hljs-params" style="line-height: 26px;">(String[]&nbsp;args)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SingleClass&nbsp;singleClass&nbsp;=&nbsp;SingleClass.getInstance();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//&nbsp;序列化</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SerializableUtil.serializable(singleClass);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//&nbsp;反序列化</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SingleClass&nbsp;singleClass1&nbsp;=&nbsp;SerializableUtil.reverseSerializable();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"序列化之前："</span>&nbsp;+&nbsp;singleClass.hashCode());<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"序列化之后："</span>+&nbsp;singleClass1.hashCode());<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>}<br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">运行结果，如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;">序列化成功！<br>反序列化成功！<br>net.lishaoy.serializable.serializable.Single<span class="hljs-variable" style="color: #986801; line-height: 26px;">$SingleClass</span>@41629346<br>序列化之前：1442407170<br>序列化之后：1096979270<br><br>BUILD&nbsp;SUCCESSFUL&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">in</span>&nbsp;621ms<br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">单例模式序列化前后会产生多个对象的问题，可以重写 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">readResolve()</code> 方法解决。</p>
+<h2 data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; font-weight: bold; color: black; font-size: 22px; text-align: left; margin: 20px 10px 0px 0px;"><span class="prefix" style="display: none;"></span><span class="content" style="font-size: 18px; font-weight: bold; display: inline-block; padding-left: 10px; border-left: 5px solid #DEC6FB; color: #595959;">Parcelable接口</span><span class="suffix"></span></h2>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;"><code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Parcelable</code> 是 Android SDK 为我们提供的序列化接口，它是基于内存的，由于内存读写速度高于硬盘，因此 Android 中的跨进程对象的传输一般使用 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Parcelable</code>；<code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Parcelable</code> 相对于 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Serializable</code> 的使用复杂一些，但是 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Parcelable</code> 的效率比 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Serializable</code> 也高很多</p>
+<h3 id="Parcelable的使用" data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; color: black; font-size: 16px; font-weight: bold; text-align: center;"><span class="prefix" style="display: none;"></span><span class="content" style="border-bottom: 2px solid #DEC6FB; color: #595959;">Parcelable的使用</span><span class="suffix" style="display: none;"></span></h3>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">由于 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Parcelable</code> 是 Android SDK 提供的，所以，需要在 Android 工程下使用，如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-class" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">class</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">Course</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">implements</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">Parcelable</span>&nbsp;</span>{<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">static</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">final</span>&nbsp;String&nbsp;TAG&nbsp;=&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"Course"</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;String&nbsp;name;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">float</span>&nbsp;score;<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-meta" style="color: #4078f2; line-height: 26px;">@Override</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;String&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">toString</span><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"Course{"</span>&nbsp;+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"name='"</span>&nbsp;+&nbsp;name&nbsp;+&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'\''</span>&nbsp;+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">",&nbsp;score="</span>&nbsp;+&nbsp;score&nbsp;+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'}'</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">Course</span><span class="hljs-params" style="line-height: 26px;">(Parcel&nbsp;in)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.name&nbsp;=&nbsp;in.readString();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.score&nbsp;=&nbsp;in.readFloat();<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//&nbsp;反序列化，将&nbsp;Parcel&nbsp;对象转换为&nbsp;Parcelable</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">static</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">final</span>&nbsp;Creator&lt;Course&gt;&nbsp;CREATOR&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;Creator&lt;Course&gt;()&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//反序列化的方法，将Parcel还原成Java对象</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-meta" style="color: #4078f2; line-height: 26px;">@Override</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;Course&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">createFromParcel</span><span class="hljs-params" style="line-height: 26px;">(Parcel&nbsp;in)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;Course(in);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//提供给外部类反序列化这个数组使用。</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-meta" style="color: #4078f2; line-height: 26px;">@Override</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;Course[]&nbsp;newArray(<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">int</span>&nbsp;size)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;Course[size];<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;};<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">Course</span><span class="hljs-params" style="line-height: 26px;">(String&nbsp;name,&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">float</span>&nbsp;score)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.name&nbsp;=&nbsp;name;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.score&nbsp;=&nbsp;score;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-meta" style="color: #4078f2; line-height: 26px;">@Override</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">int</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">describeContents</span><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">return</span>&nbsp;<span class="hljs-number" style="color: #986801; line-height: 26px;">0</span>;<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//&nbsp;序列化，将对象转换成一个&nbsp;Parcel&nbsp;对象</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-meta" style="color: #4078f2; line-height: 26px;">@Override</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">writeToParcel</span><span class="hljs-params" style="line-height: 26px;">(Parcel&nbsp;dest,&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">int</span>&nbsp;flags)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dest.writeString(<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.name);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dest.writeFloat(<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>.score);<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>}<br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">在 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">MainActivity</code> 里通过 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Intent</code> 来传递数据，如：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-class" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">class</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">MainActivity</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">extends</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">AppCompatActivity</span>&nbsp;</span>{<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-meta" style="color: #4078f2; line-height: 26px;">@Override</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">protected</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">onCreate</span><span class="hljs-params" style="line-height: 26px;">(Bundle&nbsp;savedInstanceState)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">super</span>.onCreate(savedInstanceState);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setContentView(R.layout.activity_main);<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Course.runParcel();<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Button&nbsp;button&nbsp;=&nbsp;findViewById(R.id.button);<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;button.setOnClickListener(<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;View.OnClickListener()&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-meta" style="color: #4078f2; line-height: 26px;">@Override</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">onClick</span><span class="hljs-params" style="line-height: 26px;">(View&nbsp;v)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Intent&nbsp;intent&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;Intent(MainActivity.<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">this</span>,&nbsp;ParcelActivity.class);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;intent.putExtra(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"course"</span>,&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;Course(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"数学"</span>,&nbsp;<span class="hljs-number" style="color: #986801; line-height: 26px;">66f</span>));<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;startActivity(intent);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>}<br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">在 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">ParcelActivity</code> 接受数据并打印，如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-class" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">class</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">ParcelActivity</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">extends</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">AppCompatActivity</span>&nbsp;</span>{<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">static</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">final</span>&nbsp;String&nbsp;TAG&nbsp;=&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"ParcelActivity"</span>;<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-meta" style="color: #4078f2; line-height: 26px;">@Override</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">protected</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">onCreate</span><span class="hljs-params" style="line-height: 26px;">(Bundle&nbsp;savedInstanceState)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">super</span>.onCreate(savedInstanceState);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setContentView(R.layout.activity_parcel);<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Intent&nbsp;intent&nbsp;=&nbsp;getIntent();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Parcelable&nbsp;course&nbsp;=&nbsp;intent.getParcelableExtra(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"course"</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Log.i(TAG,&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"onCreate:&nbsp;"</span>&nbsp;+&nbsp;course.toString());<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>}<br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">运行结果，如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;">I/ParcelActivity:&nbsp;onCreate:&nbsp;Course{name=<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'数学'</span>,&nbsp;score=66.0}<br></code></pre>
+<h2 data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; font-weight: bold; color: black; font-size: 22px; text-align: left; margin: 20px 10px 0px 0px;"><span class="prefix" style="display: none;"></span><span class="content" style="font-size: 18px; font-weight: bold; display: inline-block; padding-left: 10px; border-left: 5px solid #DEC6FB; color: #595959;">Parcelable与Serializable的性能比较</span><span class="suffix"></span></h2>
+<h3 id="Serializable性能分析" data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; color: black; font-size: 16px; font-weight: bold; text-align: center;"><span class="prefix" style="display: none;"></span><span class="content" style="border-bottom: 2px solid #DEC6FB; color: #595959;">Serializable性能分析</span><span class="suffix" style="display: none;"></span></h3>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;"><code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Serializable</code> 是 Java 中的序列化接口，其使用起来简单但开销较大(因为 Serializable 在序列化过程中使用了反射机制，故而会产生大量的临时变量，从而导致频繁的GC)，并且在读写数据过程中，它是通 过IO流的形式将数据写入到硬盘或者传输到网络上。</p>
+<h3 id="Parcelable性能分析" data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; color: black; font-size: 16px; font-weight: bold; text-align: center;"><span class="prefix" style="display: none;"></span><span class="content" style="border-bottom: 2px solid #DEC6FB; color: #595959;">Parcelable性能分析</span><span class="suffix" style="display: none;"></span></h3>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;"><code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Parcelable</code> 则是以 IBinder 作为信息载体，在内存上开销比较小，因此在内存之间进行数据传递时，推荐使用 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Parcelable</code>，而 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Parcelable</code> 对数据进行持久化或者网络传输时操作复杂，一般这个时候推荐使用 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Serializable</code>。</p>
+<h2 data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; font-weight: bold; color: black; font-size: 22px; text-align: left; margin: 20px 10px 0px 0px;"><span class="prefix" style="display: none;"></span><span class="content" style="font-size: 18px; font-weight: bold; display: inline-block; padding-left: 10px; border-left: 5px solid #DEC6FB; color: #595959;">JSON解析方式</span><span class="suffix"></span></h2>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">JSON(JavaScript Object Notation) 是一种轻量级的数据交换格式，通常用于：数据标记，存储，传输。</p>
+<h3 id="Android Studio自带org.json解析" data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; color: black; font-size: 16px; font-weight: bold; text-align: center;"><span class="prefix" style="display: none;"></span><span class="content" style="border-bottom: 2px solid #DEC6FB; color: #595959;">Android Studio自带org.json解析</span><span class="suffix" style="display: none;"></span></h3>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">org.json 解析是基于文档驱动，需要把全部文件读入到内存中，然后遍历所有数据，根据需要检索想要 的数据，具体使用，如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-class" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">class</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">OrgJsonActivity</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">extends</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">AppCompatActivity</span>&nbsp;</span>{<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">static</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">final</span>&nbsp;String&nbsp;TAG&nbsp;=&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"OrgJsonActivity"</span>;<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-meta" style="color: #4078f2; line-height: 26px;">@Override</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">protected</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">onCreate</span><span class="hljs-params" style="line-height: 26px;">(Bundle&nbsp;savedInstanceState)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">super</span>.onCreate(savedInstanceState);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setContentView(R.layout.activity_org_json);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">try</span>&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;createJson();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parseJson();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">catch</span>&nbsp;(JSONException&nbsp;e)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">catch</span>&nbsp;(IOException&nbsp;e)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">createJson</span><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">throws</span>&nbsp;JSONException,&nbsp;IOException&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;File&nbsp;file&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;File(getFilesDir(),&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"orgJson.json"</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JSONObject&nbsp;student&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;JSONObject();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;student.put(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"name"</span>,<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"lsy"</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;student.put(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"age"</span>,&nbsp;<span class="hljs-number" style="color: #986801; line-height: 26px;">66</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JSONObject&nbsp;course&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;JSONObject();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;course.put(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"name"</span>,<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"数学"</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;course.put(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"score"</span>,<span class="hljs-number" style="color: #986801; line-height: 26px;">66</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;student.put(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"course"</span>,&nbsp;course);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JSONArray&nbsp;courses&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;JSONArray();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;courses.put(<span class="hljs-number" style="color: #986801; line-height: 26px;">0</span>,&nbsp;course);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;student.put(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"courses"</span>,courses);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FileOutputStream&nbsp;outputStream&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;FileOutputStream(file);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outputStream.write(student.toString().getBytes());<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outputStream.close();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Log.i(TAG,&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"createJson:&nbsp;"</span>&nbsp;+&nbsp;student.toString());<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">parseJson</span><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">throws</span>&nbsp;IOException,&nbsp;JSONException&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;File&nbsp;file&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;File(getFilesDir(),&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"orgJson.json"</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FileInputStream&nbsp;inputStream&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;FileInputStream(file);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;InputStreamReader&nbsp;streamReader&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;InputStreamReader(inputStream);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BufferedReader&nbsp;reader&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;BufferedReader(streamReader);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;line;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;StringBuffer&nbsp;stringBuffer&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;StringBuffer();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">while</span>&nbsp;((line&nbsp;=&nbsp;reader.readLine())&nbsp;!=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">null</span>)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stringBuffer.append(line);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inputStream.close();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;streamReader.close();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reader.close();<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Student&nbsp;student&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;Student();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JSONObject&nbsp;jsonObject&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;JSONObject(stringBuffer.toString());<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;name&nbsp;=&nbsp;jsonObject.optString(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"name"</span>,&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"lsy"</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">int</span>&nbsp;age&nbsp;=&nbsp;jsonObject.optInt(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"age"</span>,&nbsp;<span class="hljs-number" style="color: #986801; line-height: 26px;">66</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;student.setName(name);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;student.setAge(age);<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JSONArray&nbsp;courses&nbsp;=&nbsp;jsonObject.optJSONArray(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"courses"</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">for</span>&nbsp;(<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">int</span>&nbsp;i&nbsp;=&nbsp;<span class="hljs-number" style="color: #986801; line-height: 26px;">0</span>;&nbsp;i&nbsp;&lt;&nbsp;courses.length();&nbsp;i++)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JSONObject&nbsp;course&nbsp;=&nbsp;courses.getJSONObject(i);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Course&nbsp;course1&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;Course();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;course1.setName(course.optString(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"name"</span>,<span class="hljs-string" style="color: #50a14f; line-height: 26px;">""</span>));<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;course1.setScore((<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">float</span>)&nbsp;course.optDouble(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"score"</span>,&nbsp;<span class="hljs-number" style="color: #986801; line-height: 26px;">0</span>));<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;student.addCourse(course1);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Log.i(TAG,&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"parseJson:&nbsp;"</span>&nbsp;+&nbsp;student);<br><br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>}<br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">运行结果，如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;">I/OrgJsonActivity:&nbsp;createJson:&nbsp;{<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"name"</span>:<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"lsy"</span>,<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"age"</span>:<span class="hljs-number" style="color: #986801; line-height: 26px;">66</span>,<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"course"</span>:{<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"name"</span>:<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"数学"</span>,<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"score"</span>:<span class="hljs-number" style="color: #986801; line-height: 26px;">66</span>},<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"courses"</span>:[{<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"name"</span>:<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"数学"</span>,<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"score"</span>:<span class="hljs-number" style="color: #986801; line-height: 26px;">66</span>}]}<br>I/OrgJsonActivity:&nbsp;parseJson:&nbsp;Student{id=<span class="hljs-number" style="color: #986801; line-height: 26px;">0</span>,&nbsp;name=<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'lsy'</span>,&nbsp;age=<span class="hljs-number" style="color: #986801; line-height: 26px;">66</span>,&nbsp;courses=[Course{name=<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'数学'</span>,&nbsp;score=<span class="hljs-number" style="color: #986801; line-height: 26px;">66.0</span>}]}<br></code></pre>
+<h3 id="Gson解析" data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; color: black; font-size: 16px; font-weight: bold; text-align: center;"><span class="prefix" style="display: none;"></span><span class="content" style="border-bottom: 2px solid #DEC6FB; color: #595959;">Gson解析</span><span class="suffix" style="display: none;"></span></h3>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">Gson 解析也是基于事件驱动，它根据所需取的数据 建立1个对应于JSON数据的JavaBean类，即可通过简单操作解析出 所需数据，具体使用如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-class" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">class</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">GsonActivity</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">extends</span>&nbsp;<span class="hljs-title" style="color: #c18401; line-height: 26px;">AppCompatActivity</span>&nbsp;</span>{<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">private</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">static</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">final</span>&nbsp;String&nbsp;TAG&nbsp;=&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"GsonActivity"</span>;<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-meta" style="color: #4078f2; line-height: 26px;">@Override</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">protected</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">onCreate</span><span class="hljs-params" style="line-height: 26px;">(Bundle&nbsp;savedInstanceState)</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">super</span>.onCreate(savedInstanceState);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setContentView(R.layout.activity_gson);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;createGson();<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-function" style="line-height: 26px;"><span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">public</span>&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">void</span>&nbsp;<span class="hljs-title" style="color: #4078f2; line-height: 26px;">createGson</span><span class="hljs-params" style="line-height: 26px;">()</span>&nbsp;</span>{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Student&nbsp;student&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;Student(<span class="hljs-number" style="color: #986801; line-height: 26px;">1</span>,<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"lsy"</span>,&nbsp;<span class="hljs-number" style="color: #986801; line-height: 26px;">66</span>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;student.addCourse(<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;Course(<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"英语"</span>,<span class="hljs-number" style="color: #986801; line-height: 26px;">66</span>));<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//&nbsp;序列化</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gson&nbsp;gson&nbsp;=&nbsp;<span class="hljs-keyword" style="color: #a626a4; line-height: 26px;">new</span>&nbsp;Gson();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;json&nbsp;=&nbsp;gson.toJson(student);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Log.i(TAG,&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"createGson:&nbsp;json&nbsp;"</span>&nbsp;+&nbsp;json);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hljs-comment" style="color: #a0a1a7; font-style: italic; line-height: 26px;">//&nbsp;反序列化</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Log.i(TAG,&nbsp;<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"createGson:&nbsp;json1"</span>&nbsp;+&nbsp;gson.fromJson(json,&nbsp;Student.class));<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>}<br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">运行结果如下：</p>
+<pre class="custom" data-tool="mdnice编辑器" style="margin-top: 10px; margin-bottom: 10px; border-radius: 6px; background: #fafafa;"><code class="hljs" style="overflow-x: auto; padding: 16px; color: #383a42; background: #fafafa; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; border-radius: 0px; font-size: 12px; -webkit-overflow-scrolling: touch; box-shadow: none;">I/GsonActivity:&nbsp;createGson:&nbsp;json&nbsp;{<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"age"</span>:66,<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"courses"</span>:[{<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"name"</span>:<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"英语"</span>,<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"score"</span>:66.0}],<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"id"</span>:1,<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"name"</span>:<span class="hljs-string" style="color: #50a14f; line-height: 26px;">"lsy"</span>}<br>I/GsonActivity:&nbsp;createGson:&nbsp;json1Student{id=1,&nbsp;name=<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'lsy'</span>,&nbsp;age=66,&nbsp;courses=[Course{name=<span class="hljs-string" style="color: #50a14f; line-height: 26px;">'英语'</span>,&nbsp;score=66.0}]}<br></code></pre>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">Json 解析方式还有 Jackson 解析、Fastjson解析等，在此就不具体介绍。</p>
+<h2 data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; font-weight: bold; color: black; font-size: 22px; text-align: left; margin: 20px 10px 0px 0px;"><span class="prefix" style="display: none;"></span><span class="content" style="font-size: 18px; font-weight: bold; display: inline-block; padding-left: 10px; border-left: 5px solid #DEC6FB; color: #595959;">Gson原理解析</span><span class="suffix"></span></h2>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">在序列化和反序列化的过程中，<code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">Gson</code> 充当了一个解析器的角色，如图</p>
+<div style="width: 100%; margin:auto" data-tool="mdnice编辑器">
+<figure style="margin: 0; margin-top: 10px; margin-bottom: 10px; flex-direction: column; justify-content: center; align-items: center; display: block;"><img src="https://cdn.lishaoy.net/serializable/gson.png" alt="no-shadow" style="max-width: 100%; border-radius: 6px; display: block; margin: 20px auto; object-fit: contain;"></figure>
 </div>
-
-### Gson的工作流程
-
-Gson的工作流程，如图
-
-<div style="width: 100%; margin:auto">
-
-![no-shadow](https://cdn.lishaoy.net/serializable/gson2.png "")
-
+<h3 id="JsonElement" data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; color: black; font-size: 16px; font-weight: bold; text-align: center;"><span class="prefix" style="display: none;"></span><span class="content" style="border-bottom: 2px solid #DEC6FB; color: #595959;">JsonElement</span><span class="suffix" style="display: none;"></span></h3>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">该类是一个抽象类，代表着 <code style="font-size: 14px; word-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin: 0 2px; background-color: rgba(27,31,35,.05); font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #595959; box-shadow: none;">json</code> 串的某一个元素。这个元素可以是一个 Json(JsonObject)、可以是一个数组(JsonArray)、可以是一个Java的基本类型( JsonPrimitive)、当然也可以为
+null( JsonNull)；JsonObject、JsonArray、JsonPrimitive、JsonNull 都是 JsonElement 这个抽象类的子类。JsonElement 提供了一系列的方法来判断当前的JsonElement。</p>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">JsonObject 对象可以看成 name/values 的集合，而这写 values 就是一个个 JsonElement，他们的结构可以 用如下图表示:</p>
+<div style="width: 100%; margin:auto" data-tool="mdnice编辑器">
+<figure style="margin: 0; margin-top: 10px; margin-bottom: 10px; flex-direction: column; justify-content: center; align-items: center; display: block;"><img src="https://cdn.lishaoy.net/serializable/json3.png" alt="no-shadow" style="max-width: 100%; border-radius: 6px; display: block; margin: 20px auto; object-fit: contain;"></figure>
 </div>
+<h3 id="Gson的工作流程" data-tool="mdnice编辑器" style="margin-top: 30px; margin-bottom: 15px; padding: 0px; color: black; font-size: 16px; font-weight: bold; text-align: center;"><span class="prefix" style="display: none;"></span><span class="content" style="border-bottom: 2px solid #DEC6FB; color: #595959;">Gson的工作流程</span><span class="suffix" style="display: none;"></span></h3>
+<p data-tool="mdnice编辑器" style="padding-top: 8px; padding-bottom: 8px; line-height: 26px; color: #595959; margin: 10px 0px; letter-spacing: 2px; font-size: 14px; word-spacing: 2px;">Gson的工作流程，如图</p>
+<div style="width: 100%; margin:auto" data-tool="mdnice编辑器">
+<figure style="margin: 0; margin-top: 10px; margin-bottom: 10px; flex-direction: column; justify-content: center; align-items: center; display: block;"><img src="https://cdn.lishaoy.net/serializable/gson2.png" alt="no-shadow" style="max-width: 100%; border-radius: 6px; display: block; margin: 20px auto; object-fit: contain;"></figure>
+</div></section>
