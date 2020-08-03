@@ -363,6 +363,136 @@ BUILD SUCCESSFUL in 576ms
 
 ### 使用Serializable的注意点
 
+#### readObject和writeObject
+
+`readObject` 和 `writeObject` 并没有在 `Serializable` 接口里定义，但是通过查看源码，可知，如：`ObjectOutputStream` 点击进入源码，如下：
+
+```java
+
+...
+
+private void writeSerialData(Object var1, ObjectStreamClass var2) throws IOException {
+    ClassDataSlot[] var3 = var2.getClassDataLayout();
+
+    for(int var4 = 0; var4 < var3.length; ++var4) {
+        ObjectStreamClass var5 = var3[var4].desc;
+        // hasWriteObjectMethod 会判断我们是否重写了 writeObject() 方法
+        if (var5.hasWriteObjectMethod()) {
+            ObjectOutputStream.PutFieldImpl var6 = this.curPut;
+            this.curPut = null;
+            SerialCallbackContext var7 = this.curContext;
+            if (extendedDebugInfo) {
+                this.debugInfoStack.push("custom writeObject data (class \"" + var5.getName() + "\")");
+            }
+
+            try {
+                this.curContext = new SerialCallbackContext(var1, var5);
+                this.bout.setBlockDataMode(true);
+                // 通过反射执行 writeObject() 方法
+                var5.invokeWriteObject(var1, this);
+                this.bout.setBlockDataMode(false);
+                this.bout.writeByte(120);
+            } finally {
+                this.curContext.setUsed();
+                this.curContext = var7;
+                if (extendedDebugInfo) {
+                    this.debugInfoStack.pop();
+                }
+
+            }
+
+            this.curPut = var6;
+        } else {
+            this.defaultWriteFields(var1, var5);
+        }
+    }
+}
+
+...
+
+```
+
+所以，我们也可以像 `Externalizable` 接口提供的 `writeExternal`、`readExternal` 方法一样使用 `readObject` 和 `writeObject` 来灵活的序列化和反序列化。例如：
+
+```java
+public class ReadWriteObjectCourse implements Serializable {
+
+    private static final long serialVersionUID = -6828110073372979297L;
+    private String name;
+    private float score;
+
+    public ReadWriteObjectCourse(){}
+
+    public ReadWriteObjectCourse(String name, float score) {
+        this.name = name;
+        this.score = score;
+        System.out.println("Course: " + "name " + name + " score " + score);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public float getScore() {
+        return score;
+    }
+
+    public void setScore(float score) {
+        this.score = score;
+    }
+    // 重写 writeObject() 方法，只序列化 name 字段
+    private void writeObject(ObjectOutputStream outputStream) throws IOException {
+        System.out.println("writeObject ...");
+        outputStream.writeObject(name);
+    }
+    // 重写 readObject() 方法，只反序列化 name 字段
+    private void readObject(ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
+        System.out.println("readObject ...");
+        name = (String) inputStream.readObject();
+    }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "name='" + name + '\'' +
+                ", score=" + score +
+                '}';
+    }
+
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        ReadWriteObjectCourse course = new ReadWriteObjectCourse("数学",66);
+        // 序列化
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream);
+        outputStream.writeObject(course);
+        byte[] bytes = byteArrayOutputStream.toByteArray();
+        outputStream.close();
+
+        // 反序列化
+        ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(bytes));
+        ReadWriteObjectCourse course1 = (ReadWriteObjectCourse) inputStream.readObject();
+        System.out.println(course1);
+    }
+}
+```
+
+运行结果，如下：
+
+```bash
+Course: name 数学 score 66.0
+writeObject ...
+readObject ...
+Course{name='数学', score=0.0}
+
+BUILD SUCCESSFUL in 722ms
+```
+
+`readObject` 和 `writeObject` 方法都被执行，自定义序列化 `name` 字段。`Serializable` 接口除了这2个方法可以重写外，还有2个方法，分别是 `readResolve` 和 `writeReplace`。
+
 #### 多引用写入
 
 **多引用写入** 问题，我们来看如下代码：
@@ -531,7 +661,14 @@ net.lishaoy.serializable.serializable.Single$SingleClass@41629346
 BUILD SUCCESSFUL in 621ms
 ```
 
+单例模式序列化前后会产生多个对象的问题，可以重写 `readResolve()` 方法解决。
 
 ## Parcelable接口
+
+`Parcelable` 是 Android SDK 为我们提供的序列化接口，它是基于内存的，由于内存读写速度高于硬盘，因此 Android 中的跨进程对象的传输一般使用 `Parcelable`；`Parcelable` 相对于 `Serializable` 的使用复杂一些，但是 `Parcelable` 的效率比 `Serializable` 也高很多
+
+### Parcelable的使用
+
+
 
 ## Parcelable与Serializable的性能比较
