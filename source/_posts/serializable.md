@@ -669,6 +669,275 @@ BUILD SUCCESSFUL in 621ms
 
 ### Parcelable的使用
 
+由于 `Parcelable` 是 Android SDK 提供的，所以，需要在 Android 工程下使用，如下：
 
+```java
+public class Course implements Parcelable {
+
+    private static final String TAG = "Course";
+    private String name;
+    private float score;
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "name='" + name + '\'' +
+                ", score=" + score +
+                '}';
+    }
+
+    public Course(Parcel in) {
+        this.name = in.readString();
+        this.score = in.readFloat();
+    }
+    // 反序列化，将 Parcel 对象转换为 Parcelable
+    public static final Creator<Course> CREATOR = new Creator<Course>() {
+        //反序列化的方法，将Parcel还原成Java对象
+        @Override
+        public Course createFromParcel(Parcel in) {
+            return new Course(in);
+        }
+        //提供给外部类反序列化这个数组使用。
+        @Override
+        public Course[] newArray(int size) {
+            return new Course[size];
+        }
+    };
+
+    public Course(String name, float score) {
+        this.name = name;
+        this.score = score;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+    // 序列化，将对象转换成一个 Parcel 对象
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.name);
+        dest.writeFloat(this.score);
+    }
+}
+```
+
+在 `MainActivity` 里通过 `Intent` 来传递数据，如：
+
+```java
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        Course.runParcel();
+
+        Button button = findViewById(R.id.button);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ParcelActivity.class);
+                intent.putExtra("course", new Course("数学", 66f));
+                startActivity(intent);
+            }
+        });
+    }
+}
+```
+
+在 `ParcelActivity` 接受数据并打印，如下：
+
+```java
+public class ParcelActivity extends AppCompatActivity {
+
+    private static final String TAG = "ParcelActivity";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_parcel);
+
+        Intent intent = getIntent();
+        Parcelable course = intent.getParcelableExtra("course");
+        Log.i(TAG, "onCreate: " + course.toString());
+    }
+}
+```
+
+运行结果，如下：
+
+```bash
+I/ParcelActivity: onCreate: Course{name='数学', score=66.0}
+```
 
 ## Parcelable与Serializable的性能比较
+
+### Serializable性能分析
+
+`Serializable` 是 Java 中的序列化接口，其使用起来简单但开销较大(因为 Serializable 在序列化过程中使用了反射机制，故而会产生大量的临时变量，从而导致频繁的GC)，并且在读写数据过程中，它是通 过IO流的形式将数据写入到硬盘或者传输到网络上。
+
+### Parcelable性能分析
+
+`Parcelable` 则是以 IBinder 作为信息载体，在内存上开销比较小，因此在内存之间进行数据传递时，推荐使用 `Parcelable`，而 `Parcelable` 对数据进行持久化或者网络传输时操作复杂，一般这个时候推荐使用 `Serializable`。
+
+## JSON解析方式
+
+JSON(JavaScript Object Notation) 是一种轻量级的数据交换格式，通常用于：数据标记，存储，传输。
+
+### Android Studio自带org.json解析
+
+org.json 解析是基于文档驱动，需要把全部文件读入到内存中，然后遍历所有数据，根据需要检索想要 的数据，具体使用，如下：
+
+```java
+public class OrgJsonActivity extends AppCompatActivity {
+
+    private static final String TAG = "OrgJsonActivity";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_org_json);
+        try {
+            createJson();
+            parseJson();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createJson() throws JSONException, IOException {
+        File file = new File(getFilesDir(), "orgJson.json");
+        JSONObject student = new JSONObject();
+        student.put("name","lsy");
+        student.put("age", 66);
+        JSONObject course = new JSONObject();
+        course.put("name","数学");
+        course.put("score",66);
+        student.put("course", course);
+        JSONArray courses = new JSONArray();
+        courses.put(0, course);
+        student.put("courses",courses);
+        FileOutputStream outputStream = new FileOutputStream(file);
+        outputStream.write(student.toString().getBytes());
+        outputStream.close();
+        Log.i(TAG, "createJson: " + student.toString());
+    }
+
+    private void parseJson() throws IOException, JSONException {
+        File file = new File(getFilesDir(), "orgJson.json");
+        FileInputStream inputStream = new FileInputStream(file);
+        InputStreamReader streamReader = new InputStreamReader(inputStream);
+        BufferedReader reader = new BufferedReader(streamReader);
+        String line;
+        StringBuffer stringBuffer = new StringBuffer();
+        while ((line = reader.readLine()) != null) {
+            stringBuffer.append(line);
+        }
+        inputStream.close();
+        streamReader.close();
+        reader.close();
+
+        Student student = new Student();
+        JSONObject jsonObject = new JSONObject(stringBuffer.toString());
+        String name = jsonObject.optString("name", "lsy");
+        int age = jsonObject.optInt("age", 66);
+        student.setName(name);
+        student.setAge(age);
+
+        JSONArray courses = jsonObject.optJSONArray("courses");
+        for (int i = 0; i < courses.length(); i++) {
+            JSONObject course = courses.getJSONObject(i);
+            Course course1 = new Course();
+            course1.setName(course.optString("name",""));
+            course1.setScore((float) course.optDouble("score", 0));
+            student.addCourse(course1);
+        }
+
+        Log.i(TAG, "parseJson: " + student);
+
+    }
+}
+```
+
+运行结果，如下：
+
+```java
+I/OrgJsonActivity: createJson: {"name":"lsy","age":66,"course":{"name":"数学","score":66},"courses":[{"name":"数学","score":66}]}
+I/OrgJsonActivity: parseJson: Student{id=0, name='lsy', age=66, courses=[Course{name='数学', score=66.0}]}
+```
+
+### Gson解析
+
+Gson 解析也是基于事件驱动，它根据所需取的数据 建立1个对应于JSON数据的JavaBean类，即可通过简单操作解析出 所需数据，具体使用如下：
+
+```java
+public class GsonActivity extends AppCompatActivity {
+
+    private static final String TAG = "GsonActivity";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_gson);
+        createGson();
+    }
+
+    public void createGson() {
+        Student student = new Student(1,"lsy", 66);
+        student.addCourse(new Course("英语",66));
+        // 序列化
+        Gson gson = new Gson();
+        String json = gson.toJson(student);
+        Log.i(TAG, "createGson: json " + json);
+        // 反序列化
+        Log.i(TAG, "createGson: json1" + gson.fromJson(json, Student.class));
+    }
+}
+```
+
+运行结果如下：
+
+```bash
+I/GsonActivity: createGson: json {"age":66,"courses":[{"name":"英语","score":66.0}],"id":1,"name":"lsy"}
+I/GsonActivity: createGson: json1Student{id=1, name='lsy', age=66, courses=[Course{name='英语', score=66.0}]}
+```
+
+Json 解析方式还有 Jackson 解析、Fastjson解析等，在此就不具体介绍。
+
+## Gson原理解析
+
+在序列化和反序列化的过程中，`Gson` 充当了一个解析器的角色，如图
+
+<div style="width: 100%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/serializable/gson3.png "")
+
+</div>
+
+### JsonElement
+
+该类是一个抽象类，代表着 `json` 串的某一个元素。这个元素可以是一个 Json(JsonObject)、可以是一个数组(JsonArray)、可以是一个Java的基本类型( JsonPrimitive)、当然也可以为
+null( JsonNull)；JsonObject、JsonArray、JsonPrimitive、JsonNull 都是 JsonElement 这个抽象类的子类。JsonElement 提供了一系列的方法来判断当前的JsonElement。
+
+JsonObject 对象可以看成 name/values 的集合，而这写 values 就是一个个 JsonElement，他们的结构可以 用如下图表示:
+
+<div style="width: 100%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/serializable/gson1.png "")
+
+</div>
+
+### Gson的工作流程
+
+Gson的工作流程，如图
+
+<div style="width: 100%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/serializable/gson2.png "")
+
+</div>
