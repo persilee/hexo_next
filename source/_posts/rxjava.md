@@ -360,9 +360,244 @@ public class MainActivity extends AppCompatActivity {
 
 **RxJava** 以链式调用，`Observable.just(URL)` 分发事件，`map()` 来加工数据流(可以使用多个map处理不同的业务)、`subscribeOn(Schedulers.io())` 切换工作线程、`observeOn(AndroidSchedulers.mainThread())` 切换主线程，数据流流向 `subscribe` 进行处理(下游的处理根据上游的数据流变化而变化)。
 
-## RxJava与Retrofit(案例)
+## RxJava结合Retrofit使用(案例)
+
+通过 **RxJava** 使用，现在我们已经了解它的流式的响应式编程的思想，下面我们通过和 `Retrofit` 结合使用，看看是什么体验？
+
+我们使用 [玩Android 开放API](https://www.wanandroid.com/blog/show/2) 来完成本次案例。首先我们使用 `Retrofit` 定义一个 `Api` 的接口，如下：
+
+```java
+public interface Api {
+    // 获取项目分类数据
+    @GET("project/tree/json")
+    Observable<ProjectBean> getProject();
+    // 获取项目列表数据(项目列表数据依赖于项目分类数据的id)
+    @GET("project/list/{pageIndex}/json")
+    Observable<ProjectItem> getProjectItem(@Path("pageIndex") int pageIndex, @Query("cid") int cid);
+
+}
+```
+
+`ProjectBean`、`ProjectItem` JavaBean 我们根据接口返回的数据利用工具 `GsonFormat` 生成。
+
+然后，新建一个 `HttpClient` 生成 `Retrofit`，如下：
+
+```java
+public class HttpClient {
+    // api 的 base url
+    public static String BASE_URL = "https://www.wanandroid.com/";
+
+    public static void setBaseUrl(String baseUrl) {
+        BASE_URL = baseUrl;
+    }
+
+    // 创建 Retrofit
+    public static Retrofit getRetrofit() {
+        // 创建 OkHttp 客户端
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        // 配置参数
+        OkHttpClient httpClient = builder.addNetworkInterceptor(new StethoInterceptor())
+                .readTimeout(6666, TimeUnit.SECONDS)
+                .connectTimeout(6666, TimeUnit.SECONDS)
+                .writeTimeout(6666, TimeUnit.SECONDS)
+                .build();
+
+        return new Retrofit.Builder().baseUrl(BASE_URL)
+                .client(httpClient) // 使用 OkHttp 访问网络
+                .addConverterFactory(GsonConverterFactory.create(new Gson())) // 设置 json 解析工具
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // 设置 rxjava
+                .build();
+    }
+
+}
+```
+
+再新建一个 `RetrofitActivity` 来演示，如下：
+
+```java
+public class RetrofitActivity extends AppCompatActivity {
+
+    private static final String TAG = "RetrofitActivity";
+    private Api api;
+    private TextView textView;
+    private String itemData;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_retrofit);
+        textView = findViewById(R.id.text_view);
+
+        api = HttpClient.getRetrofit().create(Api.class); // 生成 api
+    }
+
+    // 查询项目分类数据
+    @SuppressLint("CheckResult")
+    public void getProject(View view) {
+        api.getProject() // 查询项目分类数据(返回的是 Observable 被观察者)
+                .subscribeOn(Schedulers.io()) // 给上面的代码分配工作线程
+                .observeOn(AndroidSchedulers.mainThread()) // 给下面的代码分配主线程
+                .subscribe(new Consumer<ProjectBean>() { // 订阅并创建观察者
+                    @Override
+                    public void accept(ProjectBean projectBean) throws Exception {
+                        textView.setText(projectBean.toString()); // 进行 UI 操作
+                    }
+                });
+    }
+
+}
+```
+
+运行结果如图：
+
+<div style="width: 56%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/rxjava/get_project.png "")
+
+</div>
+
+可见 `Retrofit` 和 `RxJava` 结合使用，代码量减少的同时，整个流程思路更为清晰，且可以为所欲为的切换线程。
 
 ### 防抖
 
+我们再使用防抖(防止用户操作带来的频繁发起请求问题)的方式来查询项目列表数据，如下：
+
+```java
+public class RetrofitActivity extends AppCompatActivity {
+
+    private static final String TAG = "RetrofitActivity";
+    private Api api;
+    private TextView textView;
+    private String itemData;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_retrofit);
+        textView = findViewById(R.id.text_view);
+
+        api = HttpClient.getRetrofit().create(Api.class); // 生成 api
+        getProjectItemData();
+    }
+
+    ...
+
+    // 查询项目列表数据，项目列表数据需要根据项目分类数据的 id 进行查询
+    // 且使用 rxbinding 增加防抖功能
+    @SuppressLint("CheckResult")
+    public void getProjectItemData() {
+        Button button = findViewById(R.id.get_item_button_fd);
+        RxView.clicks(button) // 设置防抖的 view
+                .throttleFirst(2600, TimeUnit.MILLISECONDS) // 设置在 2.6 秒内只响应一次点击事件
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        api.getProject() // 查询项目分类数据(返回的是 Observable 被观察者)
+                                .subscribeOn(Schedulers.io()) // 给上面的代码分配工作线程
+                                .observeOn(AndroidSchedulers.mainThread()) // 给下面的代码分配主线程
+                                .subscribe(new Consumer<ProjectBean>() { // 订阅并创建观察者
+                                    @Override
+                                    public void accept(final ProjectBean projectBean) throws Exception {
+                                        for (ProjectBean.DataBean bean: projectBean.getData()) {
+                                            api.getProjectItem(1, bean.getId()) // 根据项目分类数据的 id 查询项目列表数据(返回的是 Observable 被观察者)
+                                                    .subscribeOn(Schedulers.io()) // 给上面的代码分配工作线程
+                                                    .observeOn(AndroidSchedulers.mainThread()) // 给下面的代码分配主线程
+                                                    .subscribe(new Consumer<ProjectItem>() { // 订阅并创建观察者
+                                                        @Override
+                                                        public void accept(ProjectItem projectItem) throws Exception {
+                                                            Log.d(TAG, "accept: " + projectItem);
+                                                            textView.setText(projectItem.toString()); // 进行 UI 操作
+                                                        }
+                                                    });
+                                        }
+                                    }
+                                });
+                    }
+                });
+    }
+
+}
+```
+
+运行结果如图：
+
+<div style="width: 56%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/rxjava/get_item.png "")
+
+</div>
+
+可见以上代码虽然实现了防抖和嵌套查询的功能，但是，代码嵌套过多，难以维护。
+
 ### 解决网络嵌套问题
+
+上面的代码虽没什么问题，但是嵌套太多，所以我们使用 `flatMap` 操作符来解决此问题，如下：
+
+```java
+public class RetrofitActivity extends AppCompatActivity {
+
+    private static final String TAG = "RetrofitActivity";
+    private Api api;
+    private TextView textView;
+    private String itemData;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_retrofit);
+        textView = findViewById(R.id.text_view);
+
+        api = HttpClient.getRetrofit().create(Api.class); // 生成 api
+        getProjectItemData();
+        getItemData();
+    }
+
+    ...
+
+    // 查询项目列表数据，使用 flatMap 操作符，解决网络嵌套问题
+    @SuppressLint("CheckResult")
+    public void getItemData(){
+        Button button = findViewById(R.id.get_item_button);
+        RxView.clicks(button) // 设置防抖的 view
+                .throttleFirst(2600, TimeUnit.MILLISECONDS) // 设置在 2.6 秒内只响应一次点击事件
+                .observeOn(Schedulers.io()) // 给下面的代码分配工作线程
+                .flatMap(new Function<Object, ObservableSource<ProjectBean>>() {
+                    @Override
+                    public ObservableSource<ProjectBean> apply(Object o) throws Exception {
+                        return api.getProject(); // 查询项目分类数据，并且把数据流向下游
+                    }
+                })
+                .flatMap(new Function<ProjectBean, ObservableSource<ProjectBean.DataBean>>() {
+                    @Override
+                    public ObservableSource<ProjectBean.DataBean> apply(ProjectBean projectBean) throws Exception {
+                        return Observable.fromIterable(projectBean.getData()); // 根据上游流过来的数据，迭代出每个 ProjectItem 项目列表数据，并且流向下游
+                    }
+                })
+                .flatMap(new Function<ProjectBean.DataBean, ObservableSource<ProjectItem>>() {
+                    @Override
+                    public ObservableSource<ProjectItem> apply(ProjectBean.DataBean dataBean) throws Exception {
+                        return api.getProjectItem(1, dataBean.getId()); // 根据上游流过来的数据，查询每个列表数据，并且流向下游
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ProjectItem>() {
+                    @Override
+                    public void accept(ProjectItem projectItem) throws Exception {
+                        itemData += projectItem.toString() + "\n ================================================ \n";
+                        textView.setText(itemData); // 根据上游流过来的数据，进行 UI 操作
+                    }
+                });
+    }
+}
+```
+
+运行结果如图：
+
+<div style="width: 56%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/rxjava/get_item1.png "")
+
+</div>
+
+可见，使用 `flatMap` 操作符后，思路更为清晰，代码平铺下来更易理解，以一种流式的方式不断的向下游流去数据，下游根据上游的数据可以决定是否继续向下游流或者做UI更新操作等，`flatMap` 操作符可以重复使用，且线程的切换可以随意切换，这个就是 `RxJava` 数据流式的响应式编程思想。
 
