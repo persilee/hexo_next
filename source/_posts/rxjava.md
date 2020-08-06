@@ -220,8 +220,6 @@ BUILD SUCCESSFUL in 328ms
 - `onComplete()` 和 `onError()` 之后，观察者无法接收到发送事件
 - `onSubscribe()` 是在订阅之后，发送事件之前执行
 
-## RxJava的观察者模式与标准观察者模式
-
 ## RxJava编程思想
 
 **RxJava** 是在 Java 上的响应式扩展，通过使用可观察序列，用于组成异步和基于事件编程的类库，也就是以响应式编程思维来进行编程的Java类库。
@@ -294,6 +292,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imageView;
     private final static String URL = "https://cdn.lishaoy.net/image/112131.jpg";
     private ProgressDialog loading;
+    private Disposable disposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -328,6 +327,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSubscribe(Disposable d) {
                         loading = ProgressDialog.show(MainActivity.this, "", "loading");
+                        disposable = d;
                     }
 
                     // onNext() 在发送事件之后执行
@@ -346,6 +346,12 @@ public class MainActivity extends AppCompatActivity {
                         if (loading != null) loading.dismiss();
                     }
                 });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disposable.dispose();
     }
 }
 ```
@@ -421,6 +427,7 @@ public class RetrofitActivity extends AppCompatActivity {
     private Api api;
     private TextView textView;
     private String itemData;
+    private Disposable disposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -434,7 +441,7 @@ public class RetrofitActivity extends AppCompatActivity {
     // 查询项目分类数据
     @SuppressLint("CheckResult")
     public void getProject(View view) {
-        api.getProject() // 查询项目分类数据(返回的是 Observable 被观察者)
+        disposable = api.getProject() // 查询项目分类数据(返回的是 Observable 被观察者)
                 .subscribeOn(Schedulers.io()) // 给上面的代码分配工作线程
                 .observeOn(AndroidSchedulers.mainThread()) // 给下面的代码分配主线程
                 .subscribe(new Consumer<ProjectBean>() { // 订阅并创建观察者
@@ -443,6 +450,12 @@ public class RetrofitActivity extends AppCompatActivity {
                         textView.setText(projectBean.toString()); // 进行 UI 操作
                     }
                 });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disposable.dispose();
     }
 
 }
@@ -469,6 +482,7 @@ public class RetrofitActivity extends AppCompatActivity {
     private Api api;
     private TextView textView;
     private String itemData;
+    private Disposable disposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -484,22 +498,21 @@ public class RetrofitActivity extends AppCompatActivity {
 
     // 查询项目列表数据，项目列表数据需要根据项目分类数据的 id 进行查询
     // 且使用 rxbinding 增加防抖功能
-    @SuppressLint("CheckResult")
     public void getProjectItemData() {
         Button button = findViewById(R.id.get_item_button_fd);
-        RxView.clicks(button) // 设置防抖的 view
+        disposable = RxView.clicks(button) // 设置防抖的 view
                 .throttleFirst(2600, TimeUnit.MILLISECONDS) // 设置在 2.6 秒内只响应一次点击事件
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        api.getProject() // 查询项目分类数据(返回的是 Observable 被观察者)
+                        disposable = api.getProject() // 查询项目分类数据(返回的是 Observable 被观察者)
                                 .subscribeOn(Schedulers.io()) // 给上面的代码分配工作线程
                                 .observeOn(AndroidSchedulers.mainThread()) // 给下面的代码分配主线程
                                 .subscribe(new Consumer<ProjectBean>() { // 订阅并创建观察者
                                     @Override
                                     public void accept(final ProjectBean projectBean) throws Exception {
                                         for (ProjectBean.DataBean bean: projectBean.getData()) {
-                                            api.getProjectItem(1, bean.getId()) // 根据项目分类数据的 id 查询项目列表数据(返回的是 Observable 被观察者)
+                                            disposable = api.getProjectItem(1, bean.getId()) // 根据项目分类数据的 id 查询项目列表数据(返回的是 Observable 被观察者)
                                                     .subscribeOn(Schedulers.io()) // 给上面的代码分配工作线程
                                                     .observeOn(AndroidSchedulers.mainThread()) // 给下面的代码分配主线程
                                                     .subscribe(new Consumer<ProjectItem>() { // 订阅并创建观察者
@@ -514,6 +527,12 @@ public class RetrofitActivity extends AppCompatActivity {
                                 });
                     }
                 });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disposable.dispose();
     }
 
 }
@@ -540,6 +559,7 @@ public class RetrofitActivity extends AppCompatActivity {
     private Api api;
     private TextView textView;
     private String itemData;
+    private Disposable disposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -555,10 +575,9 @@ public class RetrofitActivity extends AppCompatActivity {
     ...
 
     // 查询项目列表数据，使用 flatMap 操作符，解决网络嵌套问题
-    @SuppressLint("CheckResult")
     public void getItemData(){
         Button button = findViewById(R.id.get_item_button);
-        RxView.clicks(button) // 设置防抖的 view
+       disposable = RxView.clicks(button) // 设置防抖的 view
                 .throttleFirst(2600, TimeUnit.MILLISECONDS) // 设置在 2.6 秒内只响应一次点击事件
                 .observeOn(Schedulers.io()) // 给下面的代码分配工作线程
                 .flatMap(new Function<Object, ObservableSource<ProjectBean>>() {
@@ -588,6 +607,12 @@ public class RetrofitActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disposable.dispose();
+    }
 }
 ```
 
@@ -600,4 +625,384 @@ public class RetrofitActivity extends AppCompatActivity {
 </div>
 
 可见，使用 `flatMap` 操作符后，思路更为清晰，代码平铺下来更易理解，以一种流式的方式不断的向下游流去数据，下游根据上游的数据可以决定是否继续向下游流或者做UI更新操作等，`flatMap` 操作符可以重复使用，且线程的切换可以随意切换，这个就是 `RxJava` 数据流式的响应式编程思想。
+
+## Hook钩子函数
+
+我们已经了解了 `RxJava` 的思想和使用，现在我们来看看它的源码，我们从创建一个被观察者(Observable)开始 `Observable.create`，点击 `create`，如下：
+
+```java
+public static <T> Observable<T> create(@NonNull ObservableOnSubscribe<T> source) {
+    Objects.requireNonNull(source, "source is null");
+    return RxJavaPlugins.onAssembly(new ObservableCreate<>(source));
+}
+```
+
+很简单，就这么一句 `RxJavaPlugins.onAssembly()` 代码，我们点进 `onAssembly` 如下：
+
+```java
+/**
+  * Calls the associated hook function.
+  * @param <T> the value type
+  * @param source the hook's input value
+  * @return the value returned by the hook
+  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
+@NonNull
+public static <T> Observable<T> onAssembly(@NonNull Observable<T> source) {
+    Function<? super Observable, ? extends Observable> f = onObservableAssembly;
+    if (f != null) {
+        return apply(f, source);
+    }
+    return source;
+}
+```
+
+可以看到注释：Calls the associated hook function(调用关联的钩子函数)，把 `onObservableAssembly` 赋值给了 `f` 函数，我们通过查找 `onObservableAssembly` 发现他并没有赋值，也就是说它始终是 `null`，所以，在没有给 `onObservableAssembly` 赋值的情况下，这个函数什么也不会做；所以，我们需要给 `onObservableAssembly` 函数赋值就可以先 `if` 语句执行 `onObservableAssembly` 函数，那么怎么赋值呢？我们对 `onObservableAssembly` 进行搜索发现，如下：
+
+```java
+@SuppressWarnings("rawtypes")
+@Nullable
+static volatile Function<? super Observable, ? extends Observable> onObservableAssembly;
+
+RxJavaPlugins.onObservableAssembly = onObservableAssembly;
+```
+
+`onObservableAssembly` 是 `RxJavaPlugins` 类的一个静态变量，于是我们就知道如何赋值了，我们用之前例子来测试，如下：
+
+```java
+public class UseRxJava {
+
+    public static void main(String[] args) {
+        // 给 hook 钩子函数赋值
+        RxJavaPlugins.setOnObservableAssembly(new Function<Observable, Observable>() {
+            @Override
+            public Observable apply(Observable observable) throws Throwable {
+                System.out.println(observable + " 你想买🍊 ？");
+                return observable;
+            }
+        });
+        // 新增一个测试被观察者
+        Observable.just("🍊")
+                .map(new Function<String, Object>() {
+                    @Override
+                    public Object apply(String s) throws Throwable {
+                        return "lsy 买了 " + s;
+                    }
+                })
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Throwable {
+                        System.out.println(o);
+                    }
+                });
+        // 创建 Observable 被观察者
+        Observable observable = Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<String> emitter) throws Throwable {
+                emitter.onNext("🍊 到货了！");
+                emitter.onNext("大家可以来买 🍊 了！");
+                emitter.onError(new Throwable("🍊 又卖完了！"));
+                emitter.onNext("WOW！🍊 卖光了");
+                emitter.onComplete();
+                emitter.onComplete();
+                emitter.onNext("🍊 加急进货中...");
+            }
+        });
+
+        // 创建 Observer 观察者
+        Observer<String> observer = new Observer<String>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+                System.out.println("onSubscribe:" + d.isDisposed());
+            }
+
+            @Override
+            public void onNext(@NonNull String s) {
+                System.out.println("onNext:" + s);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+                System.out.println("onError:" + e.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+                System.out.println("onComplete");
+            }
+        };
+        // 关联订阅关系
+        observable.subscribe(observer);
+    }
+
+}
+```
+
+运行结果，如下：
+
+```bash
+io.reactivex.rxjava3.internal.operators.observable.ObservableJust@694f9431 你想买🍊 ？
+io.reactivex.rxjava3.internal.operators.observable.ObservableMap@f2a0b8e 你想买🍊 ？
+lsy 买了 🍊
+io.reactivex.rxjava3.internal.operators.observable.ObservableCreate@515f550a 你想买🍊 ？
+onSubscribe:false
+onNext:🍊 到货了！
+onNext:大家可以来买 🍊 了！
+onError:🍊 又卖完了！
+
+BUILD SUCCESSFUL in 868ms
+```
+
+我们 `hook` 钩子函数执行了3次，分别是：`ObservableJust`、`ObservableMap`、`ObservableCreate`，可知，`hook` 钩子函数是一个全局监听函数，所以我们可以利用它做很多事情。
+
+## RxJava观察者模式和标准观察者模式
+
+我们来继续解读源码，通过标准观察者模式和 `RxJava` 观察者模式的比较已区别来更加深刻的理解 `RxJava`。
+
+上面我们通过源码了解到 `hook` 钩子函数，`Observable.create` 创建一个被观察者时如果我们给钩子函数赋值，就会先执行钩子函数；那么，我们的准观察者模式和 **RxJava** 观察者模式有什么不同呢？
+
+标准观察者模式有4个角色：Observable(被观察者)、ConcreteObservable(具体的被观察者)、Observer(观察者)、ConcreteObserver(具体的观察者)，**RxJava** 观察者模式的这4个角色分别是什么呢？对应关系如下：
+
+|   标准观察者模式      |  RxJava观察者模式   |
+|: ----------------- :|: --------------- :|
+| Observable (被观察者) |    Observable 接口   |
+| ConcreteObservable(具体的被观察者) | Observable.create(）创建出来的，最终是一个 ObservableCreate 对象 |
+| Observer(观察者)    | Observer 接口        |
+| ConcreteObserver(具体的观察者) | new Observer<String>() { } 创建出来的观察者对象 |
+
+在标准的观察者模式中 Observable (被观察者) 是持有 Observer(观察者) 列表的，那么 **RxJava** 观察者模式呢？
+
+我们来继续看源码，上文我们已经看过 `Observable.create`，点击 `create`，如下：
+
+```java
+public static <T> Observable<T> create(@NonNull ObservableOnSubscribe<T> source) {
+    Objects.requireNonNull(source, "source is null");
+    return RxJavaPlugins.onAssembly(new ObservableCreate<>(source));
+}
+```
+
+`RxJavaPlugins.onAssembly()` 我们已经看过，我们来看看 `new ObservableCreate<>(source)`， 这个 `source` 就是我们传进来的 `new ObservableOnSubscribe(){ ... }`，我们点进 `ObservableCreate` 如下：
+
+```java
+public final class ObservableCreate<T> extends Observable<T> {
+    final ObservableOnSubscribe<T> source;
+
+    public ObservableCreate(ObservableOnSubscribe<T> source) {
+        this.source = source;
+    }
+
+    ...
+
+}
+```
+
+可知，`return RxJavaPlugins.onAssembly(new ObservableCreate<>(source));` 返回的是 `ObservableCreate(ObservableOnSubscribe<T> source) { this.source = source; }`，而 `source` 是我们自己传进去的；
+
+我们再来看看订阅 `observable.subscribe(observer)` 代码，点进 `subscribe`，如下：
+
+```java
+@SchedulerSupport(SchedulerSupport.NONE)
+@Override
+public final void subscribe(@NonNull Observer<? super T> observer) {
+    Objects.requireNonNull(observer, "observer is null");
+    try {
+        observer = RxJavaPlugins.onSubscribe(this, observer);
+
+        Objects.requireNonNull(observer, "The RxJavaPlugins.onSubscribe hook returned a null Observer. Please change the handler provided to RxJavaPlugins.setOnObservableSubscribe for invalid null returns. Further reading: https://github.com/ReactiveX/RxJava/wiki/Plugins");
+
+        subscribeActual(observer);
+    } catch (NullPointerException e) { // NOPMD
+        throw e;
+    } catch (Throwable e) {
+        Exceptions.throwIfFatal(e);
+        // can't call onError because no way to know if a Disposable has been set or not
+        // can't call onSubscribe because the call might have set a Subscription already
+        RxJavaPlugins.onError(e);
+
+        NullPointerException npe = new NullPointerException("Actually not, but can't throw other exceptions due to RS");
+        npe.initCause(e);
+        throw npe;
+    }
+}
+```
+
+我们看到重点代码 `subscribeActual(observer);` 点进 `subscribeActual` 如下：
+
+```java
+protected abstract void subscribeActual(@NonNull Observer<? super T> observer);
+```
+
+是一个抽象函数，也就说它的实现是在 `ObservableCreate` 类里面的，因为，是 `ObservableCreate` 调用了 `subscribe` 方法，那么，我们就回到 `subscribeActual` 类，如下：
+
+```java
+public final class ObservableCreate<T> extends Observable<T> {
+    final ObservableOnSubscribe<T> source;
+
+    public ObservableCreate(ObservableOnSubscribe<T> source) {
+        this.source = source;
+    }
+
+    // subscribeActual 抽象方法的实现
+    @Override
+    protected void subscribeActual(Observer<? super T> observer) {
+        // 创建了一个 CreateEmitter 发射器，且传入了目标观察者
+        CreateEmitter<T> parent = new CreateEmitter<>(observer);
+        // 执行了目标观察者的 onSubscribe 方法
+        observer.onSubscribe(parent);
+
+        try {
+            // 执行目标被观察者(ObservableCreate) 的 subscribe 方法且传入了 发射器 CreateEmitter
+            source.subscribe(parent);
+        } catch (Throwable ex) {
+            Exceptions.throwIfFatal(ex);
+            parent.onError(ex);
+        }
+    }
+
+}
+```
+
+可知，`subscribeActual` 抽象方法的实现：创建了一个 `CreateEmitter` 发射器，且传入了目标观察者，且执行了目标观察者的 `onSubscribe()` 方法；这就是为什么 `onSubscribe()` 方法会在订阅之后，发送事件之前执行的原因。
+
+之后，又执行目标被观察者(ObservableCreate) 的 `subscribe` 方法且传入了发射器 `CreateEmitter`，在看下我们的 `CreateEmitter` 发射器源码，如下：
+
+```java
+static final class CreateEmitter<T>
+    extends AtomicReference<Disposable>
+    implements ObservableEmitter<T>, Disposable {
+
+        private static final long serialVersionUID = -3434801548987643227L;
+
+        final Observer<? super T> observer;
+        // 持有目标观察者 observer
+        CreateEmitter(Observer<? super T> observer) {
+            this.observer = observer;
+        }
+
+        // 执行 onNext() 会调用 observer.onNext(t) 执行目标观察者的 onNext()
+        @Override
+        public void onNext(T t) {
+            if (t == null) {
+                onError(ExceptionHelper.createNullPointerException("onNext called with a null value."));
+                return;
+            }
+            if (!isDisposed()) {
+                observer.onNext(t);
+            }
+        }
+
+        @Override
+        public void onError(Throwable t) {
+            if (!tryOnError(t)) {
+                RxJavaPlugins.onError(t);
+            }
+        }
+
+       ...
+```
+
+`CreateEmitter` 发射器持有目标观察者 `observer` 目标观察者，执行 `onNext()` 会调用 `observer.onNext(t)` 执行目标观察者的 `onNext()`。
+
+**RxJava** 的观察者模式整个流程，如图：
+
+<div style="width: 100%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/rxjava/observer_uml.png "")
+
+</div>
+
+可见，**RxJava** 观察者模式和标准的观察者模式完全不同，**RxJava** 观察者模式的被观察者并没有持有观察者的列表，而是通过一个中间层 `CreateEmitter` 发射器来完成事件的传递，它更像是一个发布订阅者模式，如图：
+
+<div style="width: 100%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/rxjava/observable.png "")
+
+</div>
+
+## Map操作符原理
+
+上文加载图片的案例里我们已经使用过 `map` 操作符，用来把 `String` 数据加工成 `Bitmap` 数据，从而流向下游，我们来回顾一下上文的案例代码，如下：
+
+```java
+public void rxJavaLoadImage(View view) {
+        // Observable.just(URL) 创建被观察者
+        Observable.just(URL)
+                // 使用 map 操作符加工数据,从 String 转换为 Bitmap
+                .map(new Function<String, Bitmap>() {
+                    @Override
+                    public Bitmap apply(String s) throws IOException {
+                        URL url = new URL(URL);
+                        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                        urlConnection.setConnectTimeout(6000);
+                        int responseCode = urlConnection.getResponseCode();
+                        if (responseCode == HttpURLConnection.HTTP_OK) {
+                            InputStream inputStream = urlConnection.getInputStream();
+                            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                            return bitmap; // 将 Bitmap 数据流向下游
+                        }
+                        return null;
+                    }
+                })
+               .subscribeOn(Schedulers.io()) // 上面的代码分配工作线程
+               .observeOn(AndroidSchedulers.mainThread()) // 下面的代码分别UI线程
+                // 链式调用 subscribe 绑定观察者
+                .subscribe(new Observer<Bitmap>() {
+                    // onSubscribe() 方法在发送事件之前执行
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        loading = ProgressDialog.show(MainActivity.this, "", "loading");
+                        disposable = d;
+                    }
+
+                    // onNext() 在发送事件之后执行
+                    @Override
+                    public void onNext(Bitmap bitmap) {
+                        imageView.setImageBitmap(bitmap);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + e.getMessage(), e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        if (loading != null) loading.dismiss();
+                    }
+                });
+    }
+```
+
+我们点进 `map` 查看源码，如下
+
+```java
+@CheckReturnValue
+@SchedulerSupport(SchedulerSupport.NONE)
+public final <R> Observable<R> map(Function<? super T, ? extends R> mapper) {
+    ObjectHelper.requireNonNull(mapper, "mapper is null");
+    return RxJavaPlugins.onAssembly(new ObservableMap<T, R>(this, mapper));
+}
+```
+
+可知，最终返回的是一个 `ObservableMap`，点进 `ObservableMap` 如下：
+
+```java
+public final class ObservableMap<T, U> extends AbstractObservableWithUpstream<T, U> {
+    final Function<? super T, ? extends U> function;
+
+    public ObservableMap(ObservableSource<T> source, Function<? super T, ? extends U> function) {
+        super(source);
+        this.function = function;
+    }
+
+    // subscribeActual 是一个抽象方法（上文 observable ）
+    @Override
+    public void subscribeActual(Observer<? super U> t) {
+        source.subscribe(new MapObserver<T, U>(t, function));
+    }
+
+    ...
+
+}
+```
 
