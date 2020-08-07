@@ -1,5 +1,5 @@
 ---
-title: Android响应式编程之RxJava，看这一篇就够了
+title: Android响应式编程之RxJava详解
 tags:
   - Java
   - RxJava
@@ -995,7 +995,7 @@ public final class ObservableMap<T, U> extends AbstractObservableWithUpstream<T,
         this.function = function;
     }
 
-    // subscribeActual 是一个抽象方法（上文 observable ）
+    // new MapObserver<T, U>(t, function) 把我们传进来的函数包上了一次 MapObserver
     @Override
     public void subscribeActual(Observer<? super U> t) {
         source.subscribe(new MapObserver<T, U>(t, function));
@@ -1006,3 +1006,144 @@ public final class ObservableMap<T, U> extends AbstractObservableWithUpstream<T,
 }
 ```
 
+关键代码 `source.subscribe(new MapObserver<T, U>(t, function))` 把我们传进来的函数包上了一次 `MapObserver`，`source.subscribe()` 这个 `source` 就是 `Observable`，就相当于 `Observable.subscribe()`，而 `MapObserver` 继承与 `BasicFuseableObserver`，`BasicFuseableObserver` 实现了 `Observer`，最终 `source.subscribe()` 会执行到：
+
+```java
+ @SchedulerSupport(SchedulerSupport.NONE)
+    @Override
+    public final void subscribe(@NonNull Observer<? super T> observer) {
+        Objects.requireNonNull(observer, "observer is null");
+        try {
+            observer = RxJavaPlugins.onSubscribe(this, observer);
+
+            Objects.requireNonNull(observer, "The RxJavaPlugins.onSubscribe hook returned a null Observer. Please change the handler provided to RxJavaPlugins.setOnObservableSubscribe for invalid null returns. Further reading: https://github.com/ReactiveX/RxJava/wiki/Plugins");
+            // 是一个静态抽象方法，最终由实现类完成
+            subscribeActual(observer);
+        } catch (NullPointerException e) { // NOPMD
+            throw e;
+        } catch (Throwable e) {
+            Exceptions.throwIfFatal(e);
+            // can't call onError because no way to know if a Disposable has been set or not
+            // can't call onSubscribe because the call might have set a Subscription already
+            RxJavaPlugins.onError(e);
+
+            NullPointerException npe = new NullPointerException("Actually not, but can't throw other exceptions due to RS");
+            npe.initCause(e);
+            throw npe;
+        }
+    }
+```
+
+`subscribeActual(observer)` 是一个静态抽象方法，最终由实现类完成，也就是 `ObservableJust` 的 `subscribeActual` 方法，如下
+
+```java
+public final class ObservableJust<T> extends Observable<T> implements ScalarSupplier<T> {
+
+    private final T value;
+    public ObservableJust(final T value) {
+        this.value = value;
+    }
+    // source.subscribe(new MapObserver<T, U>(t, function)); 又对 observer 包裹了一层
+    @Override
+    protected void subscribeActual(Observer<? super T> observer) {
+        ScalarDisposable<T> sd = new ScalarDisposable<>(observer, value);
+        observer.onSubscribe(sd);
+        sd.run();
+    }
+
+    @Override
+    public T get() {
+        return value;
+    }
+}
+```
+
+`observer` 是我们从 `source.subscribe` 里 传进来的 `MapObserver`，而此段代码又对 `observer` 包裹了一层。
+
+`observer.onSubscribe(sd)` 就会执行我们自己 `new` 出来的目标观察者的 `onSubscribe` 里的逻辑。
+
+`sd.run()` 进去看看源码，如下：
+
+```java
+public static final class ScalarDisposable<T>
+    extends AtomicInteger
+    implements QueueDisposable<T>, Runnable {
+
+        ...
+
+        @Override
+        public void run() {
+            if (get() == START && compareAndSet(START, ON_NEXT)) {
+              // observer 就是我们传进来的 MapObserver
+                observer.onNext(value);
+                if (get() == ON_NEXT) {
+                    lazySet(ON_COMPLETE);
+                    observer.onComplete();
+                }
+            }
+        }
+    }
+```
+
+`observer.onNext(value)` 的 `observer` 就是我们传进来的 `MapObserver`，也就是执行 `MapObserver.onNext()`，如下：
+
+```java
+static final class MapObserver<T, U> extends BasicFuseableObserver<T, U> {
+        final Function<? super T, ? extends U> mapper;
+
+        MapObserver(Observer<? super U> actual, Function<? super T, ? extends U> mapper) {
+            super(actual);
+            this.mapper = mapper;
+        }
+
+        @Override
+        public void onNext(T t) {
+            if (done) {
+                return;
+            }
+
+            if (sourceMode != NONE) {
+                downstream.onNext(null);
+                return;
+            }
+
+            U v;
+
+            try {
+                v = Objects.requireNonNull(mapper.apply(t), "The mapper function returned a null value.");
+            } catch (Throwable ex) {
+                fail(ex);
+                return;
+            }
+            downstream.onNext(v);
+        }
+
+        ...
+    }
+```
+
+`onNext()` 通过 `mapper.apply(t)` 对我们的数据进行转换，如下
+
+```java
+public interface Function<@NonNull T, @NonNull R> {
+    /**
+     * Apply some calculation to the input value and return some other value.
+     * @param t the input value
+     * @return the output value
+     * @throws Throwable if the implementation wishes to throw any type of exception
+     */
+    R apply(T t) throws Throwable;
+}
+```
+
+传入 `T` 返回 `R`，而这个 `apply` 会执行我们实现的重写 `apply` 方法的里面逻辑。
+
+**RxJava** 的 `map` 操作符使用了装饰器模式，在不影响主数据流的情况下，对需要加工的数据进行包装，在自己的包装类里完成数据的加工。
+
+**RxJava** 里的操作符非常多，只要你理解其中的几个的原理，其它的操作符原理都差不多，下面列出了基本所有的操作符，如图：
+
+<div style="width: 100%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/rxjava/rxjava.png "")
+
+</div>
