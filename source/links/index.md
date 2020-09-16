@@ -122,7 +122,7 @@ copyright: true
         </li>
         <li class="per-links-item">
             <a href="https://www.sheepyang1993.com/" class="group-picture" title="懶洋君" target="_blank">
-                <img class="per-links-icon" src="https://www.sheepyang1993.com/avatar" alt="">
+                <img class="per-links-icon" src="https://cdn.lishaoy.net/images/links/lyj.jpeg" alt="">
                 <h3 class="per-links-title">懶洋君</h3>
                 <p class="per-links-des">生死看淡，不服就干。好撸代码，有缘即朋友。</p>
             </a>
