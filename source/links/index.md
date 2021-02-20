@@ -108,7 +108,7 @@ copyright: true
         </li>
         <li class="per-links-item">
             <a href="https://2890.ltd/" class="group-picture" title="OK Yes!技术博客" target="_blank">
-                <img class="per-links-icon" src="https://cdn.2890.ltd/d74a3de2bf526638b867b62f2caccda8.jpeg" alt="">
+                <img class="per-links-icon" src="https://scdn.2890.ltd/tc/logo2890.svg" alt="">
                 <h3 class="per-links-title">OK Yes!技术博客</h3>
                 <p class="per-links-des">念念不忘，必有回响</p>
             </a>
