@@ -14,11 +14,85 @@ top: 122
 photos:
 ---
 
-{% li https://cdn.lishaoy.net/rxjava/rxjava_cover.png, RxJava,RxJava %}
+{% li https://cdn.lishaoy.net/image/flutterMVVM/cover.png, flutter app, flutter app %}
 
 最近，在使用 **Flutter** 做一个图片分享的应用，自己创建出一套 **Flutter** 版的 **MVVM** 开发模式，觉得还挺好用，所以在此分享出来。
 
 <!-- more -->
+
+## 应用功能展示
+
+首先，我们来看看我们这套MVVM开发模式，开发出来的应用是个什么样子，大概的一部分功能如下：(也可以点击观看 [演示视频]())
+
+下拉刷新，如图：
+
+<div style="width: 100%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/image/flutterMVVM/refresh.gif "refresh")
+
+</div>
+
+上拉加载更多，如图：
+
+<div style="width: 100%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/image/flutterMVVM/loadMore.gif "load more")
+
+</div>
+
+点赞，如图：
+
+<div style="width: 100%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/image/flutterMVVM/liked.gif "liked")
+
+</div>
+
+缺省页(空数据)，如图：
+
+<div style="width: 100%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/image/flutterMVVM/empty.gif "empty")
+
+</div>
+
+loading页，如图：
+
+<div style="width: 100%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/image/flutterMVVM/loading.gif "loading")
+
+</div>
+
+渐变的Appbar，如图：
+
+<div style="width: 100%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/image/flutterMVVM/appbar.gif "appbar")
+
+</div>
+
+评论，如图：
+
+<div style="width: 100%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/image/flutterMVVM/comment.gif "comment")
+
+</div>
+
+我的页面，如图：
+
+<div style="width: 100%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/image/flutterMVVM/profile.gif "profile")
+
+</div>
+
+以上只是 App 的一部分功能，大家也可以也可以点击观看 [演示视频]()，或者扫描二维码下载 App(android) 体验：
+
+
+
+<hr />
 
 在介绍这套 **MVVM** 开发模式之前，我们首先需要了解 `riverpod` 和 `retrofit` 是什么怎么用。
 
@@ -370,6 +444,8 @@ abstract class ApiClient {
 
 View Model 模块主要处理数据和状态的绑定、业务逻辑等。
 
+### 创建状态类
+
 我们首先需要创建一个状态类，来存放，数据状态和页面状态等，如下：
 
 ```dart
@@ -414,6 +490,8 @@ class PostState {
 ```
 
 当然这个状态类也可以用 `freezed` 自动生成。
+
+### 请求网络数据和处理页面状态
 
 我们会返回这个状态类给UI，riverpod 的 StateNotifier 会监听这个状态类里的所有成员变量，当我们更改这些数据之后，UI会自动刷新，代码如下：
 
@@ -597,3 +675,4 @@ class PostsPageCategory extends ConsumerWidget {  // 继承 ConsumerWidget
 ```
 
 是不是非常简单，不需要写 setState() 和 请求数据的任何代码，代码结构也非常清晰。
+
