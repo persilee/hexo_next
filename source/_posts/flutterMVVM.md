@@ -8,7 +8,7 @@ tags:
   - dart
 copyright: true
 comments: true
-date: 2021-02-21 15:51:54
+date: 2021-02-23 23:51:54
 categories: Dart
 top: 122
 photos:
@@ -22,7 +22,7 @@ photos:
 
 ## 应用功能展示
 
-首先，我们来看看我们这套MVVM开发模式，开发出来的应用是个什么样子，大概的一部分功能如下：(也可以点击观看 [演示视频]())
+首先，我们来看看我们这套MVVM开发模式，开发出来的应用是个什么样子，大概的一部分功能如下：(也可以点击观看 [演示视频](https://www.bilibili.com/video/BV1ur4y1A7of))
 
 下拉刷新，如图：
 
@@ -88,19 +88,23 @@ loading页，如图：
 
 </div>
 
-以上只是 App 的一部分功能，大家也可以也可以点击观看 [演示视频]()，或者扫描二维码下载 App(android) 体验：
+以上只是 App 的一部分功能，大家也可以也可以点击观看 [演示视频](https://www.bilibili.com/video/BV1ur4y1A7of)，或者扫描二维码下载 App(android) 体验：
 
+<div style="width: 26%; margin:auto">
 
+![no-shadow](https://cdn.lishaoy.net/image/flutterMVVM/apk1.png "apk")
+
+</div>
 
 <hr />
 
-在介绍这套 **MVVM** 开发模式之前，我们首先需要了解 `riverpod` 和 `retrofit` 是什么怎么用。
+在介绍这套 **MVVM** 开发模式之前，我们首先需要了解 `riverpod` 和 `retrofit` 是什么。
 
 下面我们来分别了解他们是什么。
 
 ## riverpod
 
-**riverpod** 是 **Flutter** 状态管理库，flutter 的状态管理库有很多，例如： `Redux`、 `Bloc`、 `Provider` 等，flutter 官方推荐我们使用 `provider`，一般我们使用 `provider` 的时候，会结合 `ChangeNotifier` 、 `StateNotifier`、 `freezed` 去使用，而 `riverpod` 是 `provider` 的一个升级加强版，解决了 `provider` 一些疑难杂症，在这里就不过多介绍，如想了解更多 `riverpod` 信息，可以访问 [riverpod官网](https://riverpod.dev/) ；也可以了解我之前写的以下[Demo](https://github.com/persilee/flutter_pro/tree/master/lib/demo/provider_demo) 。
+**riverpod** 是 **Flutter** 状态管理库，flutter 的状态管理库有很多，例如： `Redux`、 `Bloc`、 `Provider` 等，flutter 官方推荐我们使用 `provider`，一般我们使用 `provider` 的时候，会结合 `ChangeNotifier` 、 `StateNotifier`、 `freezed` 去使用，而 `riverpod` 是 `provider` 的一个升级加强版，解决了 `provider` 一些疑难杂症，在这里就不过多介绍，如想了解更多 `riverpod` 信息，可以访问 [riverpod官网](https://riverpod.dev/) ，也可以参考我之前写的以下[Demo](https://github.com/persilee/flutter_pro/tree/master/lib/demo/provider_demo) 。
 
 ## retrofit
 
@@ -201,11 +205,11 @@ abstract class ApiClient {
         └── refresh.dart
 ```
 
-从目录结构可知， `models`、 `pages`、`view_model` 分别是 MVVM 开发模式的 M(数据层)、 V(视图层)、 VM(通过riverpod的StateNotifier将数据层和视图层绑定，state变化时数据层也跟着变化，当然这里也可以处理一些页面逻辑)。
+从目录结构可知， `models`、 `pages`、`view_model` 分别是 MVVM 开发模式的 M(数据层)、 V(视图层)、 VM(通过riverpod的StateNotifier将数据层和视图层绑定，state变化时数据层也跟着变化，当然这里也可以处理一些页面逻辑)，做过 android 的同学应该知道 android 的MVVM是使用 jetpack 组件库里的 DataBinding 和 LiveData 完成的，我这套开发模式灵感就是来源于此。
 
 ## 网络请求模块
 
-首先，我们来对网络请求模块封装一把，让它能够通话易用。
+首先，我们来对网络请求模块封装一把，让它能够通用易用。
 
 **retrofit** 是依赖网络请求库的，我们可以选择不同的库，例如：`http`、`Dio` 等。
 
@@ -223,7 +227,7 @@ abstract class RestClient {
 
 ### Dio的封装
 
-它需要传一个 Dio 的实例和一个可选的 baseUrl，我们需要对这里重新封装一下，实现使用者不用传递任何参数就可以使用，也可以选择使用不同的网络库和 baseUrl；所以，我们要封装一个 `baseDio` 单例类，如果用户没有传，我们就传递一个默认的 `baseDio` 类，代码大概是这样的：
+它需要传一个 Dio 的实例和一个可选的 baseUrl，我们需要对这里重新封装一下，使用者不用传递任何参数就可以使用，也可以选择使用不同的网络库和 baseUrl；所以，我们要封装一个 `baseDio` 单例类，如果用户没有传，我们就传递一个默认的 `baseDio` 类，代码大概如下所示：
 
 ```dart
 @RestApi(baseUrl: 'https://api.lishaoy.net')
@@ -446,7 +450,7 @@ View Model 模块主要处理数据和状态的绑定、业务逻辑等。
 
 ### 创建状态类
 
-我们首先需要创建一个状态类，来存放，数据状态和页面状态等，如下：
+我们首先需要创建一个状态类，来存放数据状态和页面状态等，如下：
 
 ```dart
 /// 存储页面状态和数据状态（如，缺省页、错误页、加载中...）
@@ -674,5 +678,208 @@ class PostsPageCategory extends ConsumerWidget {  // 继承 ConsumerWidget
 }
 ```
 
-是不是非常简单，不需要写 setState() 和 请求数据的任何代码，代码结构也非常清晰。
+是不是非常简单，不需要写 setState() 和 请求数据的任何代码，代码结构也非常清晰。在上述APP应用里的首页以及分类页面列表数据及页面的loading和缺省页等都是这一个简单 `PostsPageCategory` 完成的。
 
+
+## 其他相关
+
+以上这套开发模式我给出了大概的思路和部分代码，大家也可以顺着这个思路试试；这套开发模式后续还会继续优化它。
+
+### 应用功能相关
+
+用过 Flutter TabBar 同学应该知道，它在字体放大时会卡顿，以及如何自定义指示器等， 如图：
+
+<div style="width: 100%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/image/flutterMVVM/TabBar.gif "TabBar")
+
+</div>
+
+以及，渐变的高斯模糊背景和图片标题动画的实现等，如图：
+
+<div style="width: 100%; margin:auto">
+
+![no-shadow](https://cdn.lishaoy.net/image/flutterMVVM/profile.gif "profile")
+
+</div>
+
+及更多这个应用的功能实现和细节并没有在这里讲述，这篇文章主要介绍 MVVM，关于这个图片分享APP，只是我在业余时间对Flutter的研究探索和学习，这个应用大概只完成了一半，后续应该还好写关于这个APP的文章。
+
+### REST API接口相关
+
+还有，这个APP的后端API也是我自己开发的，使用的是 nodejs 的 **express** + **ts** 开发的，如首页推荐接口及分类页接口数据都是通过这个API查询到的： [首页API接口](https://api.lishaoy.net/posts?sort=recommend&pageIndex=1&pageSize=10)
+
+具体的实现是使用一条SQL语句查询得到，代码如下：
+
+```sql
+    SELECT 
+    post.id, 
+    post.content, 
+    post.title,
+    category.name as category,
+    post.views,
+    JSON_OBJECT(
+      'id', user.id,
+      'name', user.name,
+      'avatar', CAST(
+        IF(COUNT(avatar.id), 
+          GROUP_CONCAT(
+            DISTINCT JSON_OBJECT(
+              'largeAvatarUrl', concat('http://localhost:3001/avatar/', user.id, '|@u003f|size=large'),
+              'mediumAvatarUrl', concat('http://localhost:3001/avatar/', user.id, '|@u003f|size=medium'),
+              'smallAvatarUrl', concat('http://localhost:3001/avatar/', user.id, '|@u003f|size=small')
+            )
+          ),
+        NULL)
+      AS JSON)
+    ) as user,
+    (
+      SELECT COUNT(comment.id) FROM comment
+      WHERE comment.postId = post.id
+      GROUP BY comment.postId
+	  ) as totalComments,   
+    CAST(
+      IF(
+        COUNT(cover.id),
+            GROUP_CONCAT(
+              DISTINCT JSON_OBJECT(
+                'id', cover.id,
+                'width', cover.width,
+                'height', cover.height,
+                'largeImageUrl', concat('http://localhost:3001/files/', cover.id, '/serve|@u003f|size=large'),
+                'mediumImageUrl', concat('http://localhost:3001/files/', cover.id, '/serve|@u003f|size=medium'),
+                'small', concat('http://localhost:3001/files/', cover.id, '/serve|@u003f|size=thumbnail')
+              ) ORDER BY cover.id DESC
+            ),
+        NULL
+      ) AS JSON
+    ) AS coverImage,
+    CAST(
+      IF(
+        COUNT(file.id),
+        CONCAT(
+          '[',
+            GROUP_CONCAT(
+              DISTINCT JSON_OBJECT(
+                'id', file.id,
+                'width', file.width,
+                'height', file.height,
+                'largeImageUrl', concat('http://localhost:3001/files/', file.id, '/serve|@u003f|size=large'),
+                'mediumImageUrl', concat('http://localhost:3001/files/', file.id, '/serve|@u003f|size=medium'),
+                'small', concat('http://localhost:3001/files/', file.id, '/serve|@u003f|size=thumbnail')
+              ) ORDER BY file.id DESC
+            ),
+          ']'
+        ),
+        NULL
+      ) AS JSON
+    ) AS files,
+    CAST(
+      IF(
+        COUNT(tag.id),
+        CONCAT(
+          '[', 
+            GROUP_CONCAT(
+              DISTINCT JSON_OBJECT(
+                'id', tag.id,
+                'name', tag.name
+              )
+            ),
+          ']'
+        ),
+        NULL
+      ) AS JSON
+    ) AS tags,
+    (
+      SELECT COUNT(user_like_post.postId)
+      FROM user_like_post
+      WHERE user_like_post.postId = post.id
+    ) AS totalLikes
+  FROM post 
+    LEFT JOIN user 
+      ON user.id = post.userId
+    LEFT JOIN avatar
+      ON avatar.userId = user.id
+    LEFT JOIN LATERAL (
+      SELECT * FROM file
+      WHERE file.postId = post.id
+      ORDER BY file.id DESC
+      LIMIT 9
+    ) AS file ON file.postId = post.id
+    LEFT JOIN LATERAL(
+	  	SELECT * FROM file
+	  	WHERE file.isCover = 1 AND file.postId = post.id
+	  	GROUP BY file.id
+	  	LIMIT 1
+    ) AS cover ON cover.postId = post.id and cover.isCover = 1 
+    LEFT JOIN post_tag
+    ON post_tag.postId = post.id
+    LEFT JOIN tag
+    ON tag.id = post_tag.tagId
+    LEFT JOIN category 
+    ON post.categoryId = category.id
+  WHERE post.id IS NOT NULL
+  GROUP BY post.id
+  ORDER BY post.id DESC
+  LIMIT 10
+  OFFSET 0
+```
+
+这个是打印出来的log，具体的代码如下(可根据不同的参数查询不同的数据)，如下：
+
+```js
+export const getPosts = async (options: GetPostOptions) => {
+  const {
+    sort,
+    filter,
+    pagination: { limit, offset },
+    userId,
+  } = options;
+  let params: Array<any> = [limit, offset];
+  if (filter.param) {
+    params = [filter.param, ...params];
+  }
+  if (userId) {
+    params = [userId, ...params];
+  }
+  console.log(`params: ${params}`);
+
+  const sql = `
+  SELECT 
+    post.id, 
+    post.content, 
+    post.title,
+    category.name as category,
+    post.views,
+    post.createdAt,
+    post.updatedAt,
+    ${sqlFragment.user},
+    ${sqlFragment.totalComments},
+    ${sqlFragment.coverImage},
+    ${sqlFragment.file},
+    ${sqlFragment.tags}
+    ${userId ? `, ${sqlFragment.liked} ` : ''},
+    ${sqlFragment.totalLikes}
+  FROM post 
+    ${sqlFragment.leftJoinUser}
+    ${sqlFragment.leftJoinOneFile}
+    ${sqlFragment.leftJoinCover}
+    ${sqlFragment.leftJoinTag}
+    ${sqlFragment.leftJoinCategory}
+    ${filter.name == 'userLiked' ? sqlFragment.innerJoinUserLikePost : ''}
+  WHERE ${filter.sql}
+  GROUP BY post.id
+  ORDER BY ${sort}
+  LIMIT ?
+  OFFSET ?
+  `;
+
+  console.log(sql);
+
+  const [data] = await connection.promise().query(sql, params);
+
+  return data;
+};
+```
+
+如果这个后端 REST API 接口应用感兴趣的同学可以参考 [宁皓网](https://ninghao.net/package/xb2-node) 的视频，我就是根据这套视频做的，不过自己加了很多东西。
