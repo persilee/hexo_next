@@ -885,4 +885,5 @@ export const getPosts = async (options: GetPostOptions) => {
 如果这个后端 REST API 接口应用感兴趣的同学可以参考 [宁皓网](https://ninghao.net/package/xb2-node) 的视频，我就是根据这套视频做的，不过自己加了很多东西。
 
 最后，很多同学都希望我开源，所以，给出项目的地址，不过项目还没有完成，架构也在优化中...后续可能项目地址会变化，目前可以先参考以下地址：
+
 项目地址：[https://github.com/persilee/flutter_pro](https://github.com/persilee/flutter_pro)
