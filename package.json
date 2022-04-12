@@ -40,7 +40,7 @@
     "mini-css-extract-plugin": "^0.4.0",
     "npm": "^5.10.0",
     "pump": "^3.0.0",
-    "valine": "^1.1.9-beta9",
+    "valine": "^1.4.15",
     "webpack": "^4.46.0"
   },
   "devDependencies": {
