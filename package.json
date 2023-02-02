@@ -38,7 +38,7 @@
     "live2d-widget-model-hijiki": "^1.0.5",
     "live2d-widget-model-tororo": "^1.0.5",
     "mini-css-extract-plugin": "^0.4.0",
-    "npm": "^5.10.0",
+    "npm": "^9.4.0",
     "pump": "^3.0.0",
     "valine": "^1.1.9-beta9",
     "webpack": "^4.46.0"
